@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Egzamin Dyplomowy</string>
+    <string name="app_name">Diploma Exam</string>
+    <string name="welcome_to_exam">Welcome to the diploma exam!</string>
+    <string name="tell_me_who_you_are">Tell me who you are:</string>
+    <string name="student_instrumental">Student</string>
+    <string name="examiner_instrumental">Examiner</string>
 </resources>

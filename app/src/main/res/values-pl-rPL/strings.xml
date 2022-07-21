@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Egzamin Dyplomowy</string>
+    <string name="welcome_to_exam">Witaj na egzaminie dyplomowym!</string>
+    <string name="tell_me_who_you_are">Powiedz mi, kim jesteś:</string>
+    <string name="student_instrumental">Studentem</string>
+    <string name="examiner_instrumental">Egzaminującym</string>
+</resources>
