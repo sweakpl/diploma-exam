@@ -46,17 +46,12 @@ fun CompactWelcomeScreen() {
             )
             .verticalScroll(rememberScrollState())
     ) {
-        Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
-
         Icon(
-            painter = painterResource(id = R.drawable.ic_application_icon),
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = "Application icon - university graduation cap",
             tint = MaterialTheme.colors.onPrimary,
-            modifier = Modifier
-                .size(96.dp)
+            modifier = Modifier.size(96.dp)
         )
-
-        Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
 
         Text(
             text = stringResource(R.string.app_name),
@@ -124,19 +119,17 @@ fun MediumOrExpandedWelcomeScreen() {
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f),
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_application_icon),
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "Application icon - university graduation cap",
                 tint = MaterialTheme.colors.onPrimary,
-                modifier = Modifier
-                    .size(96.dp)
+                modifier = Modifier.size(96.dp)
             )
-
-            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
 
             Text(
                 text = stringResource(R.string.app_name),
@@ -164,7 +157,8 @@ fun MediumOrExpandedWelcomeScreen() {
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f),
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
