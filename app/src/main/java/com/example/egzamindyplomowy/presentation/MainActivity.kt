@@ -5,7 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.egzamindyplomowy.presentation.introduction.WelcomeScreen
+import com.example.egzamindyplomowy.presentation.introduction.login.LoginScreen
+import com.example.egzamindyplomowy.presentation.introduction.welcome.WelcomeScreen
 import com.example.egzamindyplomowy.presentation.ui.theme.EgzaminDyplomowyTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +14,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             EgzaminDyplomowyTheme {
-                WelcomeScreen()
+                LoginScreen()
             }
         }
     }
@@ -23,6 +24,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     EgzaminDyplomowyTheme {
-        WelcomeScreen()
+        LoginScreen()
     }
 }

@@ -4,4 +4,8 @@
     <string name="tell_me_who_you_are">Tell me who you are:</string>
     <string name="student_instrumental">Student</string>
     <string name="examiner_instrumental">Examiner</string>
+    <string name="please_login">Please, log-in:</string>
+    <string name="email" translatable="false">E-mail</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
 </resources>

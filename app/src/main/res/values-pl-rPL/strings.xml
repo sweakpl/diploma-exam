@@ -5,4 +5,7 @@
     <string name="tell_me_who_you_are">Powiedz mi, kim jesteś:</string>
     <string name="student_instrumental">Studentem</string>
     <string name="examiner_instrumental">Egzaminującym</string>
+    <string name="please_login">Proszę, zaloguj się:</string>
+    <string name="login">Zaloguj</string>
+    <string name="password">Hasło</string>
 </resources>

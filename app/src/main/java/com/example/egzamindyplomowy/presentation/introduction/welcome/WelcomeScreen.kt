@@ -1,20 +1,21 @@
-package com.example.egzamindyplomowy.presentation.introduction
+package com.example.egzamindyplomowy.presentation.introduction.welcome
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.example.egzamindyplomowy.R
 import com.example.egzamindyplomowy.presentation.WindowInfo
+import com.example.egzamindyplomowy.presentation.introduction.components.ThickWhiteButton
+import com.example.egzamindyplomowy.presentation.introduction.components.WelcomeLayout
 import com.example.egzamindyplomowy.presentation.rememberWindowInfo
 import com.example.egzamindyplomowy.presentation.ui.theme.space
 
@@ -46,34 +47,7 @@ fun CompactWelcomeScreen() {
             )
             .verticalScroll(rememberScrollState())
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = "Application icon - university graduation cap",
-            tint = MaterialTheme.colors.onPrimary,
-            modifier = Modifier.size(96.dp)
-        )
-
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.h1,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(
-                bottom = MaterialTheme.space.extraLarge,
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
-        )
-
-        Text(
-            text = stringResource(R.string.welcome_to_exam),
-            style = MaterialTheme.typography.h2,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(
-                bottom = MaterialTheme.space.medium,
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
-        )
+        WelcomeLayout()
 
         Text(
             text = stringResource(R.string.tell_me_who_you_are),
@@ -86,14 +60,14 @@ fun CompactWelcomeScreen() {
             )
         )
 
-        ExamRoleChoiceButton(
+        ThickWhiteButton(
             text = stringResource(R.string.student_instrumental),
             onClick = {/*TODO*/ }
         )
 
         Spacer(modifier = Modifier.height(MaterialTheme.space.large))
 
-        ExamRoleChoiceButton(
+        ThickWhiteButton(
             text = stringResource(R.string.examiner_instrumental),
             onClick = {/*TODO*/ }
         )
@@ -121,37 +95,9 @@ fun MediumOrExpandedWelcomeScreen() {
                 .fillMaxHeight()
                 .weight(1f)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "Application icon - university graduation cap",
-                tint = MaterialTheme.colors.onPrimary,
-                modifier = Modifier.size(96.dp)
-            )
-
-            Text(
-                text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.h1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(
-                    bottom = MaterialTheme.space.medium,
-                    start = MaterialTheme.space.large,
-                    end = MaterialTheme.space.large
-                )
-            )
-
-            Text(
-                text = stringResource(R.string.welcome_to_exam),
-                style = MaterialTheme.typography.h2,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(
-                    bottom = MaterialTheme.space.medium,
-                    start = MaterialTheme.space.large,
-                    end = MaterialTheme.space.large
-                )
-            )
+            WelcomeLayout()
         }
 
         Column(
@@ -174,46 +120,19 @@ fun MediumOrExpandedWelcomeScreen() {
                 )
             )
 
-            ExamRoleChoiceButton(
+            ThickWhiteButton(
                 text = stringResource(R.string.student_instrumental),
                 onClick = {/*TODO*/ }
             )
 
             Spacer(modifier = Modifier.height(MaterialTheme.space.large))
 
-            ExamRoleChoiceButton(
+            ThickWhiteButton(
                 text = stringResource(R.string.examiner_instrumental),
                 onClick = {/*TODO*/ }
             )
 
             Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
         }
-    }
-}
-
-@Composable
-fun ExamRoleChoiceButton(
-    text: String,
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.surface
-        ),
-        elevation = ButtonDefaults.elevation(defaultElevation = MaterialTheme.space.extraSmall),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(52.dp)
-            .padding(
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.button,
-            color = MaterialTheme.colors.primary
-        )
     }
 }
