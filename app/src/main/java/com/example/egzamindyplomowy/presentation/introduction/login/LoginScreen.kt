@@ -32,13 +32,14 @@ import com.example.egzamindyplomowy.presentation.rememberWindowInfo
 import com.example.egzamindyplomowy.presentation.ui.theme.space
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    loginMode: String
+) {
     val windowInfo = rememberWindowInfo()
 
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var emailAddress by remember { mutableStateOf("") }
-
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         CompactLoginScreen(

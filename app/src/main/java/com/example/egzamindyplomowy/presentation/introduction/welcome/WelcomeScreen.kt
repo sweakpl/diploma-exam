@@ -12,7 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
 import com.example.egzamindyplomowy.R
+import com.example.egzamindyplomowy.common.LOGIN_MODE_EXAMINER
+import com.example.egzamindyplomowy.common.LOGIN_MODE_STUDENT
+import com.example.egzamindyplomowy.presentation.Screen
 import com.example.egzamindyplomowy.presentation.WindowInfo
 import com.example.egzamindyplomowy.presentation.introduction.components.ThickWhiteButton
 import com.example.egzamindyplomowy.presentation.introduction.components.WelcomeLayout
@@ -20,18 +24,20 @@ import com.example.egzamindyplomowy.presentation.rememberWindowInfo
 import com.example.egzamindyplomowy.presentation.ui.theme.space
 
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(
+    navController: NavController
+) {
     val windowInfo = rememberWindowInfo()
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
-        CompactWelcomeScreen()
+        CompactWelcomeScreen(navController = navController)
     } else {
-        MediumOrExpandedWelcomeScreen()
+        MediumOrExpandedWelcomeScreen(navController = navController)
     }
 }
 
 @Composable
-fun CompactWelcomeScreen() {
+fun CompactWelcomeScreen(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -62,14 +68,18 @@ fun CompactWelcomeScreen() {
 
         ThickWhiteButton(
             text = stringResource(R.string.student_instrumental),
-            onClick = {/*TODO*/ }
+            onClick = {
+                navController.navigate(Screen.LoginScreen.withArguments(LOGIN_MODE_STUDENT))
+            }
         )
 
         Spacer(modifier = Modifier.height(MaterialTheme.space.large))
 
         ThickWhiteButton(
             text = stringResource(R.string.examiner_instrumental),
-            onClick = {/*TODO*/ }
+            onClick = {
+                navController.navigate(Screen.LoginScreen.withArguments(LOGIN_MODE_EXAMINER))
+            }
         )
 
         Spacer(modifier = Modifier.height(MaterialTheme.space.large))
@@ -77,7 +87,7 @@ fun CompactWelcomeScreen() {
 }
 
 @Composable
-fun MediumOrExpandedWelcomeScreen() {
+fun MediumOrExpandedWelcomeScreen(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -122,14 +132,18 @@ fun MediumOrExpandedWelcomeScreen() {
 
             ThickWhiteButton(
                 text = stringResource(R.string.student_instrumental),
-                onClick = {/*TODO*/ }
+                onClick = {
+                    navController.navigate(Screen.LoginScreen.withArguments(LOGIN_MODE_STUDENT))
+                }
             )
 
             Spacer(modifier = Modifier.height(MaterialTheme.space.large))
 
             ThickWhiteButton(
                 text = stringResource(R.string.examiner_instrumental),
-                onClick = {/*TODO*/ }
+                onClick = {
+                    navController.navigate(Screen.LoginScreen.withArguments(LOGIN_MODE_EXAMINER))
+                }
             )
 
             Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
