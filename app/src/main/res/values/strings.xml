@@ -8,4 +8,6 @@
     <string name="email" translatable="false">E-mail</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
+    <string name="invalid_email_error">The e-mail is invalid!</string>
+    <string name="wrong_credentials_error">Wrong email or password!</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.egzamindyplomowy.presentation.introduction.login
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,57 +14,85 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.example.egzamindyplomowy.R
+import com.example.egzamindyplomowy.presentation.UiText
 import com.example.egzamindyplomowy.presentation.WindowInfo
 import com.example.egzamindyplomowy.presentation.introduction.components.ThickWhiteButton
 import com.example.egzamindyplomowy.presentation.introduction.components.WelcomeLayout
 import com.example.egzamindyplomowy.presentation.rememberWindowInfo
 import com.example.egzamindyplomowy.presentation.ui.theme.space
+import kotlinx.coroutines.flow.collect
 
+@ExperimentalComposeUiApi
 @Composable
 fun LoginScreen(
-    loginMode: String
+    loginMode: String,
+    loginViewModel: LoginViewModel
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = context) {
+        loginViewModel.authenticateEvents.collect { event ->
+            when (event) {
+                is LoginViewModel.AuthenticationEvent.Success -> {
+                    Toast.makeText(
+                        context,
+                        "Login successful",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    val state = loginViewModel.state
     val windowInfo = rememberWindowInfo()
 
-    var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var emailAddress by remember { mutableStateOf("") }
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         CompactLoginScreen(
-            emailAddress = emailAddress,
-            onEmailAddressChange = { emailAddress = it },
-            password = password,
-            onPasswordChange = { password = it },
+            emailAddress = state.email,
+            onEmailAddressChange = { loginViewModel.onEvent(LoginFormEvent.EmailChanged(it)) },
+            password = state.password,
+            onPasswordChange = { loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it)) },
             passwordVisible = passwordVisible,
             onPasswordVisibleClick = { passwordVisible = !passwordVisible },
-            onLoginClick = { /* TODO: login the user */ }
+            errorMessage = state.errorMessage,
+            onLoginClick = { loginViewModel.onEvent(LoginFormEvent.Login) },
+            isAuthorizing = state.isAuthorizing
         )
     } else {
         MediumOrExpandedLoginScreen(
-            emailAddress = emailAddress,
-            onEmailAddressChange = { emailAddress = it },
-            password = password,
-            onPasswordChange = { password = it },
+            emailAddress = state.email,
+            onEmailAddressChange = { loginViewModel.onEvent(LoginFormEvent.EmailChanged(it)) },
+            password = state.password,
+            onPasswordChange = { loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it)) },
             passwordVisible = passwordVisible,
             onPasswordVisibleClick = { passwordVisible = !passwordVisible },
-            onLoginClick = { /* TODO: login the user */ }
+            errorMessage = state.errorMessage,
+            onLoginClick = { loginViewModel.onEvent(LoginFormEvent.Login) },
+            isAuthorizing = state.isAuthorizing
         )
     }
 }
 
+@ExperimentalComposeUiApi
 @Composable
 fun CompactLoginScreen(
     emailAddress: String,
@@ -72,9 +101,12 @@ fun CompactLoginScreen(
     onPasswordChange: (String) -> Unit,
     passwordVisible: Boolean,
     onPasswordVisibleClick: () -> Unit,
-    onLoginClick: () -> Unit
+    errorMessage: UiText?,
+    onLoginClick: () -> Unit,
+    isAuthorizing: Boolean
 ) {
     val focusManager = LocalFocusManager.current
+    val softwareKeyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -105,6 +137,7 @@ fun CompactLoginScreen(
         )
 
         OutlinedTextField(
+            isError = errorMessage != null,
             value = emailAddress,
             onValueChange = { onEmailAddressChange(it) },
             label = {
@@ -119,7 +152,11 @@ fun CompactLoginScreen(
                 trailingIconColor = MaterialTheme.colors.onPrimary,
                 focusedBorderColor = MaterialTheme.colors.onPrimary,
                 unfocusedBorderColor = MaterialTheme.colors.onPrimary,
-                backgroundColor = Color.Transparent
+                backgroundColor = Color.Transparent,
+                errorBorderColor = MaterialTheme.colors.error,
+                errorTrailingIconColor = MaterialTheme.colors.error,
+                errorLabelColor = MaterialTheme.colors.error,
+                errorCursorColor = MaterialTheme.colors.error
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -146,6 +183,7 @@ fun CompactLoginScreen(
         )
 
         OutlinedTextField(
+            isError = errorMessage != null,
             value = password,
             onValueChange = { onPasswordChange(it) },
             label = {
@@ -160,7 +198,11 @@ fun CompactLoginScreen(
                 trailingIconColor = MaterialTheme.colors.onPrimary,
                 focusedBorderColor = MaterialTheme.colors.onPrimary,
                 unfocusedBorderColor = MaterialTheme.colors.onPrimary,
-                backgroundColor = Color.Transparent
+                backgroundColor = Color.Transparent,
+                errorBorderColor = MaterialTheme.colors.error,
+                errorTrailingIconColor = MaterialTheme.colors.error,
+                errorLabelColor = MaterialTheme.colors.error,
+                errorCursorColor = MaterialTheme.colors.error
             ),
             singleLine = true,
             visualTransformation = if (passwordVisible) {
@@ -173,7 +215,10 @@ fun CompactLoginScreen(
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
-                onDone = { onLoginClick() }
+                onDone = {
+                    onLoginClick()
+                    softwareKeyboardController?.hide()
+                }
             ),
             trailingIcon = {
                 val image = if (passwordVisible) {
@@ -197,15 +242,37 @@ fun CompactLoginScreen(
                 )
         )
 
-        ThickWhiteButton(
-            text = stringResource(R.string.login),
-            onClick = onLoginClick
-        )
+        if (errorMessage != null) {
+            Text(
+                text =  errorMessage.asString(),
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colors.error,
+                modifier = Modifier.padding(
+                    bottom = MaterialTheme.space.large,
+                    start = MaterialTheme.space.large,
+                    end = MaterialTheme.space.large
+                )
+            )
+        }
+
+        if (isAuthorizing) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.onPrimary,
+                modifier = Modifier.size(52.dp)
+            )
+        } else {
+            ThickWhiteButton(
+                text = stringResource(R.string.login),
+                onClick = onLoginClick
+            )
+        }
 
         Spacer(modifier = Modifier.height(MaterialTheme.space.large))
     }
 }
 
+@ExperimentalComposeUiApi
 @Composable
 fun MediumOrExpandedLoginScreen(
     emailAddress: String,
@@ -214,9 +281,12 @@ fun MediumOrExpandedLoginScreen(
     onPasswordChange: (String) -> Unit,
     passwordVisible: Boolean,
     onPasswordVisibleClick: () -> Unit,
-    onLoginClick: () -> Unit
+    errorMessage: UiText?,
+    onLoginClick: () -> Unit,
+    isAuthorizing: Boolean
 ) {
     val focusManager = LocalFocusManager.current
+    val softwareKeyboardController = LocalSoftwareKeyboardController.current
 
     Row(
         modifier = Modifier
@@ -261,6 +331,7 @@ fun MediumOrExpandedLoginScreen(
             )
 
             OutlinedTextField(
+                isError = errorMessage != null,
                 value = emailAddress,
                 onValueChange = { onEmailAddressChange(it) },
                 label = {
@@ -275,7 +346,11 @@ fun MediumOrExpandedLoginScreen(
                     trailingIconColor = MaterialTheme.colors.onPrimary,
                     focusedBorderColor = MaterialTheme.colors.onPrimary,
                     unfocusedBorderColor = MaterialTheme.colors.onPrimary,
-                    backgroundColor = Color.Transparent
+                    backgroundColor = Color.Transparent,
+                    errorBorderColor = MaterialTheme.colors.error,
+                    errorTrailingIconColor = MaterialTheme.colors.error,
+                    errorLabelColor = MaterialTheme.colors.error,
+                    errorCursorColor = MaterialTheme.colors.error
                 ),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -302,6 +377,7 @@ fun MediumOrExpandedLoginScreen(
             )
 
             OutlinedTextField(
+                isError = errorMessage != null,
                 value = password,
                 onValueChange = { onPasswordChange(it) },
                 label = {
@@ -316,7 +392,11 @@ fun MediumOrExpandedLoginScreen(
                     trailingIconColor = MaterialTheme.colors.onPrimary,
                     focusedBorderColor = MaterialTheme.colors.onPrimary,
                     unfocusedBorderColor = MaterialTheme.colors.onPrimary,
-                    backgroundColor = Color.Transparent
+                    backgroundColor = Color.Transparent,
+                    errorBorderColor = MaterialTheme.colors.error,
+                    errorTrailingIconColor = MaterialTheme.colors.error,
+                    errorLabelColor = MaterialTheme.colors.error,
+                    errorCursorColor = MaterialTheme.colors.error
                 ),
                 singleLine = true,
                 visualTransformation = if (passwordVisible) {
@@ -329,7 +409,10 @@ fun MediumOrExpandedLoginScreen(
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { onLoginClick() }
+                    onDone = {
+                        onLoginClick()
+                        softwareKeyboardController?.hide()
+                    }
                 ),
                 trailingIcon = {
                     val image = if (passwordVisible) {
@@ -353,10 +436,36 @@ fun MediumOrExpandedLoginScreen(
                     )
             )
 
-            ThickWhiteButton(
-                text = stringResource(R.string.login),
-                onClick = onLoginClick
-            )
+            if (errorMessage != null) {
+                Text(
+                    text = errorMessage.asString(),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.error,
+                    modifier = Modifier.padding(
+                        bottom = MaterialTheme.space.large,
+                        start = MaterialTheme.space.large,
+                        end = MaterialTheme.space.large
+                    )
+                )
+            }
+
+            if (isAuthorizing) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier
+                        .size(52.dp)
+                        .padding(
+                            start = MaterialTheme.space.large,
+                            end = MaterialTheme.space.large
+                        )
+                )
+            } else {
+                ThickWhiteButton(
+                    text = stringResource(R.string.login),
+                    onClick = onLoginClick
+                )
+            }
 
             Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
         }
