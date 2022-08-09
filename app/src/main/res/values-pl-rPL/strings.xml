@@ -10,4 +10,5 @@
     <string name="password">Hasło</string>
     <string name="invalid_email_error">E-mail jest nieprawdłowy!</string>
     <string name="wrong_credentials_error">Niepoprawny e-mail lub hasło!</string>
+    <string name="blank_password_error">Hasło jest puste!</string>
 </resources>

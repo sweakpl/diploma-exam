@@ -7,7 +7,7 @@ import java.util.regex.Pattern
 class ValidateEmail {
 
     private val validationEmailPattern = Pattern.compile(
-        "^[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*\$"
+        "^[a-z]+\\.[a-z]+(-[a-z]+)?@(student\\.)?pk\\.edu\\.pl\$"
     )
 
     operator fun invoke(email: String): ValidationResult {

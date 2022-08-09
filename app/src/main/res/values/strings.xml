@@ -10,4 +10,5 @@
     <string name="password">Password</string>
     <string name="invalid_email_error">The e-mail is invalid!</string>
     <string name="wrong_credentials_error">Wrong email or password!</string>
+    <string name="blank_password_error">The password is blank!</string>
 </resources>
