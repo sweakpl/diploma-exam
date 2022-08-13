@@ -11,4 +11,6 @@
     <string name="invalid_email_error">The e-mail is invalid!</string>
     <string name="wrong_credentials_error">Wrong email or password!</string>
     <string name="blank_password_error">The password is blank!</string>
+    <string name="login_help_examiner_message">In order to login, use Your email in the pk.edu.pl domain. It should be registered by the session administrator. In case of any problems, contact your administrator.</string>
+    <string name="login_help_student_message">In order to login, use Your email in the student.pk.edu.pl domain. It should be registered by the session administrator. In case of any problems, contact your examiner.</string>
 </resources>

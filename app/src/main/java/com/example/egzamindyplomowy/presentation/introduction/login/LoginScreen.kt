@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,10 +31,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.egzamindyplomowy.R
+import com.example.egzamindyplomowy.common.LOGIN_MODE_EXAMINER
+import com.example.egzamindyplomowy.common.LOGIN_MODE_STUDENT
 import com.example.egzamindyplomowy.presentation.UiText
 import com.example.egzamindyplomowy.presentation.WindowInfo
-import com.example.egzamindyplomowy.presentation.introduction.components.ThickWhiteButton
-import com.example.egzamindyplomowy.presentation.introduction.components.WelcomeLayout
+import com.example.egzamindyplomowy.presentation.components.Dialog
+import com.example.egzamindyplomowy.presentation.components.ThickWhiteButton
+import com.example.egzamindyplomowy.presentation.components.WelcomeLayout
 import com.example.egzamindyplomowy.presentation.rememberWindowInfo
 import com.example.egzamindyplomowy.presentation.ui.theme.space
 import kotlinx.coroutines.flow.collect
@@ -63,6 +67,7 @@ fun LoginScreen(
     val state = loginViewModel.state
     val windowInfo = rememberWindowInfo()
 
+    var loginHelpDialogVisible by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
@@ -75,7 +80,8 @@ fun LoginScreen(
             onPasswordVisibleClick = { passwordVisible = !passwordVisible },
             errorMessage = state.errorMessage,
             onLoginClick = { loginViewModel.onEvent(LoginFormEvent.Login) },
-            isAuthorizing = state.isAuthorizing
+            isAuthorizing = state.isAuthorizing,
+            onLoginHelpClick = { loginHelpDialogVisible = true }
         )
     } else {
         MediumOrExpandedLoginScreen(
@@ -87,7 +93,26 @@ fun LoginScreen(
             onPasswordVisibleClick = { passwordVisible = !passwordVisible },
             errorMessage = state.errorMessage,
             onLoginClick = { loginViewModel.onEvent(LoginFormEvent.Login) },
-            isAuthorizing = state.isAuthorizing
+            isAuthorizing = state.isAuthorizing,
+            onLoginHelpClick = { loginHelpDialogVisible = true }
+        )
+    }
+
+    if (loginHelpDialogVisible) {
+        Dialog(
+            onDismissRequest = { loginHelpDialogVisible = false },
+            onPositiveClick = { loginHelpDialogVisible = false },
+            onNegativeClick = null,
+            title = stringResource(R.string.login),
+            message = stringResource(
+                when (loginMode) {
+                    LOGIN_MODE_STUDENT -> R.string.login_help_student_message
+                    else -> R.string.login_help_examiner_message
+                }
+            ),
+            positiveButtonText = stringResource(android.R.string.ok),
+            negativeButtonText = null,
+            onlyPositiveButton = true
         )
     }
 }
@@ -103,7 +128,8 @@ fun CompactLoginScreen(
     onPasswordVisibleClick: () -> Unit,
     errorMessage: UiText?,
     onLoginClick: () -> Unit,
-    isAuthorizing: Boolean
+    isAuthorizing: Boolean,
+    onLoginHelpClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
@@ -125,16 +151,34 @@ fun CompactLoginScreen(
     ) {
         WelcomeLayout()
 
-        Text(
-            text = stringResource(R.string.please_login),
-            style = MaterialTheme.typography.h2,
-            textAlign = TextAlign.Center,
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(
                 bottom = MaterialTheme.space.large,
                 start = MaterialTheme.space.large,
                 end = MaterialTheme.space.large
             )
-        )
+        ) {
+            IconButton(
+                onClick = onLoginHelpClick,
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = MaterialTheme.space.small)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_help),
+                    contentDescription = "Login help icon",
+                    tint = MaterialTheme.colors.onPrimary,
+                )
+            }
+
+            Text(
+                text = stringResource(R.string.please_login),
+                style = MaterialTheme.typography.h2,
+                textAlign = TextAlign.Center,
+            )
+        }
 
         OutlinedTextField(
             isError = errorMessage != null,
@@ -244,7 +288,7 @@ fun CompactLoginScreen(
 
         if (errorMessage != null) {
             Text(
-                text =  errorMessage.asString(),
+                text = errorMessage.asString(),
                 style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.error,
@@ -283,7 +327,8 @@ fun MediumOrExpandedLoginScreen(
     onPasswordVisibleClick: () -> Unit,
     errorMessage: UiText?,
     onLoginClick: () -> Unit,
-    isAuthorizing: Boolean
+    isAuthorizing: Boolean,
+    onLoginHelpClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
@@ -318,17 +363,35 @@ fun MediumOrExpandedLoginScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(R.string.please_login),
-                style = MaterialTheme.typography.h2,
-                textAlign = TextAlign.Center,
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(
                     top = MaterialTheme.space.medium,
                     bottom = MaterialTheme.space.large,
                     start = MaterialTheme.space.large,
                     end = MaterialTheme.space.large
                 )
-            )
+            ) {
+                IconButton(
+                    onClick = onLoginHelpClick,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(end = MaterialTheme.space.small)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_help),
+                        contentDescription = "Login help icon",
+                        tint = MaterialTheme.colors.onPrimary,
+                    )
+                }
+
+                Text(
+                    text = stringResource(R.string.please_login),
+                    style = MaterialTheme.typography.h2,
+                    textAlign = TextAlign.Center,
+                )
+            }
 
             OutlinedTextField(
                 isError = errorMessage != null,

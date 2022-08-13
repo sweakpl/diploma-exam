@@ -18,8 +18,8 @@ import com.example.egzamindyplomowy.common.LOGIN_MODE_EXAMINER
 import com.example.egzamindyplomowy.common.LOGIN_MODE_STUDENT
 import com.example.egzamindyplomowy.presentation.Screen
 import com.example.egzamindyplomowy.presentation.WindowInfo
-import com.example.egzamindyplomowy.presentation.introduction.components.ThickWhiteButton
-import com.example.egzamindyplomowy.presentation.introduction.components.WelcomeLayout
+import com.example.egzamindyplomowy.presentation.components.ThickWhiteButton
+import com.example.egzamindyplomowy.presentation.components.WelcomeLayout
 import com.example.egzamindyplomowy.presentation.rememberWindowInfo
 import com.example.egzamindyplomowy.presentation.ui.theme.space
 

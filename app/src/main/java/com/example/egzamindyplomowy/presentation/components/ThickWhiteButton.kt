@@ -1,4 +1,4 @@
-package com.example.egzamindyplomowy.presentation.introduction.components
+package com.example.egzamindyplomowy.presentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
