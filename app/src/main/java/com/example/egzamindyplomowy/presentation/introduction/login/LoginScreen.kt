@@ -31,7 +31,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.egzamindyplomowy.R
-import com.example.egzamindyplomowy.common.LOGIN_MODE_EXAMINER
 import com.example.egzamindyplomowy.common.LOGIN_MODE_STUDENT
 import com.example.egzamindyplomowy.presentation.UiText
 import com.example.egzamindyplomowy.presentation.WindowInfo
@@ -64,44 +63,69 @@ fun LoginScreen(
         }
     }
 
-    val state = loginViewModel.state
+    val loginFormState = loginViewModel.state
     val windowInfo = rememberWindowInfo()
 
-    var loginHelpDialogVisible by remember { mutableStateOf(false) }
-    var passwordVisible by remember { mutableStateOf(false) }
-
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
-        CompactLoginScreen(
-            emailAddress = state.email,
-            onEmailAddressChange = { loginViewModel.onEvent(LoginFormEvent.EmailChanged(it)) },
-            password = state.password,
-            onPasswordChange = { loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it)) },
-            passwordVisible = passwordVisible,
-            onPasswordVisibleClick = { passwordVisible = !passwordVisible },
-            errorMessage = state.errorMessage,
-            onLoginClick = { loginViewModel.onEvent(LoginFormEvent.Login) },
-            isAuthorizing = state.isAuthorizing,
-            onLoginHelpClick = { loginHelpDialogVisible = true }
-        )
+        CompactLoginScreen {
+            LoginForm(
+                emailAddress = loginFormState.email,
+                onEmailAddressChange = {
+                    loginViewModel.onEvent(LoginFormEvent.EmailChanged(it))
+                },
+                password = loginFormState.password,
+                onPasswordChange = {
+                    loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it))
+                },
+                passwordVisible = loginFormState.passwordVisible,
+                onPasswordVisibleClick = {
+                    loginViewModel.onEvent(LoginFormEvent.PasswordVisibilityChanged)
+                },
+                errorMessage = loginFormState.errorMessage,
+                onLoginClick = {
+                    loginViewModel.onEvent(LoginFormEvent.Login)
+                },
+                isAuthorizing = loginFormState.isAuthorizing,
+                onLoginHelpClick = {
+                    loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(true))
+                }
+            )
+        }
     } else {
-        MediumOrExpandedLoginScreen(
-            emailAddress = state.email,
-            onEmailAddressChange = { loginViewModel.onEvent(LoginFormEvent.EmailChanged(it)) },
-            password = state.password,
-            onPasswordChange = { loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it)) },
-            passwordVisible = passwordVisible,
-            onPasswordVisibleClick = { passwordVisible = !passwordVisible },
-            errorMessage = state.errorMessage,
-            onLoginClick = { loginViewModel.onEvent(LoginFormEvent.Login) },
-            isAuthorizing = state.isAuthorizing,
-            onLoginHelpClick = { loginHelpDialogVisible = true }
-        )
+        MediumOrExpandedLoginScreen {
+            LoginForm(
+                emailAddress = loginFormState.email,
+                onEmailAddressChange = {
+                    loginViewModel.onEvent(LoginFormEvent.EmailChanged(it))
+                },
+                password = loginFormState.password,
+                onPasswordChange = {
+                    loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it))
+                },
+                passwordVisible = loginFormState.passwordVisible,
+                onPasswordVisibleClick = {
+                    loginViewModel.onEvent(LoginFormEvent.PasswordVisibilityChanged)
+                },
+                errorMessage = loginFormState.errorMessage,
+                onLoginClick = {
+                    loginViewModel.onEvent(LoginFormEvent.Login)
+                },
+                isAuthorizing = loginFormState.isAuthorizing,
+                onLoginHelpClick = {
+                    loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(true))
+                }
+            )
+        }
     }
 
-    if (loginHelpDialogVisible) {
+    if (loginFormState.loginHelpDialogVisible) {
         Dialog(
-            onDismissRequest = { loginHelpDialogVisible = false },
-            onPositiveClick = { loginHelpDialogVisible = false },
+            onDismissRequest = {
+                loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(false))
+            },
+            onPositiveClick = {
+                loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(false))
+            },
             onNegativeClick = null,
             title = stringResource(R.string.login),
             message = stringResource(
@@ -119,23 +143,8 @@ fun LoginScreen(
 
 @ExperimentalComposeUiApi
 @Composable
-fun CompactLoginScreen(
-    emailAddress: String,
-    onEmailAddressChange: (String) -> Unit,
-    password: String,
-    onPasswordChange: (String) -> Unit,
-    passwordVisible: Boolean,
-    onPasswordVisibleClick: () -> Unit,
-    errorMessage: UiText?,
-    onLoginClick: () -> Unit,
-    isAuthorizing: Boolean,
-    onLoginHelpClick: () -> Unit
-) {
-    val focusManager = LocalFocusManager.current
-    val softwareKeyboardController = LocalSoftwareKeyboardController.current
-
+fun CompactLoginScreen(formComponent: @Composable () -> Unit) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
@@ -151,6 +160,74 @@ fun CompactLoginScreen(
     ) {
         WelcomeLayout()
 
+        formComponent()
+
+        Spacer(modifier = Modifier.height(MaterialTheme.space.large))
+    }
+}
+
+@ExperimentalComposeUiApi
+@Composable
+fun MediumOrExpandedLoginScreen(formComponent: @Composable () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        MaterialTheme.colors.primary,
+                        MaterialTheme.colors.primaryVariant
+                    )
+                )
+            )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Center
+        ) {
+            WelcomeLayout()
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
+
+            formComponent()
+
+            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
+        }
+    }
+}
+
+@ExperimentalComposeUiApi
+@Composable
+fun LoginForm(
+    emailAddress: String,
+    onEmailAddressChange: (String) -> Unit,
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    passwordVisible: Boolean,
+    onPasswordVisibleClick: () -> Unit,
+    errorMessage: UiText?,
+    onLoginClick: () -> Unit,
+    isAuthorizing: Boolean,
+    onLoginHelpClick: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+    val softwareKeyboardController = LocalSoftwareKeyboardController.current
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -310,227 +387,6 @@ fun CompactLoginScreen(
                 text = stringResource(R.string.login),
                 onClick = onLoginClick
             )
-        }
-
-        Spacer(modifier = Modifier.height(MaterialTheme.space.large))
-    }
-}
-
-@ExperimentalComposeUiApi
-@Composable
-fun MediumOrExpandedLoginScreen(
-    emailAddress: String,
-    onEmailAddressChange: (String) -> Unit,
-    password: String,
-    onPasswordChange: (String) -> Unit,
-    passwordVisible: Boolean,
-    onPasswordVisibleClick: () -> Unit,
-    errorMessage: UiText?,
-    onLoginClick: () -> Unit,
-    isAuthorizing: Boolean,
-    onLoginHelpClick: () -> Unit
-) {
-    val focusManager = LocalFocusManager.current
-    val softwareKeyboardController = LocalSoftwareKeyboardController.current
-
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        MaterialTheme.colors.primary,
-                        MaterialTheme.colors.primaryVariant
-                    )
-                )
-            )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center
-        ) {
-            WelcomeLayout()
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(
-                    top = MaterialTheme.space.medium,
-                    bottom = MaterialTheme.space.large,
-                    start = MaterialTheme.space.large,
-                    end = MaterialTheme.space.large
-                )
-            ) {
-                IconButton(
-                    onClick = onLoginHelpClick,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = MaterialTheme.space.small)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_help),
-                        contentDescription = "Login help icon",
-                        tint = MaterialTheme.colors.onPrimary,
-                    )
-                }
-
-                Text(
-                    text = stringResource(R.string.please_login),
-                    style = MaterialTheme.typography.h2,
-                    textAlign = TextAlign.Center,
-                )
-            }
-
-            OutlinedTextField(
-                isError = errorMessage != null,
-                value = emailAddress,
-                onValueChange = { onEmailAddressChange(it) },
-                label = {
-                    Text(
-                        text = stringResource(R.string.email),
-                        style = MaterialTheme.typography.body1
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = MaterialTheme.colors.onPrimary,
-                    cursorColor = MaterialTheme.colors.onPrimary,
-                    trailingIconColor = MaterialTheme.colors.onPrimary,
-                    focusedBorderColor = MaterialTheme.colors.onPrimary,
-                    unfocusedBorderColor = MaterialTheme.colors.onPrimary,
-                    backgroundColor = Color.Transparent,
-                    errorBorderColor = MaterialTheme.colors.error,
-                    errorTrailingIconColor = MaterialTheme.colors.error,
-                    errorLabelColor = MaterialTheme.colors.error,
-                    errorCursorColor = MaterialTheme.colors.error
-                ),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        focusManager.moveFocus(FocusDirection.Down)
-                    }
-                ),
-                trailingIcon = {
-                    IconButton(onClick = { onEmailAddressChange("") }) {
-                        Icon(imageVector = Icons.Default.Clear, "Clear text")
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        bottom = MaterialTheme.space.medium,
-                        start = MaterialTheme.space.large,
-                        end = MaterialTheme.space.large
-                    )
-            )
-
-            OutlinedTextField(
-                isError = errorMessage != null,
-                value = password,
-                onValueChange = { onPasswordChange(it) },
-                label = {
-                    Text(
-                        text = stringResource(R.string.password),
-                        style = MaterialTheme.typography.body1
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = MaterialTheme.colors.onPrimary,
-                    cursorColor = MaterialTheme.colors.onPrimary,
-                    trailingIconColor = MaterialTheme.colors.onPrimary,
-                    focusedBorderColor = MaterialTheme.colors.onPrimary,
-                    unfocusedBorderColor = MaterialTheme.colors.onPrimary,
-                    backgroundColor = Color.Transparent,
-                    errorBorderColor = MaterialTheme.colors.error,
-                    errorTrailingIconColor = MaterialTheme.colors.error,
-                    errorLabelColor = MaterialTheme.colors.error,
-                    errorCursorColor = MaterialTheme.colors.error
-                ),
-                singleLine = true,
-                visualTransformation = if (passwordVisible) {
-                    VisualTransformation.None
-                } else {
-                    PasswordVisualTransformation()
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        onLoginClick()
-                        softwareKeyboardController?.hide()
-                    }
-                ),
-                trailingIcon = {
-                    val image = if (passwordVisible) {
-                        Icons.Default.Visibility
-                    } else {
-                        Icons.Default.VisibilityOff
-                    }
-
-                    val description = if (passwordVisible) "Hide password" else "Show password"
-
-                    IconButton(onClick = onPasswordVisibleClick) {
-                        Icon(imageVector = image, description)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        bottom = MaterialTheme.space.large,
-                        start = MaterialTheme.space.large,
-                        end = MaterialTheme.space.large
-                    )
-            )
-
-            if (errorMessage != null) {
-                Text(
-                    text = errorMessage.asString(),
-                    style = MaterialTheme.typography.body1,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.error,
-                    modifier = Modifier.padding(
-                        bottom = MaterialTheme.space.large,
-                        start = MaterialTheme.space.large,
-                        end = MaterialTheme.space.large
-                    )
-                )
-            }
-
-            if (isAuthorizing) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colors.onPrimary,
-                    modifier = Modifier
-                        .size(52.dp)
-                        .padding(
-                            start = MaterialTheme.space.large,
-                            end = MaterialTheme.space.large
-                        )
-                )
-            } else {
-                ThickWhiteButton(
-                    text = stringResource(R.string.login),
-                    onClick = onLoginClick
-                )
-            }
-
-            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
         }
     }
 }

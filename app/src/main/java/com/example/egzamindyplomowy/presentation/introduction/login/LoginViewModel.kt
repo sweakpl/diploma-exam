@@ -29,6 +29,10 @@ class LoginViewModel(
                 state = state.copy(email = event.email, errorMessage = null)
             is LoginFormEvent.PasswordChanged ->
                 state = state.copy(password = event.password, errorMessage = null)
+            is LoginFormEvent.PasswordVisibilityChanged ->
+                state = state.copy(passwordVisible = !state.passwordVisible)
+            is LoginFormEvent.LoginHelpVisible ->
+                state = state.copy(loginHelpDialogVisible = event.isVisible)
             is LoginFormEvent.Login -> {
                 login()
             }

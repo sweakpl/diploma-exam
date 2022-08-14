@@ -11,6 +11,6 @@
     <string name="invalid_email_error">E-mail jest nieprawdłowy!</string>
     <string name="wrong_credentials_error">Niepoprawny e-mail lub hasło!</string>
     <string name="blank_password_error">Hasło jest puste!</string>
-    <string name="login_help_examiner_message">Do zalogowania się użyj swojego maila w domenie pk.edu.pl. Powinien być on zarejestrowany przez administratora sesji. W razie problemów, skontaktuj się z administratorem.</string>
+    <string name="login_help_examiner_message">Do zalogowania się użyj swojego maila w domenie pk.edu.pl. Powinien być on zarejestrowany przez administratora sesji.W razie problemów, skontaktuj się z administratorem.</string>
     <string name="login_help_student_message">Do zalogowania się użyj swojego maila w domenie student.pk.edu.pl. Powinien być on zarejestrowany przez administratora sesji. W razie problemów, skontaktuj się z egzaminatorem.</string>
 </resources>
