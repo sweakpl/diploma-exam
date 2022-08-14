@@ -18,14 +18,14 @@ import com.example.egzamindyplomowy.presentation.ui.theme.space
 
 @Composable
 fun Dialog(
-    onDismissRequest: () -> Unit,
-    onPositiveClick: () -> Unit,
-    onNegativeClick: (() -> Unit)?,
     title: String,
     message: String,
+    onDismissRequest: () -> Unit,
+    onlyPositiveButton: Boolean = false,
+    onPositiveClick: () -> Unit,
     positiveButtonText: String,
-    negativeButtonText: String?,
-    onlyPositiveButton: Boolean = false
+    onNegativeClick: (() -> Unit)? = null,
+    negativeButtonText: String? = null
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,

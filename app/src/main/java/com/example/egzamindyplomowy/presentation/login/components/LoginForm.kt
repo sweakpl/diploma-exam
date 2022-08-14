@@ -1,25 +1,19 @@
-package com.example.egzamindyplomowy.presentation.introduction.login
+package com.example.egzamindyplomowy.presentation.login.components
 
-import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -31,181 +25,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.egzamindyplomowy.R
-import com.example.egzamindyplomowy.common.LOGIN_MODE_STUDENT
 import com.example.egzamindyplomowy.presentation.UiText
-import com.example.egzamindyplomowy.presentation.WindowInfo
-import com.example.egzamindyplomowy.presentation.components.Dialog
 import com.example.egzamindyplomowy.presentation.components.ThickWhiteButton
-import com.example.egzamindyplomowy.presentation.components.WelcomeLayout
-import com.example.egzamindyplomowy.presentation.rememberWindowInfo
 import com.example.egzamindyplomowy.presentation.ui.theme.space
-import kotlinx.coroutines.flow.collect
-
-@ExperimentalComposeUiApi
-@Composable
-fun LoginScreen(
-    loginMode: String,
-    loginViewModel: LoginViewModel
-) {
-    val context = LocalContext.current
-
-    LaunchedEffect(key1 = context) {
-        loginViewModel.authenticateEvents.collect { event ->
-            when (event) {
-                is LoginViewModel.AuthenticationEvent.Success -> {
-                    Toast.makeText(
-                        context,
-                        "Login successful",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-    }
-
-    val loginFormState = loginViewModel.state
-    val windowInfo = rememberWindowInfo()
-
-    if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
-        CompactLoginScreen {
-            LoginForm(
-                emailAddress = loginFormState.email,
-                onEmailAddressChange = {
-                    loginViewModel.onEvent(LoginFormEvent.EmailChanged(it))
-                },
-                password = loginFormState.password,
-                onPasswordChange = {
-                    loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it))
-                },
-                passwordVisible = loginFormState.passwordVisible,
-                onPasswordVisibleClick = {
-                    loginViewModel.onEvent(LoginFormEvent.PasswordVisibilityChanged)
-                },
-                errorMessage = loginFormState.errorMessage,
-                onLoginClick = {
-                    loginViewModel.onEvent(LoginFormEvent.Login)
-                },
-                isAuthorizing = loginFormState.isAuthorizing,
-                onLoginHelpClick = {
-                    loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(true))
-                }
-            )
-        }
-    } else {
-        MediumOrExpandedLoginScreen {
-            LoginForm(
-                emailAddress = loginFormState.email,
-                onEmailAddressChange = {
-                    loginViewModel.onEvent(LoginFormEvent.EmailChanged(it))
-                },
-                password = loginFormState.password,
-                onPasswordChange = {
-                    loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it))
-                },
-                passwordVisible = loginFormState.passwordVisible,
-                onPasswordVisibleClick = {
-                    loginViewModel.onEvent(LoginFormEvent.PasswordVisibilityChanged)
-                },
-                errorMessage = loginFormState.errorMessage,
-                onLoginClick = {
-                    loginViewModel.onEvent(LoginFormEvent.Login)
-                },
-                isAuthorizing = loginFormState.isAuthorizing,
-                onLoginHelpClick = {
-                    loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(true))
-                }
-            )
-        }
-    }
-
-    if (loginFormState.loginHelpDialogVisible) {
-        Dialog(
-            onDismissRequest = {
-                loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(false))
-            },
-            onPositiveClick = {
-                loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(false))
-            },
-            onNegativeClick = null,
-            title = stringResource(R.string.login),
-            message = stringResource(
-                when (loginMode) {
-                    LOGIN_MODE_STUDENT -> R.string.login_help_student_message
-                    else -> R.string.login_help_examiner_message
-                }
-            ),
-            positiveButtonText = stringResource(android.R.string.ok),
-            negativeButtonText = null,
-            onlyPositiveButton = true
-        )
-    }
-}
-
-@ExperimentalComposeUiApi
-@Composable
-fun CompactLoginScreen(formComponent: @Composable () -> Unit) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        MaterialTheme.colors.primary,
-                        MaterialTheme.colors.primaryVariant
-                    )
-                )
-            )
-            .verticalScroll(rememberScrollState())
-    ) {
-        WelcomeLayout()
-
-        formComponent()
-
-        Spacer(modifier = Modifier.height(MaterialTheme.space.large))
-    }
-}
-
-@ExperimentalComposeUiApi
-@Composable
-fun MediumOrExpandedLoginScreen(formComponent: @Composable () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        MaterialTheme.colors.primary,
-                        MaterialTheme.colors.primaryVariant
-                    )
-                )
-            )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center
-        ) {
-            WelcomeLayout()
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
-
-            formComponent()
-
-            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
-        }
-    }
-}
 
 @ExperimentalComposeUiApi
 @Composable

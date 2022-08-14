@@ -1,4 +1,4 @@
-package com.example.egzamindyplomowy.presentation.introduction.login
+package com.example.egzamindyplomowy.presentation.login
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +25,8 @@ class LoginViewModel(
 
     fun onEvent(event: LoginFormEvent) {
         when (event) {
+            is LoginFormEvent.UserRoleChosen ->
+                state = state.copy(userRole = event.userRole)
             is LoginFormEvent.EmailChanged ->
                 state = state.copy(email = event.email, errorMessage = null)
             is LoginFormEvent.PasswordChanged ->
