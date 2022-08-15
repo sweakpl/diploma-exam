@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.egzamindyplomowy.R
 import com.example.egzamindyplomowy.common.UserRole
 import com.example.egzamindyplomowy.presentation.WindowInfo
@@ -24,12 +25,13 @@ import com.example.egzamindyplomowy.presentation.login.components.LoginForm
 import com.example.egzamindyplomowy.presentation.login.components.UserRoleChoiceButtons
 import com.example.egzamindyplomowy.presentation.rememberWindowInfo
 import com.example.egzamindyplomowy.presentation.ui.theme.space
-import kotlinx.coroutines.flow.collect
 
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel) {
+fun LoginScreen(
+    loginViewModel: LoginViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
 
     LaunchedEffect(key1 = context) {

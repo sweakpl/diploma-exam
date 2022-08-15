@@ -9,13 +9,16 @@ import com.example.egzamindyplomowy.R
 import com.example.egzamindyplomowy.domain.use_case.login.ValidateEmail
 import com.example.egzamindyplomowy.domain.use_case.login.AuthenticateUser
 import com.example.egzamindyplomowy.presentation.UiText
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(
-    private val validateEmail: ValidateEmail = ValidateEmail(),
-    private val authenticateUser: AuthenticateUser = AuthenticateUser()
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val validateEmail: ValidateEmail,
+    private val authenticateUser: AuthenticateUser
 ) : ViewModel() {
 
     var state by mutableStateOf(LoginFormState())

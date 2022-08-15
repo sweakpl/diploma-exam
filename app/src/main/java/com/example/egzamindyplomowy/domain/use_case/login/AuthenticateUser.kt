@@ -3,9 +3,10 @@ package com.example.egzamindyplomowy.domain.use_case.login
 import com.example.egzamindyplomowy.R
 import com.example.egzamindyplomowy.presentation.UiText
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 import kotlin.random.Random
 
-class AuthenticateUser {
+class AuthenticateUser @Inject constructor() {
 
     suspend operator fun invoke(email: String, password: String): AuthenticationResult {
         delay(1000)

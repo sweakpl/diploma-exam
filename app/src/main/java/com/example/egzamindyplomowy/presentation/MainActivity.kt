@@ -11,13 +11,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.egzamindyplomowy.presentation.login.LoginScreen
 import com.example.egzamindyplomowy.presentation.ui.theme.EgzaminDyplomowyTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @ExperimentalAnimationApi
     @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             EgzaminDyplomowyTheme {
                 val navController = rememberNavController()
@@ -27,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = Screen.LoginScreen.route
                 ) {
                     composable(route = Screen.LoginScreen.route) {
-                        LoginScreen(loginViewModel = viewModel())
+                        LoginScreen()
                     }
                 }
             }
