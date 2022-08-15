@@ -1,9 +1,8 @@
 package com.example.egzamindyplomowy.presentation.login
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -27,6 +26,7 @@ import com.example.egzamindyplomowy.presentation.rememberWindowInfo
 import com.example.egzamindyplomowy.presentation.ui.theme.space
 import kotlinx.coroutines.flow.collect
 
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel) {
@@ -51,20 +51,12 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         CompactLoginScreen {
-            Box {
-                AnimatedVisibility(
-                    visible = loginFormState.userRole == null,
-                    exit = fadeOut()
-                ) {
+            AnimatedContent(targetState = loginFormState.userRole) { targetState ->
+                if (targetState == null) {
                     UserRoleChoiceButtons {
                         loginViewModel.onEvent(LoginFormEvent.UserRoleChosen(it))
                     }
-                }
-
-                AnimatedVisibility(
-                    visible = loginFormState.userRole != null,
-                    enter = fadeIn()
-                ) {
+                } else {
                     LoginForm(
                         emailAddress = loginFormState.email,
                         onEmailAddressChange = {
@@ -92,20 +84,12 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
         }
     } else {
         MediumOrExpandedLoginScreen {
-            Box {
-                AnimatedVisibility(
-                    visible = loginFormState.userRole == null,
-                    exit = fadeOut()
-                ) {
+            AnimatedContent(targetState = loginFormState.userRole) { targetState ->
+                if (targetState == null) {
                     UserRoleChoiceButtons {
                         loginViewModel.onEvent(LoginFormEvent.UserRoleChosen(it))
                     }
-                }
-
-                AnimatedVisibility(
-                    visible = loginFormState.userRole != null,
-                    enter = fadeIn()
-                ) {
+                } else {
                     LoginForm(
                         emailAddress = loginFormState.email,
                         onEmailAddressChange = {

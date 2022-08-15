@@ -1,5 +1,8 @@
 package com.example.egzamindyplomowy.presentation.login.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,6 +32,7 @@ import com.example.egzamindyplomowy.presentation.UiText
 import com.example.egzamindyplomowy.presentation.components.ThickWhiteButton
 import com.example.egzamindyplomowy.presentation.ui.theme.space
 
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
 fun LoginForm(
@@ -185,9 +189,9 @@ fun LoginForm(
                 )
         )
 
-        if (errorMessage != null) {
+        AnimatedVisibility(visible = errorMessage != null) {
             Text(
-                text = errorMessage.asString(),
+                text = errorMessage?.asString() ?: "",
                 style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.error,
@@ -199,16 +203,18 @@ fun LoginForm(
             )
         }
 
-        if (isAuthorizing) {
-            CircularProgressIndicator(
-                color = MaterialTheme.colors.onPrimary,
-                modifier = Modifier.size(52.dp)
-            )
-        } else {
-            ThickWhiteButton(
-                text = stringResource(R.string.login),
-                onClick = onLoginClick
-            )
+        AnimatedContent(targetState = isAuthorizing) { targetState ->
+            if (targetState) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.size(52.dp)
+                )
+            } else {
+                ThickWhiteButton(
+                    text = stringResource(R.string.login),
+                    onClick = onLoginClick
+                )
+            }
         }
     }
 }
