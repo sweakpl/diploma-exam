@@ -16,4 +16,6 @@
     <string name="waiting_for_student">Oczekiwanie na dołączenie studenta do sesji…</string>
     <string name="waiting_for_examiner">Oczekiwanie na dołączenie egzaminatora do sesji…</string>
     <string name="logged_in_as">Zalogowano jako %1$s</string>
+    <string name="cant_reach_server">Nie udało się osiągnąć serwera. Sprawdź połączenie internetowe.</string>
+    <string name="unknown_error">Nieznany błąd.</string>
 </resources>

@@ -16,4 +16,6 @@
     <string name="waiting_for_student">Waiting for the student to join the session…</string>
     <string name="waiting_for_examiner">Waiting for the examiner to join the session…</string>
     <string name="logged_in_as">Logged in as %1$s</string>
+    <string name="cant_reach_server">Can\'t reach server. Check your internet connection.</string>
+    <string name="unknown_error">Unknown error.</string>
 </resources>
