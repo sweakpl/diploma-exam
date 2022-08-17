@@ -1,7 +1,7 @@
 package com.example.diplomaexam.presentation.login
 
 import com.example.diplomaexam.common.UserRole
-import com.example.diplomaexam.presentation.UiText
+import com.example.diplomaexam.presentation.ui.util.UiText
 
 data class LoginFormState(
     val userRole: UserRole? = null,

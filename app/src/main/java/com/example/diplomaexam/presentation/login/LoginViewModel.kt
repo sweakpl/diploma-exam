@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.diplomaexam.R
 import com.example.diplomaexam.domain.use_case.login.ValidateEmail
 import com.example.diplomaexam.domain.use_case.login.AuthenticateUser
-import com.example.diplomaexam.presentation.UiText
+import com.example.diplomaexam.presentation.ui.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

@@ -1,7 +1,7 @@
 package com.example.diplomaexam.domain.use_case.login
 
 import com.example.diplomaexam.R
-import com.example.diplomaexam.presentation.UiText
+import com.example.diplomaexam.presentation.ui.util.UiText
 import java.util.regex.Pattern
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.example.diplomaexam.presentation
+package com.example.diplomaexam.presentation.ui.util
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable

@@ -1,4 +1,4 @@
-package com.example.diplomaexam.presentation
+package com.example.diplomaexam.presentation.ui.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration

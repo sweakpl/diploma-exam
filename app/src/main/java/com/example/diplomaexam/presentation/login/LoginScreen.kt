@@ -1,6 +1,5 @@
 package com.example.diplomaexam.presentation.login
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
@@ -16,21 +15,24 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.diplomaexam.R
 import com.example.diplomaexam.common.UserRole
-import com.example.diplomaexam.presentation.WindowInfo
+import com.example.diplomaexam.presentation.Screen
 import com.example.diplomaexam.presentation.components.Dialog
 import com.example.diplomaexam.presentation.components.WelcomeLayout
 import com.example.diplomaexam.presentation.login.components.LoginForm
 import com.example.diplomaexam.presentation.login.components.UserRoleChoiceButtons
-import com.example.diplomaexam.presentation.rememberWindowInfo
 import com.example.diplomaexam.presentation.ui.theme.space
+import com.example.diplomaexam.presentation.ui.util.WindowInfo
+import com.example.diplomaexam.presentation.ui.util.rememberWindowInfo
 
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val context = LocalContext.current
 
@@ -38,11 +40,11 @@ fun LoginScreen(
         loginViewModel.authenticateEvents.collect { event ->
             when (event) {
                 is LoginViewModel.AuthenticationEvent.Success -> {
-                    Toast.makeText(
-                        context,
-                        "Login successful",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    navController.navigate(Screen.LobbyScreen.route) {
+                        popUpTo(Screen.LoginScreen.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }

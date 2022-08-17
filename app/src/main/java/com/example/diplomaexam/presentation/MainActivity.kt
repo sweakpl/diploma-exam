@@ -8,6 +8,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.diplomaexam.presentation.lobby.LobbyScreen
 import com.example.diplomaexam.presentation.login.LoginScreen
 import com.example.diplomaexam.presentation.ui.theme.DiplomaExamTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +30,11 @@ class MainActivity : ComponentActivity() {
                     startDestination = Screen.LoginScreen.route
                 ) {
                     composable(route = Screen.LoginScreen.route) {
-                        LoginScreen()
+                        LoginScreen(navController = navController)
+                    }
+
+                    composable(route = Screen.LobbyScreen.route) {
+                        LobbyScreen()
                     }
                 }
             }
