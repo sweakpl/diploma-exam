@@ -87,6 +87,7 @@ fun LoginForm(
             isError = errorMessage != null,
             value = emailAddress,
             onValueChange = { onEmailAddressChange(it) },
+            enabled = !isAuthorizing,
             label = {
                 Text(
                     text = stringResource(R.string.email),
@@ -116,7 +117,10 @@ fun LoginForm(
                 }
             ),
             trailingIcon = {
-                IconButton(onClick = { onEmailAddressChange("") }) {
+                IconButton(
+                    onClick = { onEmailAddressChange("") },
+                    enabled = !isAuthorizing
+                ) {
                     Icon(imageVector = Icons.Default.Clear, "Clear text")
                 }
             },
@@ -133,6 +137,7 @@ fun LoginForm(
             isError = errorMessage != null,
             value = password,
             onValueChange = { onPasswordChange(it) },
+            enabled = !isAuthorizing,
             label = {
                 Text(
                     text = stringResource(R.string.password),
@@ -176,7 +181,10 @@ fun LoginForm(
 
                 val description = if (passwordVisible) "Hide password" else "Show password"
 
-                IconButton(onClick = onPasswordVisibleClick) {
+                IconButton(
+                    onClick = onPasswordVisibleClick,
+                    enabled = !isAuthorizing
+                ) {
                     Icon(imageVector = image, description)
                 }
             },
