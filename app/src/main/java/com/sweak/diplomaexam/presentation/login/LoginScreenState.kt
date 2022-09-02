@@ -3,7 +3,7 @@ package com.sweak.diplomaexam.presentation.login
 import com.sweak.diplomaexam.common.UserRole
 import com.sweak.diplomaexam.presentation.ui.util.UiText
 
-data class LoginFormState(
+data class LoginScreenState(
     val userRole: UserRole? = null,
     val loginHelpDialogVisible: Boolean = false,
     val email: String = "",

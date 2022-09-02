@@ -18,4 +18,5 @@
     <string name="logged_in_as">Zalogowano jako %1$s</string>
     <string name="cant_reach_server">Nie udało się osiągnąć serwera. Sprawdź połączenie internetowe.</string>
     <string name="unknown_error">Nieznany błąd.</string>
+    <string name="waiting_for_other_user">Oczekiwanie na dołączenie pozostałego użytkownika do sesji…</string>
 </resources>

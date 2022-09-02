@@ -6,7 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.R
+import com.sweak.diplomaexam.common.DUMMY_GLOBAL_USER_EMAIL
+import com.sweak.diplomaexam.common.DUMMY_GLOBAL_USER_ROLE
 import com.sweak.diplomaexam.common.Resource
+import com.sweak.diplomaexam.common.UserRole
 import com.sweak.diplomaexam.domain.use_case.login.AuthenticateUser
 import com.sweak.diplomaexam.domain.use_case.login.ValidateEmail
 import com.sweak.diplomaexam.presentation.ui.util.UiText
@@ -23,24 +26,24 @@ class LoginViewModel @Inject constructor(
     private val authenticateUser: AuthenticateUser
 ) : ViewModel() {
 
-    var state by mutableStateOf(LoginFormState())
+    var state by mutableStateOf(LoginScreenState())
 
     private val authenticateEventChannel = Channel<AuthenticationEvent>()
     val authenticateEvents = authenticateEventChannel.receiveAsFlow()
 
-    fun onEvent(event: LoginFormEvent) {
+    fun onEvent(event: LoginScreenEvent) {
         when (event) {
-            is LoginFormEvent.UserRoleChosen ->
+            is LoginScreenEvent.UserRoleChosen ->
                 state = state.copy(userRole = event.userRole)
-            is LoginFormEvent.EmailChanged ->
+            is LoginScreenEvent.EmailChanged ->
                 state = state.copy(email = event.email, errorMessage = null)
-            is LoginFormEvent.PasswordChanged ->
+            is LoginScreenEvent.PasswordChanged ->
                 state = state.copy(password = event.password, errorMessage = null)
-            is LoginFormEvent.PasswordVisibilityChanged ->
+            is LoginScreenEvent.PasswordVisibilityChanged ->
                 state = state.copy(passwordVisible = !state.passwordVisible)
-            is LoginFormEvent.LoginHelpVisible ->
+            is LoginScreenEvent.LoginHelpVisible ->
                 state = state.copy(loginHelpDialogVisible = event.isVisible)
-            is LoginFormEvent.Login -> {
+            is LoginScreenEvent.Login -> {
                 login()
             }
         }
@@ -69,6 +72,10 @@ class LoginViewModel @Inject constructor(
                     )
 
                     if (it.data?.successful == true) {
+                        // Setting the dummy data to test the app behavior
+                        DUMMY_GLOBAL_USER_ROLE = state.userRole ?: UserRole.USER_STUDENT
+                        DUMMY_GLOBAL_USER_EMAIL = state.email
+
                         authenticateEventChannel.send(AuthenticationEvent.Success)
                     }
                 }

@@ -50,37 +50,37 @@ fun LoginScreen(
         }
     }
 
-    val loginFormState = loginViewModel.state
+    val loginScreenState = loginViewModel.state
     val windowInfo = rememberWindowInfo()
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         CompactLoginScreen {
-            AnimatedContent(targetState = loginFormState.userRole) { targetState ->
+            AnimatedContent(targetState = loginScreenState.userRole) { targetState ->
                 if (targetState == null) {
                     UserRoleChoiceButtons {
-                        loginViewModel.onEvent(LoginFormEvent.UserRoleChosen(it))
+                        loginViewModel.onEvent(LoginScreenEvent.UserRoleChosen(it))
                     }
                 } else {
                     LoginForm(
-                        emailAddress = loginFormState.email,
+                        emailAddress = loginScreenState.email,
                         onEmailAddressChange = {
-                            loginViewModel.onEvent(LoginFormEvent.EmailChanged(it))
+                            loginViewModel.onEvent(LoginScreenEvent.EmailChanged(it))
                         },
-                        password = loginFormState.password,
+                        password = loginScreenState.password,
                         onPasswordChange = {
-                            loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it))
+                            loginViewModel.onEvent(LoginScreenEvent.PasswordChanged(it))
                         },
-                        passwordVisible = loginFormState.passwordVisible,
+                        passwordVisible = loginScreenState.passwordVisible,
                         onPasswordVisibleClick = {
-                            loginViewModel.onEvent(LoginFormEvent.PasswordVisibilityChanged)
+                            loginViewModel.onEvent(LoginScreenEvent.PasswordVisibilityChanged)
                         },
-                        errorMessage = loginFormState.errorMessage,
+                        errorMessage = loginScreenState.errorMessage,
                         onLoginClick = {
-                            loginViewModel.onEvent(LoginFormEvent.Login)
+                            loginViewModel.onEvent(LoginScreenEvent.Login)
                         },
-                        isAuthorizing = loginFormState.isAuthorizing,
+                        isAuthorizing = loginScreenState.isAuthorizing,
                         onLoginHelpClick = {
-                            loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(true))
+                            loginViewModel.onEvent(LoginScreenEvent.LoginHelpVisible(true))
                         }
                     )
                 }
@@ -88,32 +88,32 @@ fun LoginScreen(
         }
     } else {
         MediumOrExpandedLoginScreen {
-            AnimatedContent(targetState = loginFormState.userRole) { targetState ->
+            AnimatedContent(targetState = loginScreenState.userRole) { targetState ->
                 if (targetState == null) {
                     UserRoleChoiceButtons {
-                        loginViewModel.onEvent(LoginFormEvent.UserRoleChosen(it))
+                        loginViewModel.onEvent(LoginScreenEvent.UserRoleChosen(it))
                     }
                 } else {
                     LoginForm(
-                        emailAddress = loginFormState.email,
+                        emailAddress = loginScreenState.email,
                         onEmailAddressChange = {
-                            loginViewModel.onEvent(LoginFormEvent.EmailChanged(it))
+                            loginViewModel.onEvent(LoginScreenEvent.EmailChanged(it))
                         },
-                        password = loginFormState.password,
+                        password = loginScreenState.password,
                         onPasswordChange = {
-                            loginViewModel.onEvent(LoginFormEvent.PasswordChanged(it))
+                            loginViewModel.onEvent(LoginScreenEvent.PasswordChanged(it))
                         },
-                        passwordVisible = loginFormState.passwordVisible,
+                        passwordVisible = loginScreenState.passwordVisible,
                         onPasswordVisibleClick = {
-                            loginViewModel.onEvent(LoginFormEvent.PasswordVisibilityChanged)
+                            loginViewModel.onEvent(LoginScreenEvent.PasswordVisibilityChanged)
                         },
-                        errorMessage = loginFormState.errorMessage,
+                        errorMessage = loginScreenState.errorMessage,
                         onLoginClick = {
-                            loginViewModel.onEvent(LoginFormEvent.Login)
+                            loginViewModel.onEvent(LoginScreenEvent.Login)
                         },
-                        isAuthorizing = loginFormState.isAuthorizing,
+                        isAuthorizing = loginScreenState.isAuthorizing,
                         onLoginHelpClick = {
-                            loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(true))
+                            loginViewModel.onEvent(LoginScreenEvent.LoginHelpVisible(true))
                         }
                     )
                 }
@@ -121,21 +121,21 @@ fun LoginScreen(
         }
     }
 
-    if (loginFormState.loginHelpDialogVisible) {
+    if (loginScreenState.loginHelpDialogVisible) {
         Dialog(
             title = stringResource(R.string.login),
             message = stringResource(
-                when (loginFormState.userRole) {
+                when (loginScreenState.userRole) {
                     UserRole.USER_STUDENT -> R.string.login_help_student_message
                     else -> R.string.login_help_examiner_message
                 }
             ),
             onDismissRequest = {
-                loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(false))
+                loginViewModel.onEvent(LoginScreenEvent.LoginHelpVisible(false))
             },
             onlyPositiveButton = true,
             onPositiveClick = {
-                loginViewModel.onEvent(LoginFormEvent.LoginHelpVisible(false))
+                loginViewModel.onEvent(LoginScreenEvent.LoginHelpVisible(false))
             },
             positiveButtonText = stringResource(android.R.string.ok)
         )

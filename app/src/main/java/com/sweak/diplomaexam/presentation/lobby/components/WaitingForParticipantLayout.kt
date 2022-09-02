@@ -11,10 +11,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sweak.diplomaexam.R
+import com.sweak.diplomaexam.common.UserRole
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
-fun WaitingForParticipantLayout(participant: Participant) {
+fun WaitingForParticipantLayout(userRole: UserRole?) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -28,9 +29,10 @@ fun WaitingForParticipantLayout(participant: Participant) {
     ) {
         Text(
             text = stringResource(
-                when (participant) {
-                    Participant.STUDENT -> R.string.waiting_for_student
-                    Participant.EXAMINER -> R.string.waiting_for_examiner
+                when (userRole) {
+                    UserRole.USER_EXAMINER -> R.string.waiting_for_student
+                    UserRole.USER_STUDENT -> R.string.waiting_for_examiner
+                    null -> R.string.waiting_for_other_user
                 }
             ),
             style = MaterialTheme.typography.h2,
@@ -48,8 +50,4 @@ fun WaitingForParticipantLayout(participant: Participant) {
             modifier = Modifier.size(96.dp)
         )
     }
-}
-
-enum class Participant {
-    STUDENT, EXAMINER
 }

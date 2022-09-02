@@ -8,27 +8,37 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.presentation.components.WelcomeLayout
 import com.sweak.diplomaexam.presentation.lobby.components.LoggedInAsLayout
-import com.sweak.diplomaexam.presentation.lobby.components.Participant
 import com.sweak.diplomaexam.presentation.lobby.components.WaitingForParticipantLayout
 import com.sweak.diplomaexam.presentation.ui.theme.space
 import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
 import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 
 @Composable
-fun LobbyScreen() {
+fun LobbyScreen(
+    lobbyViewModel: LobbyViewModel = hiltViewModel()
+) {
+    val lobbyScreenState = lobbyViewModel.state
     val windowInfo = rememberWindowInfo()
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
-        CompactLobbyScreen()
+        CompactLobbyScreen(
+            user = lobbyScreenState.user
+        )
     } else {
-        MediumOrExpandedLobbyScreen()
+        MediumOrExpandedLobbyScreen(
+            user = lobbyScreenState.user
+        )
     }
 }
 
 @Composable
-fun CompactLobbyScreen() {
+fun CompactLobbyScreen(
+    user: User?
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,9 +59,9 @@ fun CompactLobbyScreen() {
         ) {
             WelcomeLayout()
 
-            WaitingForParticipantLayout(participant = Participant.STUDENT)
+            WaitingForParticipantLayout(userRole = user?.role)
 
-            LoggedInAsLayout(userEmail = "adam.nowak@pk.edu.pl")
+            LoggedInAsLayout(userEmail = user?.email)
 
             Spacer(modifier = Modifier.height(MaterialTheme.space.large))
         }
@@ -59,7 +69,9 @@ fun CompactLobbyScreen() {
 }
 
 @Composable
-fun MediumOrExpandedLobbyScreen() {
+fun MediumOrExpandedLobbyScreen(
+    user: User?
+) {
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -91,9 +103,9 @@ fun MediumOrExpandedLobbyScreen() {
         ) {
             Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
 
-            WaitingForParticipantLayout(participant = Participant.EXAMINER)
+            WaitingForParticipantLayout(userRole = user?.role)
 
-            LoggedInAsLayout(userEmail = "adam.nowak@pk.edu.pl")
+            LoggedInAsLayout(userEmail = user?.email)
 
             Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
         }

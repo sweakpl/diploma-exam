@@ -1,5 +1,6 @@
 package com.sweak.diplomaexam.presentation.lobby.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -14,27 +15,31 @@ import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
-fun LoggedInAsLayout(userEmail: String) {
-    Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.Top,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = MaterialTheme.space.large)
+fun LoggedInAsLayout(userEmail: String?) {
+    AnimatedVisibility(
+        visible = userEmail != null
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_account_circle),
-            contentDescription = "Logged in account icon",
-            tint = MaterialTheme.colors.onPrimary,
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.Top,
             modifier = Modifier
-                .size(MaterialTheme.space.medium)
-                .padding(end = MaterialTheme.space.extraSmall)
-        )
+                .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.space.large)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_account_circle),
+                contentDescription = "Logged in account icon",
+                tint = MaterialTheme.colors.onPrimary,
+                modifier = Modifier
+                    .size(MaterialTheme.space.medium)
+                    .padding(end = MaterialTheme.space.extraSmall)
+            )
 
-        Text(
-            text = stringResource(R.string.logged_in_as, userEmail),
-            style = MaterialTheme.typography.body1,
-            textAlign = TextAlign.Start,
-        )
+            Text(
+                text = stringResource(R.string.logged_in_as, userEmail ?: ""),
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.Start,
+            )
+        }
     }
 }
