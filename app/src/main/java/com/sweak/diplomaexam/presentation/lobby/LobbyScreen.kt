@@ -1,5 +1,6 @@
 package com.sweak.diplomaexam.presentation.lobby
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,6 +18,7 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
 import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 
+@ExperimentalAnimationApi
 @Composable
 fun LobbyScreen(
     lobbyViewModel: LobbyViewModel = hiltViewModel()
@@ -26,18 +28,22 @@ fun LobbyScreen(
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         CompactLobbyScreen(
-            user = lobbyScreenState.user
+            user = lobbyScreenState.user,
+            hasOtherUserJoined = lobbyScreenState.hasOtherUserJoined
         )
     } else {
         MediumOrExpandedLobbyScreen(
-            user = lobbyScreenState.user
+            user = lobbyScreenState.user,
+            hasOtherUserJoined = lobbyScreenState.hasOtherUserJoined
         )
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun CompactLobbyScreen(
-    user: User?
+    user: User?,
+    hasOtherUserJoined: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -59,7 +65,10 @@ fun CompactLobbyScreen(
         ) {
             WelcomeLayout()
 
-            WaitingForParticipantLayout(userRole = user?.role)
+            WaitingForParticipantLayout(
+                userRole = user?.role,
+                hasOtherUserJoined = hasOtherUserJoined
+            )
 
             LoggedInAsLayout(userEmail = user?.email)
 
@@ -68,9 +77,11 @@ fun CompactLobbyScreen(
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun MediumOrExpandedLobbyScreen(
-    user: User?
+    user: User?,
+    hasOtherUserJoined: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -103,7 +114,10 @@ fun MediumOrExpandedLobbyScreen(
         ) {
             Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
 
-            WaitingForParticipantLayout(userRole = user?.role)
+            WaitingForParticipantLayout(
+                userRole = user?.role,
+                hasOtherUserJoined = hasOtherUserJoined
+            )
 
             LoggedInAsLayout(userEmail = user?.email)
 

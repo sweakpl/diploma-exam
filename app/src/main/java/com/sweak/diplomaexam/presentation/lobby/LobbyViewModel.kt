@@ -6,7 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.common.Resource
-import com.sweak.diplomaexam.domain.use_case.lobby.GetCurrentUser
+import com.sweak.diplomaexam.domain.use_case.common.GetCurrentUser
+import com.sweak.diplomaexam.domain.use_case.lobby.HasOtherUserJoinedTheLobby
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LobbyViewModel @Inject constructor(
-    getCurrentUser: GetCurrentUser
+    getCurrentUser: GetCurrentUser,
+    hasOtherUserJoinedTheLobby: HasOtherUserJoinedTheLobby
 ) : ViewModel() {
 
     var state by mutableStateOf(LobbyScreenState())
@@ -27,6 +29,15 @@ class LobbyViewModel @Inject constructor(
                 }
                 else -> { /* no-op */ }
             }
-        }.launchIn(viewModelScope)
+        }.launchIn(viewModelScope).invokeOnCompletion {
+            hasOtherUserJoinedTheLobby().onEach {
+                when (it) {
+                    is Resource.Success -> {
+                        state = state.copy(hasOtherUserJoined = it.data ?: false)
+                    }
+                    else -> { /* no-op */ }
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 }

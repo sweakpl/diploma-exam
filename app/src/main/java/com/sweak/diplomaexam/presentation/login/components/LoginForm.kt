@@ -219,6 +219,7 @@ fun LoginForm(
                 )
             } else {
                 ThickWhiteButton(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.space.large),
                     text = stringResource(R.string.login),
                     onClick = onLoginClick
                 )

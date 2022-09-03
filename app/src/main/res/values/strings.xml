@@ -18,5 +18,8 @@
     <string name="logged_in_as">Logged in as %1$s</string>
     <string name="cant_reach_server">Can\'t reach server. Check your internet connection.</string>
     <string name="unknown_error">Unknown error.</string>
-    <string name="waiting_for_other_user">Waiting for the other user to join the session…</string>
+    <string name="start_exam">Start the exam</string>
+    <string name="student_joined_session">The student joined the session…</string>
+    <string name="waiting_for_examiner_to_start_session">Waiting for the examiner to start the session…</string>
+    <string name="waiting">Waiting…</string>
 </resources>

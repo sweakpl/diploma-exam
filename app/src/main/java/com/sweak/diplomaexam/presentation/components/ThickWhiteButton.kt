@@ -14,6 +14,7 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
 fun ThickWhiteButton(
+    modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit
 ) {
@@ -23,13 +24,9 @@ fun ThickWhiteButton(
             backgroundColor = MaterialTheme.colors.surface
         ),
         elevation = ButtonDefaults.elevation(defaultElevation = MaterialTheme.space.extraSmall),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(52.dp)
-            .padding(
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
     ) {
         Text(
             text = text,

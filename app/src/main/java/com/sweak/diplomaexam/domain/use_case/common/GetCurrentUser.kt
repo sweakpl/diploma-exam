@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.domain.use_case.lobby
+package com.sweak.diplomaexam.domain.use_case.common
 
 import com.sweak.diplomaexam.common.DUMMY_GLOBAL_USER_EMAIL
 import com.sweak.diplomaexam.common.DUMMY_GLOBAL_USER_ROLE

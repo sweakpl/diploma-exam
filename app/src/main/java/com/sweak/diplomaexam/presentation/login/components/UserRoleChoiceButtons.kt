@@ -31,6 +31,7 @@ fun UserRoleChoiceButtons(onUserRoleChosen: (UserRole) -> Unit) {
         )
 
         ThickWhiteButton(
+            modifier = Modifier.padding(horizontal = MaterialTheme.space.large),
             text = stringResource(R.string.student_instrumental),
             onClick = { onUserRoleChosen(UserRole.USER_STUDENT) }
         )
@@ -38,6 +39,7 @@ fun UserRoleChoiceButtons(onUserRoleChosen: (UserRole) -> Unit) {
         Spacer(modifier = Modifier.height(MaterialTheme.space.large))
 
         ThickWhiteButton(
+            modifier = Modifier.padding(horizontal = MaterialTheme.space.large),
             text = stringResource(R.string.examiner_instrumental),
             onClick = { onUserRoleChosen(UserRole.USER_EXAMINER) }
         )
