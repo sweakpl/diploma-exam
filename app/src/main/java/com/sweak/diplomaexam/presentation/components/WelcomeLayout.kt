@@ -15,11 +15,11 @@ import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
-fun WelcomeLayout() {
+fun WelcomeLayout(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
@@ -32,22 +32,13 @@ fun WelcomeLayout() {
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.h1,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(
-                bottom = MaterialTheme.space.extraLarge,
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
+            modifier = Modifier.padding(bottom = MaterialTheme.space.extraLarge)
         )
 
         Text(
             text = stringResource(R.string.welcome_to_exam),
             style = MaterialTheme.typography.h2,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(
-                bottom = MaterialTheme.space.medium,
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
+            textAlign = TextAlign.Center
         )
     }
 }

@@ -45,23 +45,21 @@ fun LoginForm(
     errorMessage: UiText?,
     onLoginClick: () -> Unit,
     isAuthorizing: Boolean,
-    onLoginHelpClick: () -> Unit
+    onLoginHelpClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(
-                bottom = MaterialTheme.space.large,
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
+            modifier = Modifier.padding(bottom = MaterialTheme.space.large)
         ) {
             IconButton(
                 onClick = onLoginHelpClick,
@@ -126,11 +124,7 @@ fun LoginForm(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    bottom = MaterialTheme.space.medium,
-                    start = MaterialTheme.space.large,
-                    end = MaterialTheme.space.large
-                )
+                .padding(bottom = MaterialTheme.space.medium)
         )
 
         OutlinedTextField(
@@ -190,11 +184,7 @@ fun LoginForm(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    bottom = MaterialTheme.space.large,
-                    start = MaterialTheme.space.large,
-                    end = MaterialTheme.space.large
-                )
+                .padding(bottom = MaterialTheme.space.large)
         )
 
         AnimatedVisibility(visible = errorMessage != null) {
@@ -203,11 +193,7 @@ fun LoginForm(
                 style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.error,
-                modifier = Modifier.padding(
-                    bottom = MaterialTheme.space.large,
-                    start = MaterialTheme.space.large,
-                    end = MaterialTheme.space.large
-                )
+                modifier = Modifier.padding(bottom = MaterialTheme.space.large)
             )
         }
 
@@ -219,7 +205,6 @@ fun LoginForm(
                 )
             } else {
                 ThickWhiteButton(
-                    modifier = Modifier.padding(horizontal = MaterialTheme.space.large),
                     text = stringResource(R.string.login),
                     onClick = onLoginClick
                 )

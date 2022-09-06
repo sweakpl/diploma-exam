@@ -15,16 +15,17 @@ import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
-fun LoggedInAsLayout(userEmail: String?) {
+fun LoggedInAsLayout(
+    userEmail: String?,
+    modifier: Modifier = Modifier
+) {
     AnimatedVisibility(
-        visible = userEmail != null
+        visible = userEmail != null,
+        modifier = modifier
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.space.large)
+            verticalAlignment = Alignment.Top
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_account_circle),

@@ -55,11 +55,20 @@ fun LoginScreen(
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         CompactLoginScreen {
-            AnimatedContent(targetState = loginScreenState.userRole) { targetState ->
+            AnimatedContent(
+                targetState = loginScreenState.userRole,
+                modifier = Modifier.padding(
+                    start = MaterialTheme.space.large,
+                    end = MaterialTheme.space.large,
+                    bottom = MaterialTheme.space.large
+                )
+            ) { targetState ->
                 if (targetState == null) {
-                    UserRoleChoiceButtons {
-                        loginViewModel.onEvent(LoginScreenEvent.UserRoleChosen(it))
-                    }
+                    UserRoleChoiceButtons(
+                        onUserRoleChosen = {
+                            loginViewModel.onEvent(LoginScreenEvent.UserRoleChosen(it))
+                        }
+                    )
                 } else {
                     LoginForm(
                         emailAddress = loginScreenState.email,
@@ -88,11 +97,19 @@ fun LoginScreen(
         }
     } else {
         MediumOrExpandedLoginScreen {
-            AnimatedContent(targetState = loginScreenState.userRole) { targetState ->
+            AnimatedContent(
+                targetState = loginScreenState.userRole,
+                modifier = Modifier.padding(
+                    horizontal = MaterialTheme.space.large,
+                    vertical = MaterialTheme.space.medium
+                )
+            ) { targetState ->
                 if (targetState == null) {
-                    UserRoleChoiceButtons {
-                        loginViewModel.onEvent(LoginScreenEvent.UserRoleChosen(it))
-                    }
+                    UserRoleChoiceButtons(
+                        onUserRoleChosen = {
+                            loginViewModel.onEvent(LoginScreenEvent.UserRoleChosen(it))
+                        }
+                    )
                 } else {
                     LoginForm(
                         emailAddress = loginScreenState.email,
@@ -159,11 +176,17 @@ fun CompactLoginScreen(formComponent: @Composable () -> Unit) {
             )
             .verticalScroll(rememberScrollState())
     ) {
-        WelcomeLayout()
+        WelcomeLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = MaterialTheme.space.large,
+                    end = MaterialTheme.space.large,
+                    bottom = MaterialTheme.space.medium
+                )
+        )
 
         formComponent()
-
-        Spacer(modifier = Modifier.height(MaterialTheme.space.large))
     }
 }
 
@@ -189,7 +212,15 @@ fun MediumOrExpandedLoginScreen(formComponent: @Composable () -> Unit) {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center
         ) {
-            WelcomeLayout()
+            WelcomeLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = MaterialTheme.space.large,
+                        end = MaterialTheme.space.large,
+                        bottom = MaterialTheme.space.medium
+                    )
+            )
         }
 
         Column(
@@ -199,11 +230,7 @@ fun MediumOrExpandedLoginScreen(formComponent: @Composable () -> Unit) {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
-
             formComponent()
-
-            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
         }
     }
 }

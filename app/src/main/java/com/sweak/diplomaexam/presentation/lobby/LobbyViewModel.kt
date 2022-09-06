@@ -40,7 +40,6 @@ class LobbyViewModel @Inject constructor(
                                 hasOtherUserJoinedTheLobby = it.data.hasOtherUserJoinedTheLobby
                             )
                         }
-
                     }
                 }
                 else -> { /* no-op */ }

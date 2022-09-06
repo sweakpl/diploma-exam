@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.common.UserRole
+import com.sweak.diplomaexam.presentation.components.LoadingLayout
 import com.sweak.diplomaexam.presentation.components.ThickWhiteButton
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
@@ -22,66 +23,64 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 fun WaitingForParticipantLayout(
     userRole: UserRole?,
     hasOtherUserJoined: Boolean,
-    startExamSession: () -> Unit
+    startExamSession: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var hasStartExamButtonBeenClicked by remember { mutableStateOf(false) }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                bottom = MaterialTheme.space.large,
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
-    ) {
-        Text(
-            text = stringResource(
-                if (!hasOtherUserJoined) {
-                    when (userRole) {
-                        UserRole.USER_EXAMINER -> R.string.waiting_for_student
-                        UserRole.USER_STUDENT -> R.string.waiting_for_examiner
-                        null -> R.string.waiting
-                    }
-                } else {
-                    when (userRole) {
-                        UserRole.USER_EXAMINER -> R.string.student_joined_session
-                        UserRole.USER_STUDENT -> R.string.waiting_for_examiner_to_start_session
-                        else -> R.string.waiting
+    AnimatedContent(
+        targetState = userRole != null,
+        modifier = modifier
+    ) { targetState ->
+        if (targetState) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(
+                        if (!hasOtherUserJoined) {
+                            when (userRole) {
+                                UserRole.USER_EXAMINER -> R.string.waiting_for_student
+                                UserRole.USER_STUDENT -> R.string.waiting_for_examiner
+                                null -> R.string.waiting
+                            }
+                        } else {
+                            when (userRole) {
+                                UserRole.USER_EXAMINER -> R.string.student_joined_session
+                                UserRole.USER_STUDENT -> R.string.waiting_for_examiner_to_start_session
+                                else -> R.string.waiting
+                            }
+                        }
+                    ),
+                    style = MaterialTheme.typography.h2,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = MaterialTheme.space.large)
+                )
+
+                AnimatedContent(
+                    targetState = userRole == UserRole.USER_EXAMINER &&
+                            hasOtherUserJoined &&
+                            !hasStartExamButtonBeenClicked
+                ) { state ->
+                    if (state) {
+                        ThickWhiteButton(
+                            text = stringResource(R.string.start_exam),
+                            onClick = {
+                                startExamSession()
+                                hasStartExamButtonBeenClicked = true
+                            }
+                        )
+                    } else {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colors.onPrimary,
+                            modifier = Modifier.size(96.dp)
+                        )
                     }
                 }
-            ),
-            style = MaterialTheme.typography.h2,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(
-                top = MaterialTheme.space.medium,
-                bottom = MaterialTheme.space.large,
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
-        )
-
-        AnimatedContent(
-            targetState = userRole == UserRole.USER_EXAMINER &&
-                    hasOtherUserJoined &&
-                    !hasStartExamButtonBeenClicked
-        ) { targetState ->
-            if (targetState) {
-                ThickWhiteButton(
-                    text = stringResource(R.string.start_exam),
-                    onClick = {
-                        startExamSession()
-                        hasStartExamButtonBeenClicked = true
-                    }
-                )
-            } else {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colors.onPrimary,
-                    modifier = Modifier.size(96.dp)
-                )
             }
+        } else {
+            LoadingLayout()
         }
     }
 }

@@ -14,9 +14,9 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
 fun ThickWhiteButton(
-    modifier: Modifier = Modifier,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,

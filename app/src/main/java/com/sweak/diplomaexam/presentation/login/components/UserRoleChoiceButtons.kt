@@ -14,32 +14,30 @@ import com.sweak.diplomaexam.presentation.components.ThickWhiteButton
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
-fun UserRoleChoiceButtons(onUserRoleChosen: (UserRole) -> Unit) {
+fun UserRoleChoiceButtons(
+    onUserRoleChosen: (UserRole) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
     ) {
         Text(
             text = stringResource(R.string.tell_me_who_you_are),
             style = MaterialTheme.typography.h2,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(
-                bottom = MaterialTheme.space.large,
-                start = MaterialTheme.space.large,
-                end = MaterialTheme.space.large
-            )
+            modifier = Modifier.padding(bottom = MaterialTheme.space.large)
         )
 
         ThickWhiteButton(
-            modifier = Modifier.padding(horizontal = MaterialTheme.space.large),
             text = stringResource(R.string.student_instrumental),
-            onClick = { onUserRoleChosen(UserRole.USER_STUDENT) }
+            onClick = { onUserRoleChosen(UserRole.USER_STUDENT) },
+            modifier = Modifier.padding(bottom = MaterialTheme.space.large)
         )
 
-        Spacer(modifier = Modifier.height(MaterialTheme.space.large))
 
         ThickWhiteButton(
-            modifier = Modifier.padding(horizontal = MaterialTheme.space.large),
             text = stringResource(R.string.examiner_instrumental),
             onClick = { onUserRoleChosen(UserRole.USER_EXAMINER) }
         )

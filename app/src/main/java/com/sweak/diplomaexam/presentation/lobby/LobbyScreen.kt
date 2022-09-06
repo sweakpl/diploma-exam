@@ -82,17 +82,40 @@ fun CompactLobbyScreen(
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState())
         ) {
-            WelcomeLayout()
+            WelcomeLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = MaterialTheme.space.large,
+                        end = MaterialTheme.space.large,
+                        bottom = MaterialTheme.space.medium
+                    )
+            )
 
             WaitingForParticipantLayout(
                 userRole = user?.role,
                 hasOtherUserJoined = hasOtherUserJoined,
-                startExamSession = startExamSession
+                startExamSession = startExamSession,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = MaterialTheme.space.medium,
+                        start = MaterialTheme.space.large,
+                        end = MaterialTheme.space.large,
+                        bottom = MaterialTheme.space.large
+                    )
             )
 
-            LoggedInAsLayout(userEmail = user?.email)
-
-            Spacer(modifier = Modifier.height(MaterialTheme.space.large))
+            LoggedInAsLayout(
+                userEmail = user?.email,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = MaterialTheme.space.large,
+                        end = MaterialTheme.space.large,
+                        bottom = MaterialTheme.space.large,
+                    )
+            )
         }
     }
 }
@@ -123,7 +146,15 @@ fun MediumOrExpandedLobbyScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center
         ) {
-            WelcomeLayout()
+            WelcomeLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = MaterialTheme.space.large,
+                        end = MaterialTheme.space.large,
+                        bottom = MaterialTheme.space.medium
+                    )
+            )
         }
 
         Column(
@@ -133,17 +164,30 @@ fun MediumOrExpandedLobbyScreen(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
-            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
-
             WaitingForParticipantLayout(
                 userRole = user?.role,
                 hasOtherUserJoined = hasOtherUserJoined,
-                startExamSession = startExamSession
+                startExamSession = startExamSession,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = MaterialTheme.space.medium,
+                        start = MaterialTheme.space.large,
+                        end = MaterialTheme.space.large,
+                        bottom = MaterialTheme.space.large
+                    )
             )
 
-            LoggedInAsLayout(userEmail = user?.email)
-
-            Spacer(modifier = Modifier.height(MaterialTheme.space.medium))
+            LoggedInAsLayout(
+                userEmail = user?.email,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = MaterialTheme.space.large,
+                        end = MaterialTheme.space.large,
+                        bottom = MaterialTheme.space.medium,
+                    )
+            )
         }
     }
 }
