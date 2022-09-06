@@ -7,9 +7,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.presentation.components.WelcomeLayout
 import com.sweak.diplomaexam.presentation.lobby.components.LoggedInAsLayout
@@ -21,20 +24,35 @@ import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 @ExperimentalAnimationApi
 @Composable
 fun LobbyScreen(
-    lobbyViewModel: LobbyViewModel = hiltViewModel()
+    lobbyViewModel: LobbyViewModel = hiltViewModel(),
+    navController: NavController
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = context) {
+        lobbyViewModel.sessionStartEvents.collect { event ->
+            when (event) {
+                is LobbyViewModel.SessionStartEvent.Success -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
+
     val lobbyScreenState = lobbyViewModel.state
     val windowInfo = rememberWindowInfo()
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         CompactLobbyScreen(
             user = lobbyScreenState.user,
-            hasOtherUserJoined = lobbyScreenState.hasOtherUserJoined
+            hasOtherUserJoined = lobbyScreenState.hasOtherUserJoinedTheLobby,
+            startExamSession = { lobbyViewModel.startSession() }
         )
     } else {
         MediumOrExpandedLobbyScreen(
             user = lobbyScreenState.user,
-            hasOtherUserJoined = lobbyScreenState.hasOtherUserJoined
+            hasOtherUserJoined = lobbyScreenState.hasOtherUserJoinedTheLobby,
+            startExamSession = { lobbyViewModel.startSession() }
         )
     }
 }
@@ -43,7 +61,8 @@ fun LobbyScreen(
 @Composable
 fun CompactLobbyScreen(
     user: User?,
-    hasOtherUserJoined: Boolean
+    hasOtherUserJoined: Boolean,
+    startExamSession: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -67,7 +86,8 @@ fun CompactLobbyScreen(
 
             WaitingForParticipantLayout(
                 userRole = user?.role,
-                hasOtherUserJoined = hasOtherUserJoined
+                hasOtherUserJoined = hasOtherUserJoined,
+                startExamSession = startExamSession
             )
 
             LoggedInAsLayout(userEmail = user?.email)
@@ -81,7 +101,8 @@ fun CompactLobbyScreen(
 @Composable
 fun MediumOrExpandedLobbyScreen(
     user: User?,
-    hasOtherUserJoined: Boolean
+    hasOtherUserJoined: Boolean,
+    startExamSession: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -116,7 +137,8 @@ fun MediumOrExpandedLobbyScreen(
 
             WaitingForParticipantLayout(
                 userRole = user?.role,
-                hasOtherUserJoined = hasOtherUserJoined
+                hasOtherUserJoined = hasOtherUserJoined,
+                startExamSession = startExamSession
             )
 
             LoggedInAsLayout(userEmail = user?.email)

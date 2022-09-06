@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,8 +21,11 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 @Composable
 fun WaitingForParticipantLayout(
     userRole: UserRole?,
-    hasOtherUserJoined: Boolean
+    hasOtherUserJoined: Boolean,
+    startExamSession: () -> Unit
 ) {
+    var hasStartExamButtonBeenClicked by remember { mutableStateOf(false) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -61,12 +64,17 @@ fun WaitingForParticipantLayout(
         )
 
         AnimatedContent(
-            targetState = userRole == UserRole.USER_EXAMINER && hasOtherUserJoined
+            targetState = userRole == UserRole.USER_EXAMINER &&
+                    hasOtherUserJoined &&
+                    !hasStartExamButtonBeenClicked
         ) { targetState ->
             if (targetState) {
                 ThickWhiteButton(
                     text = stringResource(R.string.start_exam),
-                    onClick = {}
+                    onClick = {
+                        startExamSession()
+                        hasStartExamButtonBeenClicked = true
+                    }
                 )
             } else {
                 CircularProgressIndicator(

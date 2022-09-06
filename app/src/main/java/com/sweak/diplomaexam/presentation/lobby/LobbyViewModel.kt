@@ -6,38 +6,51 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.common.Resource
-import com.sweak.diplomaexam.domain.use_case.common.GetCurrentUser
-import com.sweak.diplomaexam.domain.use_case.lobby.HasOtherUserJoinedTheLobby
+import com.sweak.diplomaexam.domain.use_case.lobby.GetLobbyState
+import com.sweak.diplomaexam.domain.use_case.lobby.StartExamSession
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LobbyViewModel @Inject constructor(
-    getCurrentUser: GetCurrentUser,
-    hasOtherUserJoinedTheLobby: HasOtherUserJoinedTheLobby
+    getLobbyState: GetLobbyState,
+    private val startExamSession: StartExamSession
 ) : ViewModel() {
 
     var state by mutableStateOf(LobbyScreenState())
 
+    private val sessionStartEventChannel = Channel<SessionStartEvent>()
+    val sessionStartEvents = sessionStartEventChannel.receiveAsFlow()
+
     init {
-        getCurrentUser().onEach {
+        getLobbyState().onEach {
             when (it) {
                 is Resource.Success -> {
-                    state = state.copy(user = it.data)
+                    if (it.data != null) {
+                        if (it.data.hasTheSessionBeenStarted) {
+                            sessionStartEventChannel.send(SessionStartEvent.Success)
+                        } else {
+                            state = state.copy(
+                                user = it.data.currentUser,
+                                hasOtherUserJoinedTheLobby = it.data.hasOtherUserJoinedTheLobby
+                            )
+                        }
+
+                    }
                 }
                 else -> { /* no-op */ }
             }
-        }.launchIn(viewModelScope).invokeOnCompletion {
-            hasOtherUserJoinedTheLobby().onEach {
-                when (it) {
-                    is Resource.Success -> {
-                        state = state.copy(hasOtherUserJoined = it.data ?: false)
-                    }
-                    else -> { /* no-op */ }
-                }
-            }.launchIn(viewModelScope)
-        }
+        }.launchIn(viewModelScope)
+    }
+
+    fun startSession() = viewModelScope.launch { startExamSession() }
+
+    sealed class SessionStartEvent {
+        object Success : SessionStartEvent()
     }
 }

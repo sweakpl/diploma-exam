@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(route = Screen.LobbyScreen.route) {
-                        LobbyScreen()
+                        LobbyScreen(navController = navController)
                     }
                 }
             }
