@@ -23,4 +23,8 @@
     <string name="waiting_for_examiner_to_start_session">Oczekiwanie na rozpoczęcie sesji przez egzaminatora…</string>
     <string name="waiting">Oczekiwanie…</string>
     <string name="loading">Ładowanie…</string>
+    <string name="drawing_questions">Losowanie pytań</string>
+    <string name="please_draw_questions">Witaj studencie! Aby przejść dalej, wylosuj swoje pytania:</string>
+    <string name="draw">Losuj</string>
+    <string name="student_is_drawing">Student losuje pytania…</string>
 </resources>

@@ -1,3 +1,9 @@
+@file:Suppress("FunctionName", "FunctionName", "FunctionName", "FunctionName", "FunctionName",
+    "FunctionName", "FunctionName", "FunctionName", "FunctionName", "FunctionName", "FunctionName",
+    "FunctionName", "FunctionName", "FunctionName", "FunctionName", "FunctionName", "FunctionName",
+    "FunctionName", "FunctionName", "FunctionName"
+)
+
 package com.sweak.diplomaexam.presentation.components
 
 import androidx.compose.foundation.background

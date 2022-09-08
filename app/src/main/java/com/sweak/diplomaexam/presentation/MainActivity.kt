@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sweak.diplomaexam.presentation.lobby.LobbyScreen
 import com.sweak.diplomaexam.presentation.login.LoginScreen
+import com.sweak.diplomaexam.presentation.questions_draw.QuestionsDrawScreen
 import com.sweak.diplomaexam.presentation.ui.theme.DiplomaExamTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,6 +36,10 @@ class MainActivity : ComponentActivity() {
 
                     composable(route = Screen.LobbyScreen.route) {
                         LobbyScreen(navController = navController)
+                    }
+
+                    composable(route = Screen.QuestionsDrawScreen.route) {
+                        QuestionsDrawScreen()
                     }
                 }
             }

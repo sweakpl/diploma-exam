@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.components.WelcomeLayout
 import com.sweak.diplomaexam.presentation.lobby.components.LoggedInAsLayout
 import com.sweak.diplomaexam.presentation.lobby.components.WaitingForParticipantLayout
@@ -33,7 +34,11 @@ fun LobbyScreen(
         lobbyViewModel.sessionStartEvents.collect { event ->
             when (event) {
                 is LobbyViewModel.SessionStartEvent.Success -> {
-                    navController.popBackStack()
+                    navController.navigate(Screen.QuestionsDrawScreen.route) {
+                        popUpTo(Screen.LobbyScreen.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }

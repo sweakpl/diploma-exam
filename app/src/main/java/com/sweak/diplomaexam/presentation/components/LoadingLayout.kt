@@ -17,14 +17,17 @@ import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
-fun LoadingLayout(modifier: Modifier = Modifier) {
+fun LoadingLayout(
+    modifier: Modifier = Modifier,
+    text: String = stringResource(R.string.loading)
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         Text(
-            text = stringResource(R.string.loading),
+            text = text,
             style = MaterialTheme.typography.h2,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = MaterialTheme.space.large)
