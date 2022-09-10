@@ -1,8 +1,6 @@
 package com.sweak.diplomaexam.domain.use_case.questions_draw
 
-import com.sweak.diplomaexam.common.DUMMY_GLOBAL_USER_EMAIL
-import com.sweak.diplomaexam.common.DUMMY_GLOBAL_USER_ROLE
-import com.sweak.diplomaexam.common.Resource
+import com.sweak.diplomaexam.common.*
 import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.presentation.questions_draw.QuestionsDrawState
 import kotlinx.coroutines.delay
@@ -17,7 +15,8 @@ class GetQuestionsDrawState @Inject constructor() {
         emit(
             Resource.Success(
                 QuestionsDrawState(
-                    currentUser = User(DUMMY_GLOBAL_USER_ROLE, DUMMY_GLOBAL_USER_EMAIL)
+                    currentUser = User(DUMMY_GLOBAL_USER_ROLE, DUMMY_GLOBAL_USER_EMAIL),
+                    otherUser = User(DUMMY_GLOBAL_OTHER_USER_ROLE, DUMMY_GLOBAL_OTHER_USER_EMAIL)
                 )
             )
         )

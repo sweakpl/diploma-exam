@@ -24,7 +24,10 @@ class QuestionsDrawViewModel @Inject constructor(
             when (it) {
                 is Resource.Success -> {
                     if (it.data != null) {
-                        state = state.copy(currentUser = it.data.currentUser)
+                        state = state.copy(
+                            currentUser = it.data.currentUser,
+                            otherUser = it.data.otherUser
+                        )
                     }
                 }
                 else -> { /* no-op */ }

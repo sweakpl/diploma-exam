@@ -31,19 +31,26 @@ fun QuestionsDrawScreen(
 
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         CompactQuestionsDrawScreen(
-            user = questionsDrawState.currentUser
+            currentUser = questionsDrawState.currentUser,
+            otherUser = questionsDrawState.otherUser
         )
     } else {
         MediumOrExpandedQuestionsDrawScreen(
-            user = questionsDrawState.currentUser
+            currentUser = questionsDrawState.currentUser,
+            otherUser = questionsDrawState.otherUser
         )
     }
 }
 
 @Composable
 fun CompactQuestionsDrawScreen(
-    user: User?
+    currentUser: User?,
+    otherUser: User?
 ) {
+    val usersInSession = mutableListOf<User>()
+    currentUser?.let { usersInSession.add(it) }
+    otherUser?.let { usersInSession.add(it) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,6 +65,7 @@ fun CompactQuestionsDrawScreen(
     ) {
         Header(
             displayMode = HeaderDisplayMode.COMPACT,
+            usersInSession = usersInSession,
             proceedButtonEnabled = false,
             modifier = Modifier
                 .fillMaxWidth()
@@ -76,10 +84,10 @@ fun CompactQuestionsDrawScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            if (user == null || user.role == UserRole.USER_EXAMINER) {
+            if (currentUser == null || currentUser.role == UserRole.USER_EXAMINER) {
                 LoadingLayout(
                     text = stringResource(
-                        if (user != null) R.string.student_is_drawing else R.string.loading
+                        if (currentUser != null) R.string.student_is_drawing else R.string.loading
                     ),
                     modifier = Modifier.padding(
                         start = MaterialTheme.space.large,
@@ -105,8 +113,13 @@ fun CompactQuestionsDrawScreen(
 
 @Composable
 fun MediumOrExpandedQuestionsDrawScreen(
-    user: User?
+    currentUser: User?,
+    otherUser: User?
 ) {
+    val usersInSession = mutableListOf<User>()
+    currentUser?.let { usersInSession.add(it) }
+    otherUser?.let { usersInSession.add(it) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -121,6 +134,7 @@ fun MediumOrExpandedQuestionsDrawScreen(
     ) {
         Header(
             displayMode = HeaderDisplayMode.MEDIUM_OR_EXPANDED,
+            usersInSession = usersInSession,
             proceedButtonEnabled = false,
             modifier = Modifier
                 .fillMaxWidth()
@@ -132,9 +146,9 @@ fun MediumOrExpandedQuestionsDrawScreen(
                 )
         )
 
-        if (user == null ||
-            user.role == UserRole.USER_STUDENT ||
-            user.role == UserRole.USER_EXAMINER
+        if (currentUser == null ||
+            currentUser.role == UserRole.USER_STUDENT ||
+            currentUser.role == UserRole.USER_EXAMINER
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -143,10 +157,10 @@ fun MediumOrExpandedQuestionsDrawScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                if (user == null || user.role == UserRole.USER_EXAMINER) {
+                if (currentUser == null || currentUser.role == UserRole.USER_EXAMINER) {
                     LoadingLayout(
                         text = stringResource(
-                            if (user != null) R.string.student_is_drawing else R.string.loading
+                            if (currentUser != null) R.string.student_is_drawing else R.string.loading
                         ),
                         modifier = Modifier.padding(
                             start = MaterialTheme.space.large,

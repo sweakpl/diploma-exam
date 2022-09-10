@@ -27,4 +27,5 @@
     <string name="please_draw_questions">Welcome student! In order to continue, please draw your questions:</string>
     <string name="draw">Draw</string>
     <string name="student_is_drawing">Student is drawing questions…</string>
+    <string name="users_in_session">Users in the session:</string>
 </resources>
