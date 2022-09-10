@@ -28,4 +28,5 @@
     <string name="draw">Draw</string>
     <string name="student_is_drawing">Student is drawing questions…</string>
     <string name="users_in_session">Users in the session:</string>
+    <string name="question_with_number">Question %1$s</string>
 </resources>

@@ -28,4 +28,5 @@
     <string name="draw">Losuj</string>
     <string name="student_is_drawing">Student losuje pytania…</string>
     <string name="users_in_session">Użytkownicy w sesji:</string>
+    <string name="question_with_number">Pytanie %1$s</string>
 </resources>

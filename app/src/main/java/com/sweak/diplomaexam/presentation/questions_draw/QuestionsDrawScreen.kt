@@ -1,9 +1,9 @@
 package com.sweak.diplomaexam.presentation.questions_draw
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,15 +13,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.common.UserRole
+import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.presentation.components.Header
 import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
 import com.sweak.diplomaexam.presentation.components.LoadingLayout
+import com.sweak.diplomaexam.presentation.questions_draw.components.DrawnQuestionsColumn
 import com.sweak.diplomaexam.presentation.questions_draw.components.QuestionsDrawPrompt
 import com.sweak.diplomaexam.presentation.ui.theme.space
 import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
 import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 
+@ExperimentalAnimationApi
 @Composable
 fun QuestionsDrawScreen(
     questionsDrawViewModel: QuestionsDrawViewModel = hiltViewModel()
@@ -32,20 +35,30 @@ fun QuestionsDrawScreen(
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         CompactQuestionsDrawScreen(
             currentUser = questionsDrawState.currentUser,
-            otherUser = questionsDrawState.otherUser
+            otherUser = questionsDrawState.otherUser,
+            onDrawQuestionsClick = { questionsDrawViewModel.drawNewQuestions() },
+            areQuestionsInDrawingProcess = questionsDrawState.areQuestionsInDrawingProcess,
+            questions = questionsDrawState.questions
         )
     } else {
         MediumOrExpandedQuestionsDrawScreen(
             currentUser = questionsDrawState.currentUser,
-            otherUser = questionsDrawState.otherUser
+            otherUser = questionsDrawState.otherUser,
+            onDrawQuestionsClick = { questionsDrawViewModel.drawNewQuestions() },
+            areQuestionsInDrawingProcess = questionsDrawState.areQuestionsInDrawingProcess,
+            questions = questionsDrawState.questions
         )
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun CompactQuestionsDrawScreen(
     currentUser: User?,
-    otherUser: User?
+    otherUser: User?,
+    onDrawQuestionsClick: () -> Unit,
+    areQuestionsInDrawingProcess: Boolean,
+    questions: List<ExamQuestion>?
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -82,39 +95,69 @@ fun CompactQuestionsDrawScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
         ) {
-            if (currentUser == null || currentUser.role == UserRole.USER_EXAMINER) {
-                LoadingLayout(
-                    text = stringResource(
-                        if (currentUser != null) R.string.student_is_drawing else R.string.loading
-                    ),
-                    modifier = Modifier.padding(
-                        start = MaterialTheme.space.large,
-                        end = MaterialTheme.space.large,
-                        bottom = MaterialTheme.space.large,
-                        top = MaterialTheme.space.medium,
-                    )
-                )
-            } else {
-                QuestionsDrawPrompt(
-                    modifier = Modifier
-                        .padding(
+            AnimatedContent(targetState = currentUser != null) { targetState ->
+                if (targetState) {
+                    AnimatedContent(targetState = questions == null) { state ->
+                        if (state) {
+                            if (currentUser?.role == UserRole.USER_EXAMINER) {
+                                LoadingLayout(
+                                    text = stringResource(R.string.student_is_drawing),
+                                    modifier = Modifier.padding(
+                                        start = MaterialTheme.space.large,
+                                        end = MaterialTheme.space.large,
+                                        bottom = MaterialTheme.space.large,
+                                        top = MaterialTheme.space.medium,
+                                    )
+                                )
+                            } else if (currentUser?.role == UserRole.USER_STUDENT) {
+                                QuestionsDrawPrompt(
+                                    onDrawClick = onDrawQuestionsClick,
+                                    areQuestionsInDrawingProcess = areQuestionsInDrawingProcess,
+                                    modifier = Modifier.padding(
+                                        start = MaterialTheme.space.large,
+                                        end = MaterialTheme.space.large,
+                                        bottom = MaterialTheme.space.large,
+                                        top = MaterialTheme.space.medium,
+                                    )
+                                )
+                            }
+                        } else {
+                            DrawnQuestionsColumn(
+                                questions = questions ?: emptyList(),
+                                modifier = Modifier.padding(
+                                    start = MaterialTheme.space.large,
+                                    end = MaterialTheme.space.large,
+                                    bottom = MaterialTheme.space.large,
+                                    top = MaterialTheme.space.medium,
+                                )
+                            )
+                        }
+                    }
+                } else {
+                    LoadingLayout(
+                        text = stringResource(R.string.loading),
+                        modifier = Modifier.padding(
                             start = MaterialTheme.space.large,
                             end = MaterialTheme.space.large,
                             bottom = MaterialTheme.space.large,
                             top = MaterialTheme.space.medium,
                         )
-                )
+                    )
+                }
             }
         }
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun MediumOrExpandedQuestionsDrawScreen(
     currentUser: User?,
-    otherUser: User?
+    otherUser: User?,
+    onDrawQuestionsClick: () -> Unit,
+    areQuestionsInDrawingProcess: Boolean,
+    questions: List<ExamQuestion>?
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -146,38 +189,59 @@ fun MediumOrExpandedQuestionsDrawScreen(
                 )
         )
 
-        if (currentUser == null ||
-            currentUser.role == UserRole.USER_STUDENT ||
-            currentUser.role == UserRole.USER_EXAMINER
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                if (currentUser == null || currentUser.role == UserRole.USER_EXAMINER) {
+            AnimatedContent(targetState = currentUser != null) { targetState ->
+                if (targetState) {
+                    AnimatedContent(targetState = questions == null) { state ->
+                        if (state) {
+                            if (currentUser?.role == UserRole.USER_EXAMINER) {
+                                LoadingLayout(
+                                    text = stringResource(R.string.student_is_drawing),
+                                    modifier = Modifier.padding(
+                                        start = MaterialTheme.space.large,
+                                        end = MaterialTheme.space.large,
+                                        bottom = MaterialTheme.space.medium,
+                                        top = MaterialTheme.space.small
+                                    )
+                                )
+                            } else if (currentUser?.role == UserRole.USER_STUDENT) {
+                                QuestionsDrawPrompt(
+                                    onDrawClick = onDrawQuestionsClick,
+                                    areQuestionsInDrawingProcess = areQuestionsInDrawingProcess,
+                                    modifier = Modifier.padding(
+                                        start = MaterialTheme.space.extraLarge * 2,
+                                        end = MaterialTheme.space.extraLarge * 2,
+                                        bottom = MaterialTheme.space.medium,
+                                        top = MaterialTheme.space.small
+                                    )
+                                )
+                            }
+                        } else {
+                            DrawnQuestionsColumn(
+                                questions = questions ?: emptyList(),
+                                modifier = Modifier.padding(
+                                    start = MaterialTheme.space.large,
+                                    end = MaterialTheme.space.large,
+                                    bottom = MaterialTheme.space.medium,
+                                    top = MaterialTheme.space.small
+                                )
+                            )
+                        }
+                    }
+                } else {
                     LoadingLayout(
-                        text = stringResource(
-                            if (currentUser != null) R.string.student_is_drawing else R.string.loading
-                        ),
+                        text = stringResource(R.string.loading),
                         modifier = Modifier.padding(
                             start = MaterialTheme.space.large,
                             end = MaterialTheme.space.large,
                             bottom = MaterialTheme.space.medium,
                             top = MaterialTheme.space.small
                         )
-                    )
-                } else {
-                    QuestionsDrawPrompt(
-                        modifier = Modifier
-                            .padding(
-                                start = MaterialTheme.space.extraLarge * 2,
-                                end = MaterialTheme.space.extraLarge * 2,
-                                bottom = MaterialTheme.space.medium,
-                                top = MaterialTheme.space.small
-                            )
                     )
                 }
             }
