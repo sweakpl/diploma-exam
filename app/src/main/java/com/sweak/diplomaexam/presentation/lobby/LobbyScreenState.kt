@@ -4,5 +4,6 @@ import com.sweak.diplomaexam.domain.model.User
 
 data class LobbyScreenState(
     val user: User? = null,
-    val hasOtherUserJoinedTheLobby: Boolean = false
+    val hasOtherUserJoinedTheLobby: Boolean = false,
+    val isSessionInStartingProcess: Boolean = false
 )

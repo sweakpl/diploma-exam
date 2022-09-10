@@ -51,12 +51,14 @@ fun LobbyScreen(
         CompactLobbyScreen(
             user = lobbyScreenState.user,
             hasOtherUserJoined = lobbyScreenState.hasOtherUserJoinedTheLobby,
+            isSessionInStartingProcess = lobbyScreenState.isSessionInStartingProcess,
             startExamSession = { lobbyViewModel.startSession() }
         )
     } else {
         MediumOrExpandedLobbyScreen(
             user = lobbyScreenState.user,
             hasOtherUserJoined = lobbyScreenState.hasOtherUserJoinedTheLobby,
+            isSessionInStartingProcess = lobbyScreenState.isSessionInStartingProcess,
             startExamSession = { lobbyViewModel.startSession() }
         )
     }
@@ -67,6 +69,7 @@ fun LobbyScreen(
 fun CompactLobbyScreen(
     user: User?,
     hasOtherUserJoined: Boolean,
+    isSessionInStartingProcess: Boolean,
     startExamSession: () -> Unit
 ) {
     Column(
@@ -100,6 +103,7 @@ fun CompactLobbyScreen(
             WaitingForParticipantLayout(
                 userRole = user?.role,
                 hasOtherUserJoined = hasOtherUserJoined,
+                isSessionInStartingProcess = isSessionInStartingProcess,
                 startExamSession = startExamSession,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -130,6 +134,7 @@ fun CompactLobbyScreen(
 fun MediumOrExpandedLobbyScreen(
     user: User?,
     hasOtherUserJoined: Boolean,
+    isSessionInStartingProcess: Boolean,
     startExamSession: () -> Unit
 ) {
     Row(
@@ -172,6 +177,7 @@ fun MediumOrExpandedLobbyScreen(
             WaitingForParticipantLayout(
                 userRole = user?.role,
                 hasOtherUserJoined = hasOtherUserJoined,
+                isSessionInStartingProcess = isSessionInStartingProcess,
                 startExamSession = startExamSession,
                 modifier = Modifier
                     .fillMaxWidth()

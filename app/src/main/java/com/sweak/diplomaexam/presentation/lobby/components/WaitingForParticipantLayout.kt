@@ -23,11 +23,10 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 fun WaitingForParticipantLayout(
     userRole: UserRole?,
     hasOtherUserJoined: Boolean,
+    isSessionInStartingProcess: Boolean,
     startExamSession: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var hasStartExamButtonBeenClicked by remember { mutableStateOf(false) }
-
     AnimatedContent(
         targetState = userRole != null,
         modifier = modifier
@@ -61,15 +60,12 @@ fun WaitingForParticipantLayout(
                 AnimatedContent(
                     targetState = userRole == UserRole.USER_EXAMINER &&
                             hasOtherUserJoined &&
-                            !hasStartExamButtonBeenClicked
+                            !isSessionInStartingProcess
                 ) { state ->
                     if (state) {
                         ThickWhiteButton(
                             text = stringResource(R.string.start_exam),
-                            onClick = {
-                                startExamSession()
-                                hasStartExamButtonBeenClicked = true
-                            }
+                            onClick = startExamSession
                         )
                     } else {
                         CircularProgressIndicator(
