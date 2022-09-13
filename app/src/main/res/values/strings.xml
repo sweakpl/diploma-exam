@@ -31,8 +31,15 @@
     <string name="question_with_number">Question %1$s</string>
     <string name="accept">Accept</string>
     <string name="draw_again">Draw again</string>
-    <string name="waiting_for_confirmation">Waiting for confirmation…</string>
     <string name="student_asked_for_redraw">Student asked for questions redraw…</string>
     <string name="allow">Allow</string>
     <string name="dont_allow">Don\'t allow</string>
+    <string name="continue_interrogative">Continue?</string>
+    <string name="do_you_want_to_accept_questions">Do you want to accept the drawn questions and continue to the answering stage?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="dont_allow_interrogative">Don\'t allow?</string>
+    <string name="do_you_want_to_disallow_redraw">Do you want to deny student\'s request for redraw and continue to the answering stage?</string>
+    <string name="waiting_for_readiness_confirmation">Waiting for readiness confirmation from the student…</string>
+    <string name="waiting_for_permission">Waiting for permission from the examiner…</string>
 </resources>

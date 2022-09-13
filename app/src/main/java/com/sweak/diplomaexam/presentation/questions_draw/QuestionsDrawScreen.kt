@@ -19,6 +19,7 @@ import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.common.UserRole
 import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.presentation.components.Dialog
 import com.sweak.diplomaexam.presentation.components.Header
 import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
 import com.sweak.diplomaexam.presentation.components.LoadingLayout
@@ -62,10 +63,13 @@ fun QuestionsDrawScreen(
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.DrawQuestions)
             },
             onAcceptDrawnQuestions = {
-                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AcceptQuestions)
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryAcceptQuestions)
             },
             onAllowQuestionsRedraw = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AllowRedraw)
+            },
+            onDisallowQuestionsRedraw = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryDisallowRedraw)
             }
         )
     } else {
@@ -80,11 +84,46 @@ fun QuestionsDrawScreen(
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.DrawQuestions)
             },
             onAcceptDrawnQuestions = {
-                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AcceptQuestions)
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryAcceptQuestions)
             },
             onAllowQuestionsRedraw = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AllowRedraw)
+            },
+            onDisallowQuestionsRedraw = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryDisallowRedraw)
             }
+        )
+    }
+
+    if (questionsDrawState.acceptQuestionsDialogVisible) {
+        Dialog(
+            title = stringResource(R.string.continue_interrogative),
+            message = stringResource(R.string.do_you_want_to_accept_questions),
+            onDismissRequest = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.HideAcceptQuestionsDialog)
+            },
+            onPositiveClick = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.HideAcceptQuestionsDialog)
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AcceptQuestions)
+            },
+            positiveButtonText = stringResource(R.string.yes),
+            negativeButtonText = stringResource(R.string.no)
+        )
+    }
+
+    if (questionsDrawState.disallowRedrawDialogVisible) {
+        Dialog(
+            title = stringResource(R.string.dont_allow_interrogative),
+            message = stringResource(R.string.do_you_want_to_disallow_redraw),
+            onDismissRequest = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.HideDisallowRedrawDialog)
+            },
+            onPositiveClick = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.HideDisallowRedrawDialog)
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.DisallowRedraw)
+            },
+            positiveButtonText = stringResource(R.string.yes),
+            negativeButtonText = stringResource(R.string.no)
         )
     }
 }
@@ -100,7 +139,8 @@ fun CompactQuestionsDrawScreen(
     waitingForDecisionFrom: UserRole,
     onDrawQuestionsClick: () -> Unit,
     onAcceptDrawnQuestions: () -> Unit,
-    onAllowQuestionsRedraw: () -> Unit
+    onAllowQuestionsRedraw: () -> Unit,
+    onDisallowQuestionsRedraw: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -185,7 +225,7 @@ fun CompactQuestionsDrawScreen(
                                     onAcceptQuestions = onAcceptDrawnQuestions,
                                     onRedrawQuestions = onDrawQuestionsClick,
                                     onAllowQuestionsRedraw = onAllowQuestionsRedraw,
-                                    onDisallowQuestionsRedraw = onAcceptDrawnQuestions,
+                                    onDisallowQuestionsRedraw = onDisallowQuestionsRedraw,
                                     modifier = Modifier
                                         .padding(
                                             start = MaterialTheme.space.large,
@@ -223,7 +263,8 @@ fun MediumOrExpandedQuestionsDrawScreen(
     waitingForDecisionFrom: UserRole,
     onDrawQuestionsClick: () -> Unit,
     onAcceptDrawnQuestions: () -> Unit,
-    onAllowQuestionsRedraw: () -> Unit
+    onAllowQuestionsRedraw: () -> Unit,
+    onDisallowQuestionsRedraw: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -312,7 +353,7 @@ fun MediumOrExpandedQuestionsDrawScreen(
                                     onAcceptQuestions = onAcceptDrawnQuestions,
                                     onRedrawQuestions = onDrawQuestionsClick,
                                     onAllowQuestionsRedraw = onAllowQuestionsRedraw,
-                                    onDisallowQuestionsRedraw = onAcceptDrawnQuestions,
+                                    onDisallowQuestionsRedraw = onDisallowQuestionsRedraw,
                                     modifier = Modifier
                                         .padding(
                                             start = MaterialTheme.space.large,

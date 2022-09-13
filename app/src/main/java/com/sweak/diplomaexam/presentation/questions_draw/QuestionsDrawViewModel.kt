@@ -61,7 +61,21 @@ class QuestionsDrawViewModel @Inject constructor(
         when (event) {
             is QuestionsDrawScreenEvent.DrawQuestions -> drawQuestions()
             is QuestionsDrawScreenEvent.AcceptQuestions -> acceptQuestions()
+            is QuestionsDrawScreenEvent.TryAcceptQuestions -> {
+                if (!state.hasStudentRequestedRedraw) {
+                    state = state.copy(acceptQuestionsDialogVisible = true)
+                } else {
+                    acceptQuestions()
+                }
+            }
             is QuestionsDrawScreenEvent.AllowRedraw -> allowRedraw()
+            is QuestionsDrawScreenEvent.DisallowRedraw -> acceptQuestions()
+            is QuestionsDrawScreenEvent.TryDisallowRedraw ->
+                state = state.copy(disallowRedrawDialogVisible = true)
+            is QuestionsDrawScreenEvent.HideAcceptQuestionsDialog ->
+                state = state.copy(acceptQuestionsDialogVisible = false)
+            is QuestionsDrawScreenEvent.HideDisallowRedrawDialog ->
+                state = state.copy(disallowRedrawDialogVisible = false)
         }
     }
 

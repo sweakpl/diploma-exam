@@ -67,7 +67,7 @@ fun Dialog(
             ) {
                 if (!onlyPositiveButton) {
                     Button(
-                        onClick = onNegativeClick ?: {},
+                        onClick = onNegativeClick ?: onDismissRequest,
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color.Transparent
                         ),

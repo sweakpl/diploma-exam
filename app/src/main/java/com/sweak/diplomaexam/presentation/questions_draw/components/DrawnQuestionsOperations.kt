@@ -67,7 +67,7 @@ fun DrawnQuestionsOperations(
                     } else {
                         LoadingLayout(
                             loadingLayoutSize = LoadingLayoutSize.SMALL,
-                            text = stringResource(R.string.waiting_for_confirmation),
+                            text = stringResource(R.string.waiting_for_readiness_confirmation),
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -79,7 +79,7 @@ fun DrawnQuestionsOperations(
                             if (userRole == UserRole.USER_STUDENT) {
                                 LoadingLayout(
                                     loadingLayoutSize = LoadingLayoutSize.SMALL,
-                                    text = stringResource(R.string.waiting_for_confirmation),
+                                    text = stringResource(R.string.waiting_for_permission),
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             } else {
@@ -120,7 +120,7 @@ fun DrawnQuestionsOperations(
                             } else {
                                 LoadingLayout(
                                     loadingLayoutSize = LoadingLayoutSize.SMALL,
-                                    text = stringResource(R.string.waiting_for_confirmation),
+                                    text = stringResource(R.string.waiting_for_readiness_confirmation),
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             }
