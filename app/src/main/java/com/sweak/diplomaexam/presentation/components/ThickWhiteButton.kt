@@ -8,6 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
@@ -15,14 +16,19 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 fun ThickWhiteButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isTransparent: Boolean = false
 ) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.surface
+            backgroundColor =
+            if (isTransparent) Color.Companion.Transparent else MaterialTheme.colors.surface
         ),
-        elevation = ButtonDefaults.elevation(defaultElevation = MaterialTheme.space.extraSmall),
+        elevation = ButtonDefaults
+            .elevation(
+                defaultElevation = if (isTransparent) 0.dp else MaterialTheme.space.extraSmall
+            ),
         modifier = modifier
             .fillMaxWidth()
             .height(52.dp)
@@ -30,7 +36,8 @@ fun ThickWhiteButton(
         Text(
             text = text,
             style = MaterialTheme.typography.button,
-            color = MaterialTheme.colors.primary
+            color =
+            if (isTransparent) MaterialTheme.colors.onPrimary else MaterialTheme.colors.primary
         )
     }
 }

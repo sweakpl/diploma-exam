@@ -6,31 +6,50 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.common.Resource
-import com.sweak.diplomaexam.domain.use_case.questions_draw.DrawQuestions
+import com.sweak.diplomaexam.domain.use_case.questions_draw.AllowQuestionsRedraw
+import com.sweak.diplomaexam.domain.use_case.questions_draw.AcceptDrawnQuestions
+import com.sweak.diplomaexam.domain.use_case.questions_draw.DrawNewQuestions
 import com.sweak.diplomaexam.domain.use_case.questions_draw.GetQuestionsDrawState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class QuestionsDrawViewModel @Inject constructor(
     getQuestionsDrawState: GetQuestionsDrawState,
-    private val drawQuestions: DrawQuestions
+    private val drawNewQuestions: DrawNewQuestions,
+    private val acceptDrawnQuestions: AcceptDrawnQuestions,
+    private val allowQuestionsRedraw: AllowQuestionsRedraw
 ) : ViewModel() {
+
     var state by mutableStateOf(QuestionsDrawScreenState())
+
+    private val questionsConfirmedEventsChannel = Channel<QuestionsConfirmedEvent>()
+    val questionsConfirmedEvents = questionsConfirmedEventsChannel.receiveAsFlow()
+
+    private var hasFinalizedRequest: Boolean = true
 
     init {
         getQuestionsDrawState().onEach {
             when (it) {
                 is Resource.Success -> {
                     if (it.data != null) {
-                        state = state.copy(
-                            currentUser = it.data.currentUser,
-                            otherUser = it.data.otherUser,
-                            questions = it.data.questions
-                        )
+                        if (it.data.areQuestionsConfirmed) {
+                            questionsConfirmedEventsChannel.send(QuestionsConfirmedEvent.Success)
+                        } else {
+                            state = state.copy(
+                                currentUser = it.data.currentUser,
+                                otherUser = it.data.otherUser,
+                                questions = it.data.questions,
+                                isLoadingResponse = !hasFinalizedRequest,
+                                hasStudentRequestedRedraw = it.data.hasStudentRequestedRedraw,
+                                waitingForDecisionFrom = it.data.waitingForDecisionFrom
+                            )
+                        }
                     }
                 }
                 else -> { /* no-op */ }
@@ -38,8 +57,18 @@ class QuestionsDrawViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun drawNewQuestions() = viewModelScope.launch {
-        state = state.copy(areQuestionsInDrawingProcess = true)
-        drawQuestions()
+    fun drawQuestions() = performRequest { viewModelScope.launch { drawNewQuestions() } }
+    fun acceptQuestions() = performRequest { viewModelScope.launch { acceptDrawnQuestions() } }
+    fun allowRedraw() = performRequest { viewModelScope.launch { allowQuestionsRedraw() } }
+
+    private fun performRequest(request: () -> Unit) {
+        hasFinalizedRequest = false
+        state = state.copy(isLoadingResponse = true)
+        request()
+        hasFinalizedRequest = true
+    }
+
+    sealed class QuestionsConfirmedEvent {
+        object Success : QuestionsConfirmedEvent()
     }
 }

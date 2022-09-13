@@ -18,7 +18,7 @@ import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
-fun DrawnQuestionsColumn(
+fun DrawnQuestionsList(
     questions: List<ExamQuestion>,
     modifier: Modifier = Modifier
 ) {

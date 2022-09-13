@@ -69,15 +69,15 @@ class LoginViewModel @Inject constructor(
                     )
 
                     if (it.data?.successful == true) {
-                        DUMMY_GLOBAL_USER_ROLE = state.userRole ?: UserRole.USER_STUDENT
-                        DUMMY_GLOBAL_USER_EMAIL = state.email
+                        DUMMY_USER_ROLE = state.userRole ?: UserRole.USER_STUDENT
+                        DUMMY_USER_EMAIL = state.email
 
-                        if (DUMMY_GLOBAL_USER_ROLE == UserRole.USER_STUDENT) {
-                            DUMMY_GLOBAL_OTHER_USER_ROLE = UserRole.USER_EXAMINER
-                            DUMMY_GLOBAL_OTHER_USER_EMAIL = "barbara.nowak@pk.edu.pl"
+                        if (DUMMY_USER_ROLE == UserRole.USER_STUDENT) {
+                            DUMMY_OTHER_USER_ROLE = UserRole.USER_EXAMINER
+                            DUMMY_OTHER_USER_EMAIL = "barbara.nowak@pk.edu.pl"
                         } else {
-                            DUMMY_GLOBAL_OTHER_USER_ROLE = UserRole.USER_STUDENT
-                            DUMMY_GLOBAL_OTHER_USER_EMAIL = "adam.kowalski@student.pk.edu.pl"
+                            DUMMY_OTHER_USER_ROLE = UserRole.USER_STUDENT
+                            DUMMY_OTHER_USER_EMAIL = "adam.kowalski@student.pk.edu.pl"
                         }
 
                         authenticateEventChannel.send(AuthenticationEvent.Success)

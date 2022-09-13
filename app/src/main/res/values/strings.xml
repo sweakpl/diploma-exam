@@ -29,4 +29,10 @@
     <string name="student_is_drawing">Student is drawing questions…</string>
     <string name="users_in_session">Users in the session:</string>
     <string name="question_with_number">Question %1$s</string>
+    <string name="accept">Accept</string>
+    <string name="draw_again">Draw again</string>
+    <string name="waiting_for_confirmation">Waiting for confirmation…</string>
+    <string name="student_asked_for_redraw">Student asked for questions redraw…</string>
+    <string name="allow">Allow</string>
+    <string name="dont_allow">Don\'t allow</string>
 </resources>

@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(route = Screen.QuestionsDrawScreen.route) {
-                        QuestionsDrawScreen()
+                        QuestionsDrawScreen(navController = navController)
                     }
                 }
             }

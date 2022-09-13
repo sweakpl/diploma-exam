@@ -1,16 +1,20 @@
 package com.sweak.diplomaexam.presentation.questions_draw
 
+import android.content.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.common.UserRole
 import com.sweak.diplomaexam.domain.model.ExamQuestion
@@ -18,7 +22,8 @@ import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.presentation.components.Header
 import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
 import com.sweak.diplomaexam.presentation.components.LoadingLayout
-import com.sweak.diplomaexam.presentation.questions_draw.components.DrawnQuestionsColumn
+import com.sweak.diplomaexam.presentation.questions_draw.components.DrawnQuestionsList
+import com.sweak.diplomaexam.presentation.questions_draw.components.DrawnQuestionsOperations
 import com.sweak.diplomaexam.presentation.questions_draw.components.QuestionsDrawPrompt
 import com.sweak.diplomaexam.presentation.ui.theme.space
 import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
@@ -27,8 +32,21 @@ import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 @ExperimentalAnimationApi
 @Composable
 fun QuestionsDrawScreen(
-    questionsDrawViewModel: QuestionsDrawViewModel = hiltViewModel()
+    questionsDrawViewModel: QuestionsDrawViewModel = hiltViewModel(),
+    navController: NavController
 ) {
+    val context: Context = LocalContext.current
+
+    LaunchedEffect(key1 = context) {
+        questionsDrawViewModel.questionsConfirmedEvents.collect { event ->
+            when (event) {
+                is QuestionsDrawViewModel.QuestionsConfirmedEvent.Success -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
+
     val questionsDrawState = questionsDrawViewModel.state
     val windowInfo = rememberWindowInfo()
 
@@ -36,17 +54,25 @@ fun QuestionsDrawScreen(
         CompactQuestionsDrawScreen(
             currentUser = questionsDrawState.currentUser,
             otherUser = questionsDrawState.otherUser,
-            onDrawQuestionsClick = { questionsDrawViewModel.drawNewQuestions() },
-            areQuestionsInDrawingProcess = questionsDrawState.areQuestionsInDrawingProcess,
-            questions = questionsDrawState.questions
+            questions = questionsDrawState.questions,
+            isLoadingResponse = questionsDrawState.isLoadingResponse,
+            hasStudentRequestedRedraw = questionsDrawState.hasStudentRequestedRedraw,
+            waitingForDecisionFrom = questionsDrawState.waitingForDecisionFrom,
+            onDrawQuestionsClick = { questionsDrawViewModel.drawQuestions() },
+            onAcceptDrawnQuestions = { questionsDrawViewModel.acceptQuestions() },
+            onAllowQuestionsRedraw = { questionsDrawViewModel.allowRedraw() }
         )
     } else {
         MediumOrExpandedQuestionsDrawScreen(
             currentUser = questionsDrawState.currentUser,
             otherUser = questionsDrawState.otherUser,
-            onDrawQuestionsClick = { questionsDrawViewModel.drawNewQuestions() },
-            areQuestionsInDrawingProcess = questionsDrawState.areQuestionsInDrawingProcess,
-            questions = questionsDrawState.questions
+            questions = questionsDrawState.questions,
+            isLoadingResponse = questionsDrawState.isLoadingResponse,
+            hasStudentRequestedRedraw = questionsDrawState.hasStudentRequestedRedraw,
+            waitingForDecisionFrom = questionsDrawState.waitingForDecisionFrom,
+            onDrawQuestionsClick = { questionsDrawViewModel.drawQuestions() },
+            onAcceptDrawnQuestions = { questionsDrawViewModel.acceptQuestions() },
+            onAllowQuestionsRedraw = { questionsDrawViewModel.allowRedraw() }
         )
     }
 }
@@ -56,9 +82,13 @@ fun QuestionsDrawScreen(
 fun CompactQuestionsDrawScreen(
     currentUser: User?,
     otherUser: User?,
+    questions: List<ExamQuestion>?,
+    isLoadingResponse: Boolean,
+    hasStudentRequestedRedraw: Boolean,
+    waitingForDecisionFrom: UserRole,
     onDrawQuestionsClick: () -> Unit,
-    areQuestionsInDrawingProcess: Boolean,
-    questions: List<ExamQuestion>?
+    onAcceptDrawnQuestions: () -> Unit,
+    onAllowQuestionsRedraw: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -93,8 +123,7 @@ fun CompactQuestionsDrawScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             AnimatedContent(targetState = currentUser != null) { targetState ->
                 if (targetState) {
@@ -113,25 +142,46 @@ fun CompactQuestionsDrawScreen(
                             } else if (currentUser?.role == UserRole.USER_STUDENT) {
                                 QuestionsDrawPrompt(
                                     onDrawClick = onDrawQuestionsClick,
-                                    areQuestionsInDrawingProcess = areQuestionsInDrawingProcess,
+                                    areQuestionsInDrawingProcess = isLoadingResponse,
                                     modifier = Modifier.padding(
                                         start = MaterialTheme.space.large,
                                         end = MaterialTheme.space.large,
                                         bottom = MaterialTheme.space.large,
-                                        top = MaterialTheme.space.medium,
+                                        top = MaterialTheme.space.medium
                                     )
                                 )
                             }
                         } else {
-                            DrawnQuestionsColumn(
-                                questions = questions ?: emptyList(),
-                                modifier = Modifier.padding(
-                                    start = MaterialTheme.space.large,
-                                    end = MaterialTheme.space.large,
-                                    bottom = MaterialTheme.space.large,
-                                    top = MaterialTheme.space.medium,
+                            Column {
+                                DrawnQuestionsList(
+                                    questions = questions ?: emptyList(),
+                                    modifier = Modifier
+                                        .padding(
+                                            start = MaterialTheme.space.large,
+                                            end = MaterialTheme.space.large,
+                                            bottom = MaterialTheme.space.large,
+                                            top = MaterialTheme.space.medium
+                                        )
+                                        .weight(1f)
                                 )
-                            )
+
+                                DrawnQuestionsOperations(
+                                    userRole = currentUser?.role ?: UserRole.USER_STUDENT,
+                                    isLoadingResponse = isLoadingResponse,
+                                    hasStudentRequestedRedraw = hasStudentRequestedRedraw,
+                                    waitingForDecisionFrom = waitingForDecisionFrom,
+                                    onAcceptQuestions = onAcceptDrawnQuestions,
+                                    onRedrawQuestions = onDrawQuestionsClick,
+                                    onAllowQuestionsRedraw = onAllowQuestionsRedraw,
+                                    onDisallowQuestionsRedraw = onAcceptDrawnQuestions,
+                                    modifier = Modifier
+                                        .padding(
+                                            start = MaterialTheme.space.large,
+                                            end = MaterialTheme.space.large,
+                                            bottom = MaterialTheme.space.large
+                                        )
+                                )
+                            }
                         }
                     }
                 } else {
@@ -155,9 +205,13 @@ fun CompactQuestionsDrawScreen(
 fun MediumOrExpandedQuestionsDrawScreen(
     currentUser: User?,
     otherUser: User?,
+    questions: List<ExamQuestion>?,
+    isLoadingResponse: Boolean,
+    hasStudentRequestedRedraw: Boolean,
+    waitingForDecisionFrom: UserRole,
     onDrawQuestionsClick: () -> Unit,
-    areQuestionsInDrawingProcess: Boolean,
-    questions: List<ExamQuestion>?
+    onAcceptDrawnQuestions: () -> Unit,
+    onAllowQuestionsRedraw: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -212,7 +266,7 @@ fun MediumOrExpandedQuestionsDrawScreen(
                             } else if (currentUser?.role == UserRole.USER_STUDENT) {
                                 QuestionsDrawPrompt(
                                     onDrawClick = onDrawQuestionsClick,
-                                    areQuestionsInDrawingProcess = areQuestionsInDrawingProcess,
+                                    areQuestionsInDrawingProcess = isLoadingResponse,
                                     modifier = Modifier.padding(
                                         start = MaterialTheme.space.extraLarge * 2,
                                         end = MaterialTheme.space.extraLarge * 2,
@@ -222,15 +276,41 @@ fun MediumOrExpandedQuestionsDrawScreen(
                                 )
                             }
                         } else {
-                            DrawnQuestionsColumn(
-                                questions = questions ?: emptyList(),
-                                modifier = Modifier.padding(
-                                    start = MaterialTheme.space.large,
-                                    end = MaterialTheme.space.large,
-                                    bottom = MaterialTheme.space.medium,
-                                    top = MaterialTheme.space.small
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                DrawnQuestionsList(
+                                    questions = questions ?: emptyList(),
+                                    modifier = Modifier
+                                        .padding(
+                                            start = MaterialTheme.space.large,
+                                            end = MaterialTheme.space.large,
+                                            bottom = MaterialTheme.space.medium,
+                                            top = MaterialTheme.space.small
+                                        )
+                                        .weight(1f)
                                 )
-                            )
+
+                                DrawnQuestionsOperations(
+                                    userRole = currentUser?.role ?: UserRole.USER_STUDENT,
+                                    isLoadingResponse = isLoadingResponse,
+                                    hasStudentRequestedRedraw = hasStudentRequestedRedraw,
+                                    waitingForDecisionFrom = waitingForDecisionFrom,
+                                    onAcceptQuestions = onAcceptDrawnQuestions,
+                                    onRedrawQuestions = onDrawQuestionsClick,
+                                    onAllowQuestionsRedraw = onAllowQuestionsRedraw,
+                                    onDisallowQuestionsRedraw = onAcceptDrawnQuestions,
+                                    modifier = Modifier
+                                        .padding(
+                                            start = MaterialTheme.space.large,
+                                            end = MaterialTheme.space.large,
+                                            bottom = MaterialTheme.space.medium,
+                                            top = MaterialTheme.space.small
+                                        )
+                                        .weight(1f)
+                                )
+                            }
                         }
                     }
                 } else {

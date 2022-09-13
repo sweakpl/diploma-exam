@@ -29,4 +29,10 @@
     <string name="student_is_drawing">Student losuje pytania…</string>
     <string name="users_in_session">Użytkownicy w sesji:</string>
     <string name="question_with_number">Pytanie %1$s</string>
+    <string name="accept">Zaakceptuj</string>
+    <string name="draw_again">Losuj jeszcze raz</string>
+    <string name="waiting_for_confirmation">Oczekiwanie na potwierdzenie…</string>
+    <string name="student_asked_for_redraw">Student poprosił o ponowne losowanie…</string>
+    <string name="allow">Zezwól</string>
+    <string name="dont_allow">Nie zezwalaj</string>
 </resources>

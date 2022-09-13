@@ -15,7 +15,7 @@ class GetLobbyState @Inject constructor() {
         emit(
             Resource.Success(
                 LobbyState(
-                    currentUser = User(DUMMY_GLOBAL_USER_ROLE, DUMMY_GLOBAL_USER_EMAIL),
+                    currentUser = User(DUMMY_USER_ROLE, DUMMY_USER_EMAIL),
                     hasOtherUserJoinedTheLobby = false,
                     hasTheSessionBeenStarted = false
                 )
@@ -25,7 +25,7 @@ class GetLobbyState @Inject constructor() {
         emit(
             Resource.Success(
                 LobbyState(
-                    currentUser = User(DUMMY_GLOBAL_USER_ROLE, DUMMY_GLOBAL_USER_EMAIL),
+                    currentUser = User(DUMMY_USER_ROLE, DUMMY_USER_EMAIL),
                     hasOtherUserJoinedTheLobby = true,
                     hasTheSessionBeenStarted = false
                 )
@@ -36,13 +36,13 @@ class GetLobbyState @Inject constructor() {
             emit(
                 Resource.Success(
                     LobbyState(
-                        currentUser = User(DUMMY_GLOBAL_USER_ROLE, DUMMY_GLOBAL_USER_EMAIL),
+                        currentUser = User(DUMMY_USER_ROLE, DUMMY_USER_EMAIL),
                         hasOtherUserJoinedTheLobby = true,
                         hasTheSessionBeenStarted =
-                        if (DUMMY_GLOBAL_USER_ROLE == UserRole.USER_STUDENT) {
+                        if (DUMMY_USER_ROLE == UserRole.USER_STUDENT) {
                             true
                         } else {
-                            DUMMY_GLOBAL_HAS_SESSION_BEEN_STARTED
+                            DUMMY_HAS_SESSION_BEEN_STARTED
                         }
                     )
                 )

@@ -19,6 +19,7 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 @Composable
 fun LoadingLayout(
     modifier: Modifier = Modifier,
+    loadingLayoutSize: LoadingLayoutSize = LoadingLayoutSize.LARGE,
     text: String = stringResource(R.string.loading)
 ) {
     Column(
@@ -30,12 +31,27 @@ fun LoadingLayout(
             text = text,
             style = MaterialTheme.typography.h2,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = MaterialTheme.space.large)
+            modifier = Modifier
+                .padding(
+                    bottom =
+                    if (loadingLayoutSize == LoadingLayoutSize.LARGE) {
+                        MaterialTheme.space.large
+                    } else {
+                        MaterialTheme.space.medium
+                    }
+                )
         )
 
         CircularProgressIndicator(
             color = MaterialTheme.colors.onPrimary,
-            modifier = Modifier.size(96.dp)
+            modifier = Modifier
+                .size(
+                    size = if (loadingLayoutSize == LoadingLayoutSize.LARGE) 96.dp else 48.dp
+                )
         )
     }
+}
+
+enum class LoadingLayoutSize {
+    SMALL, LARGE
 }
