@@ -58,9 +58,15 @@ fun QuestionsDrawScreen(
             isLoadingResponse = questionsDrawState.isLoadingResponse,
             hasStudentRequestedRedraw = questionsDrawState.hasStudentRequestedRedraw,
             waitingForDecisionFrom = questionsDrawState.waitingForDecisionFrom,
-            onDrawQuestionsClick = { questionsDrawViewModel.drawQuestions() },
-            onAcceptDrawnQuestions = { questionsDrawViewModel.acceptQuestions() },
-            onAllowQuestionsRedraw = { questionsDrawViewModel.allowRedraw() }
+            onDrawQuestionsClick = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.DrawQuestions)
+            },
+            onAcceptDrawnQuestions = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AcceptQuestions)
+            },
+            onAllowQuestionsRedraw = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AllowRedraw)
+            }
         )
     } else {
         MediumOrExpandedQuestionsDrawScreen(
@@ -70,9 +76,15 @@ fun QuestionsDrawScreen(
             isLoadingResponse = questionsDrawState.isLoadingResponse,
             hasStudentRequestedRedraw = questionsDrawState.hasStudentRequestedRedraw,
             waitingForDecisionFrom = questionsDrawState.waitingForDecisionFrom,
-            onDrawQuestionsClick = { questionsDrawViewModel.drawQuestions() },
-            onAcceptDrawnQuestions = { questionsDrawViewModel.acceptQuestions() },
-            onAllowQuestionsRedraw = { questionsDrawViewModel.allowRedraw() }
+            onDrawQuestionsClick = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.DrawQuestions)
+            },
+            onAcceptDrawnQuestions = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AcceptQuestions)
+            },
+            onAllowQuestionsRedraw = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AllowRedraw)
+            }
         )
     }
 }

@@ -52,14 +52,14 @@ fun LobbyScreen(
             user = lobbyScreenState.user,
             hasOtherUserJoined = lobbyScreenState.hasOtherUserJoinedTheLobby,
             isSessionInStartingProcess = lobbyScreenState.isSessionInStartingProcess,
-            startExamSession = { lobbyViewModel.startSession() }
+            startExamSession = { lobbyViewModel.onEvent(LobbyScreenEvent.StartExam) }
         )
     } else {
         MediumOrExpandedLobbyScreen(
             user = lobbyScreenState.user,
             hasOtherUserJoined = lobbyScreenState.hasOtherUserJoinedTheLobby,
             isSessionInStartingProcess = lobbyScreenState.isSessionInStartingProcess,
-            startExamSession = { lobbyViewModel.startSession() }
+            startExamSession = { lobbyViewModel.onEvent(LobbyScreenEvent.StartExam) }
         )
     }
 }

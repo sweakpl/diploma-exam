@@ -57,9 +57,20 @@ class QuestionsDrawViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun drawQuestions() = performRequest { viewModelScope.launch { drawNewQuestions() } }
-    fun acceptQuestions() = performRequest { viewModelScope.launch { acceptDrawnQuestions() } }
-    fun allowRedraw() = performRequest { viewModelScope.launch { allowQuestionsRedraw() } }
+    fun onEvent(event: QuestionsDrawScreenEvent) {
+        when (event) {
+            is QuestionsDrawScreenEvent.DrawQuestions -> drawQuestions()
+            is QuestionsDrawScreenEvent.AcceptQuestions -> acceptQuestions()
+            is QuestionsDrawScreenEvent.AllowRedraw -> allowRedraw()
+        }
+    }
+
+    private fun drawQuestions() =
+        performRequest { viewModelScope.launch { drawNewQuestions() } }
+    private fun acceptQuestions() =
+        performRequest { viewModelScope.launch { acceptDrawnQuestions() } }
+    private fun allowRedraw() =
+        performRequest { viewModelScope.launch { allowQuestionsRedraw() } }
 
     private fun performRequest(request: () -> Unit) {
         hasFinalizedRequest = false

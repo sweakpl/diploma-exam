@@ -47,7 +47,13 @@ class LobbyViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun startSession() = viewModelScope.launch {
+    fun onEvent(event: LobbyScreenEvent) {
+        when (event) {
+            is LobbyScreenEvent.StartExam -> startSession()
+        }
+    }
+
+    private fun startSession() = viewModelScope.launch {
         state = state.copy(isSessionInStartingProcess = true)
         startExamSession()
     }
