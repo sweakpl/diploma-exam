@@ -27,10 +27,12 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
 fun Header(
+    titleText: String,
     displayMode: HeaderDisplayMode,
     usersInSession: List<User>,
     modifier: Modifier = Modifier,
-    proceedButtonEnabled: Boolean = true
+    proceedButtonEnabled: Boolean = true,
+    onProceedClickListener: () -> Unit = {}
 ) {
     var isUsersListPopupExpanded by remember { mutableStateOf(false) }
 
@@ -139,7 +141,7 @@ fun Header(
                 }
 
                 IconButton(
-                    onClick = {},
+                    onClick = onProceedClickListener,
                     modifier = Modifier.size(36.dp).alpha(if (proceedButtonEnabled) 1f else 0f),
                     enabled = proceedButtonEnabled
                 ) {
@@ -152,7 +154,7 @@ fun Header(
             }
 
             Text(
-                text = stringResource(R.string.drawing_questions),
+                text = titleText,
                 style = MaterialTheme.typography.h1,
                 textAlign = TextAlign.Center
             )
@@ -175,13 +177,13 @@ fun Header(
             }
 
             Text(
-                text = stringResource(R.string.drawing_questions),
+                text = titleText,
                 style = MaterialTheme.typography.h1,
                 textAlign = TextAlign.Center
             )
 
             IconButton(
-                onClick = {},
+                onClick = onProceedClickListener,
                 modifier = Modifier.size(36.dp).alpha(if (proceedButtonEnabled) 1f else 0f),
                 enabled = proceedButtonEnabled
             ) {

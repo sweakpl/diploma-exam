@@ -42,4 +42,5 @@
     <string name="do_you_want_to_disallow_redraw">Do you want to deny student\'s request for redraw and continue to the answering stage?</string>
     <string name="waiting_for_readiness_confirmation">Waiting for readiness confirmation from the student…</string>
     <string name="waiting_for_permission">Waiting for permission from the examiner…</string>
+    <string name="answering_questions">Answering the questions</string>
 </resources>

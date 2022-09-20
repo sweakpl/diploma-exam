@@ -42,4 +42,5 @@
     <string name="do_you_want_to_disallow_redraw">Czy chcesz odrzucić prośbę studenta o ponowne losowanie pytań i przejść do etapu odpowiadania?</string>
     <string name="waiting_for_permission">Oczekiwanie na pozwolenie od egzaminatora…</string>
     <string name="waiting_for_readiness_confirmation">Oczekiwanie na potwierdzenie gotowości od studenta…</string>
+    <string name="answering_questions">Odpowiedź na pytania</string>
 </resources>

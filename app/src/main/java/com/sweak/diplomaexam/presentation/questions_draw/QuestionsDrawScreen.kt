@@ -19,6 +19,7 @@ import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.common.UserRole
 import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.components.Dialog
 import com.sweak.diplomaexam.presentation.components.Header
 import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
@@ -42,7 +43,11 @@ fun QuestionsDrawScreen(
         questionsDrawViewModel.questionsConfirmedEvents.collect { event ->
             when (event) {
                 is QuestionsDrawViewModel.QuestionsConfirmedEvent.Success -> {
-                    navController.popBackStack()
+                    navController.navigate(Screen.QuestionsAnsweringScreen.route) {
+                        popUpTo(Screen.QuestionsDrawScreen.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }
@@ -159,6 +164,7 @@ fun CompactQuestionsDrawScreen(
             )
     ) {
         Header(
+            titleText = stringResource(R.string.drawing_questions),
             displayMode = HeaderDisplayMode.COMPACT,
             usersInSession = usersInSession,
             proceedButtonEnabled = false,
@@ -283,6 +289,7 @@ fun MediumOrExpandedQuestionsDrawScreen(
             )
     ) {
         Header(
+            titleText = stringResource(R.string.drawing_questions),
             displayMode = HeaderDisplayMode.MEDIUM_OR_EXPANDED,
             usersInSession = usersInSession,
             proceedButtonEnabled = false,
@@ -299,8 +306,7 @@ fun MediumOrExpandedQuestionsDrawScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             AnimatedContent(targetState = currentUser != null) { targetState ->
                 if (targetState) {
