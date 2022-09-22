@@ -67,7 +67,7 @@ fun DrawnQuestionsOperations(
                     } else {
                         LoadingLayout(
                             loadingLayoutSize = LoadingLayoutSize.SMALL,
-                            text = stringResource(R.string.waiting_for_readiness_confirmation),
+                            text = stringResource(R.string.waiting_for_readiness),
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -120,7 +120,7 @@ fun DrawnQuestionsOperations(
                             } else {
                                 LoadingLayout(
                                     loadingLayoutSize = LoadingLayoutSize.SMALL,
-                                    text = stringResource(R.string.waiting_for_readiness_confirmation),
+                                    text = stringResource(R.string.waiting_for_readiness),
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             }

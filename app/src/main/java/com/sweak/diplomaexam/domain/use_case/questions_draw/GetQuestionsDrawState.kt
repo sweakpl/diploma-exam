@@ -17,17 +17,17 @@ class GetQuestionsDrawState @Inject constructor() {
         ExamQuestion(
             number = 1,
             question = "Wymień cechy algorytmu i sposoby jego reprezentacji.",
-            answer = null
+            answer = "Algorytm jest skończonym, uporządkowanym ciągiem jasno zdefiniowanych czynności, koniecznych do wykonania postawionego zadania. Cechuje się poprawnością, jednoznacznością, skończonością, sprawnością."
         ),
         ExamQuestion(
             number = 2,
             question = "Techniki modelowania bazy danych, diagramy E/R i UML, narzędzia do modelowania.",
-            answer = null
+            answer = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         ),
         ExamQuestion(
             number = 3,
             question = "Wymień standardowe metody kompresji sygnałów multimedialnych: obrazów nieruchomych, dźwięku, video. Omów dokładniej jedną z nich.",
-            answer = null
+            answer = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         ),
     )
 
@@ -35,17 +35,17 @@ class GetQuestionsDrawState @Inject constructor() {
         ExamQuestion(
             number = 1,
             question = "Omówić zagadnienie asymptotycznej złożoności obliczeniowej algorytmów. Podać standardowe notacje rzędu złożoności.",
-            answer = null
+            answer = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         ),
         ExamQuestion(
             number = 2,
             question = "Problemy współbieżności i wielodostępu w SZBD.",
-            answer = null
+            answer = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         ),
         ExamQuestion(
             number = 3,
             question = "Omów podstawowe metody bezstratnej i stratnej kompresji danych.",
-            answer = null
+            answer = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo."
         ),
     )
 
@@ -77,6 +77,7 @@ class GetQuestionsDrawState @Inject constructor() {
                 delay(3000)
 
                 if (DUMMY_ARE_QUESTIONS_CONFIRMED) {
+                    DUMMY_DRAWN_QUESTIONS = questions
                     state = state.copy(areQuestionsConfirmed = true)
                     emit(Resource.Success(state))
                     break
@@ -95,6 +96,7 @@ class GetQuestionsDrawState @Inject constructor() {
             delay(5000)
 
             if (Random.nextBoolean()) {
+                DUMMY_DRAWN_QUESTIONS = questions
                 state = state.copy(areQuestionsConfirmed = true)
                 emit(Resource.Success(state))
                 return@flow
@@ -110,6 +112,7 @@ class GetQuestionsDrawState @Inject constructor() {
                 delay(3000)
 
                 if (DUMMY_ARE_QUESTIONS_CONFIRMED) {
+                    DUMMY_DRAWN_QUESTIONS = redrawnQuestions
                     state = state.copy(areQuestionsConfirmed = true)
                     emit(Resource.Success(state))
                     break
@@ -127,6 +130,7 @@ class GetQuestionsDrawState @Inject constructor() {
             delay(10000)
 
             if (Random.nextBoolean()) {
+                DUMMY_DRAWN_QUESTIONS = questions
                 state = state.copy(areQuestionsConfirmed = true)
                 emit(Resource.Success(state))
                 return@flow
@@ -142,12 +146,14 @@ class GetQuestionsDrawState @Inject constructor() {
                 delay(3000)
 
                 if (DUMMY_ARE_QUESTIONS_CONFIRMED) {
+                    DUMMY_DRAWN_QUESTIONS = questions
                     state = state.copy(areQuestionsConfirmed = true)
                     emit(Resource.Success(state))
                     break
                 }
 
                 if (DUMMY_HAS_EXAMINER_ALLOWED_REDRAW) {
+                    DUMMY_DRAWN_QUESTIONS = redrawnQuestions
                     state = state.copy(
                         questions = redrawnQuestions,
                         waitingForDecisionFrom = UserRole.USER_STUDENT

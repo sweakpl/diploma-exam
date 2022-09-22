@@ -1,5 +1,7 @@
 package com.sweak.diplomaexam.common
 
+import com.sweak.diplomaexam.domain.model.ExamQuestion
+
 // Retrofit base URL
 const val BASE_URL = "https://diploma-examination-system.herokuapp.com/"
 
@@ -13,3 +15,4 @@ var DUMMY_HAVE_QUESTIONS_BEEN_DRAWN: Boolean = false
 var DUMMY_HAS_STUDENT_REQUESTED_REDRAW: Boolean = false
 var DUMMY_HAS_EXAMINER_ALLOWED_REDRAW: Boolean = false
 var DUMMY_ARE_QUESTIONS_CONFIRMED: Boolean = false
+var DUMMY_DRAWN_QUESTIONS: List<ExamQuestion> = emptyList()

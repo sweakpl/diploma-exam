@@ -40,7 +40,11 @@
     <string name="no">No</string>
     <string name="dont_allow_interrogative">Don\'t allow?</string>
     <string name="do_you_want_to_disallow_redraw">Do you want to deny student\'s request for redraw and continue to the answering stage?</string>
-    <string name="waiting_for_readiness_confirmation">Waiting for readiness confirmation from the student…</string>
+    <string name="waiting_for_readiness">Waiting for student\'s readiness…</string>
     <string name="waiting_for_permission">Waiting for permission from the examiner…</string>
     <string name="answering_questions">Answering the questions</string>
+    <string name="confirm_readiness">Confirm readiness</string>
+    <string name="after_answer_confirm_readiness">After answering the questions, confirm your willingness to continue to the examiner.</string>
+    <string name="hide_answer">Hide the answer</string>
+    <string name="show_answer">Show the answer</string>
 </resources>

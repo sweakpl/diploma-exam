@@ -41,6 +41,10 @@
     <string name="dont_allow_interrogative">Nie zezwalać?</string>
     <string name="do_you_want_to_disallow_redraw">Czy chcesz odrzucić prośbę studenta o ponowne losowanie pytań i przejść do etapu odpowiadania?</string>
     <string name="waiting_for_permission">Oczekiwanie na pozwolenie od egzaminatora…</string>
-    <string name="waiting_for_readiness_confirmation">Oczekiwanie na potwierdzenie gotowości od studenta…</string>
+    <string name="waiting_for_readiness">Oczekiwanie na gotowość studenta…</string>
     <string name="answering_questions">Odpowiedź na pytania</string>
+    <string name="confirm_readiness">Zgłoś gotowość</string>
+    <string name="after_answer_confirm_readiness">Po odpowiedzi na pytania, potwierdź egzaminatorowi chęć kontynuacji.</string>
+    <string name="hide_answer">Schowaj odpowiedź</string>
+    <string name="show_answer">Pokaż odpowiedź</string>
 </resources>

@@ -8,6 +8,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.sweak.diplomaexam.presentation.lobby.LobbyScreen
 import com.sweak.diplomaexam.presentation.login.LoginScreen
 import com.sweak.diplomaexam.presentation.questions_answering.QuestionsAnsweringScreen
@@ -15,6 +16,7 @@ import com.sweak.diplomaexam.presentation.questions_draw.QuestionsDrawScreen
 import com.sweak.diplomaexam.presentation.ui.theme.DiplomaExamTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalPagerApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 

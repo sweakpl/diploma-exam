@@ -1,7 +1,10 @@
 package com.sweak.diplomaexam.presentation.lobby.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -31,15 +34,14 @@ fun LoggedInAsLayout(
                 painter = painterResource(id = R.drawable.ic_account_circle),
                 contentDescription = "Logged in account icon",
                 tint = MaterialTheme.colors.onPrimary,
-                modifier = Modifier
-                    .size(MaterialTheme.space.medium)
-                    .padding(end = MaterialTheme.space.extraSmall)
+                modifier = Modifier.size(size = MaterialTheme.space.medium)
             )
 
             Text(
                 text = stringResource(R.string.logged_in_as, userEmail ?: ""),
                 style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Start,
+                modifier = Modifier.padding(start = MaterialTheme.space.extraSmall)
             )
         }
     }
