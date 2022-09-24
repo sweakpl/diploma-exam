@@ -47,4 +47,6 @@
     <string name="after_answer_confirm_readiness">Po odpowiedzi na pytania, potwierdź egzaminatorowi chęć kontynuacji.</string>
     <string name="hide_answer">Schowaj odpowiedź</string>
     <string name="show_answer">Pokaż odpowiedź</string>
+    <string name="prepare">Przygotuj się</string>
+    <string name="prepare_and_confirm_readiness">Teraz możesz jeszcze raz spojrzeć na wylosowane pytania i przygotować się do odpowiedzi na nie. Zgłoś swoją gotowość do odpowiedzi przyciskiem \"Zgłoś gotowość\".</string>
 </resources>

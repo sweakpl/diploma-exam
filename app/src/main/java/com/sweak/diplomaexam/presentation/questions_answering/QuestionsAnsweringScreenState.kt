@@ -8,5 +8,6 @@ data class QuestionsAnsweringScreenState(
     val otherUser: User? = null,
     val questions: List<ExamQuestion> = emptyList(),
     val isLoadingResponse: Boolean = false,
-    val isWaitingForStudentReadiness: Boolean = false
+    val isWaitingForStudentReadiness: Boolean = false,
+    val studentPreparationDialogVisible: Boolean = true
 )

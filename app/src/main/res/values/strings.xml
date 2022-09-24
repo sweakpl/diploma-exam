@@ -47,4 +47,7 @@
     <string name="after_answer_confirm_readiness">After answering the questions, confirm your willingness to continue to the examiner.</string>
     <string name="hide_answer">Hide the answer</string>
     <string name="show_answer">Show the answer</string>
+    <string name="prepare">Prepare</string>
+    <string name="prepare_and_confirm_readiness">Now you can once again look at the drawn questions and prepare to answer them. Report your readiness to answer by clicking the \"Confirm readiness\" button.</string>
+    <string name="ok" translatable="false">OK</string>
 </resources>

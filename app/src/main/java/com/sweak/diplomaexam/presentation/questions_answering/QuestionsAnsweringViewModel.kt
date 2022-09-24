@@ -46,6 +46,8 @@ class QuestionsAnsweringViewModel @Inject constructor(
     fun onEvent(event: QuestionsAnsweringScreenEvent) {
         when (event) {
             is QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer -> confirmReadiness()
+            is QuestionsAnsweringScreenEvent.HidePreparationDialog ->
+                state = state.copy(studentPreparationDialogVisible = false)
         }
     }
 

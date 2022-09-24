@@ -16,6 +16,7 @@ import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.common.UserRole
 import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.presentation.components.Dialog
 import com.sweak.diplomaexam.presentation.components.Header
 import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
 import com.sweak.diplomaexam.presentation.components.LoadingLayout
@@ -61,6 +62,27 @@ fun QuestionsAnsweringScreen(
                     QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
                 )
             }
+        )
+    }
+
+    if (questionsAnsweringState.currentUser?.role == UserRole.USER_STUDENT &&
+        questionsAnsweringState.studentPreparationDialogVisible
+    ) {
+        Dialog(
+            title = stringResource(R.string.prepare),
+            message = stringResource(R.string.prepare_and_confirm_readiness),
+            onDismissRequest = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HidePreparationDialog
+                )
+            },
+            onlyPositiveButton = true,
+            onPositiveClick = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HidePreparationDialog
+                )
+            },
+            positiveButtonText = stringResource(R.string.ok)
         )
     }
 }
