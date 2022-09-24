@@ -42,7 +42,12 @@ fun QuestionsAnsweringScreen(
             otherUser = questionsAnsweringState.otherUser,
             questions = questionsAnsweringState.questions,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
-            isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness
+            isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
+            onConfirmReadiness = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
+                )
+            }
         )
     } else {
         MediumOrExpandedQuestionsAnsweringScreen(
@@ -50,7 +55,12 @@ fun QuestionsAnsweringScreen(
             otherUser = questionsAnsweringState.otherUser,
             questions = questionsAnsweringState.questions,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
-            isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness
+            isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
+            onConfirmReadiness = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
+                )
+            }
         )
     }
 }
@@ -63,7 +73,8 @@ fun CompactQuestionsAnsweringScreen(
     otherUser: User?,
     questions: List<ExamQuestion>,
     isLoadingResponse: Boolean,
-    isWaitingForStudentReadiness: Boolean
+    isWaitingForStudentReadiness: Boolean,
+    onConfirmReadiness: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -108,7 +119,7 @@ fun CompactQuestionsAnsweringScreen(
                         displayMode = StudentQuestionsPanelDisplayMode.COMPACT,
                         isLoadingResponse = isLoadingResponse,
                         isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                        onConfirmReadiness = {}
+                        onConfirmReadiness = onConfirmReadiness
                     )
                 } else {
                     ExaminerQuestionsPanel(
@@ -139,7 +150,8 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     otherUser: User?,
     questions: List<ExamQuestion>,
     isLoadingResponse: Boolean,
-    isWaitingForStudentReadiness: Boolean
+    isWaitingForStudentReadiness: Boolean,
+    onConfirmReadiness: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -187,7 +199,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
                         displayMode = StudentQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
                         isLoadingResponse = isLoadingResponse,
                         isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                        onConfirmReadiness = {}
+                        onConfirmReadiness = onConfirmReadiness
                     )
                 } else {
                     ExaminerQuestionsPanel(

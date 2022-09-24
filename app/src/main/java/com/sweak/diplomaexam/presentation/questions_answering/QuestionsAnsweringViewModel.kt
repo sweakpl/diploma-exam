@@ -6,15 +6,18 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.common.Resource
+import com.sweak.diplomaexam.domain.use_case.questions_answering.ConfirmReadinessToAnswer
 import com.sweak.diplomaexam.domain.use_case.questions_answering.GetQuestionsAnsweringState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class QuestionsAnsweringViewModel @Inject constructor(
-    getQuestionsAnsweringState: GetQuestionsAnsweringState
+    getQuestionsAnsweringState: GetQuestionsAnsweringState,
+    private val confirmReadinessToAnswer: ConfirmReadinessToAnswer,
 ) : ViewModel() {
 
     var state by mutableStateOf(QuestionsAnsweringScreenState())
@@ -38,5 +41,21 @@ class QuestionsAnsweringViewModel @Inject constructor(
                 else -> { /* no-op */ }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun onEvent(event: QuestionsAnsweringScreenEvent) {
+        when (event) {
+            is QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer -> confirmReadiness()
+        }
+    }
+
+    private fun confirmReadiness() =
+        performRequest { viewModelScope.launch { confirmReadinessToAnswer() } }
+
+    private fun performRequest(request: () -> Unit) {
+        hasFinalizedRequest = false
+        state = state.copy(isLoadingResponse = true)
+        request()
+        hasFinalizedRequest = true
     }
 }

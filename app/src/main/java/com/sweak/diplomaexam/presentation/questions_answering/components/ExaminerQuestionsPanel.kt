@@ -85,7 +85,7 @@ fun ExaminerQuestionsPanel(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = MaterialTheme.space.large)
+                    .padding(top = MaterialTheme.space.large)
             ) {
                 PagerButton(
                     onClick = onLeftButtonClick,
@@ -113,12 +113,16 @@ fun ExaminerQuestionsPanel(
                 modifier = modifier.fillMaxWidth()
             ) { targetState ->
                 if (targetState) {
-                    LoadingLayout(loadingLayoutSize = LoadingLayoutSize.SMALL)
+                    LoadingLayout(
+                        loadingLayoutSize = LoadingLayoutSize.SMALL,
+                        modifier = Modifier.padding(top = MaterialTheme.space.large)
+                    )
                 } else {
                     AnimatedVisibility(visible = isWaitingForStudentReadiness) {
                         LoadingLayout(
                             loadingLayoutSize = LoadingLayoutSize.SMALL,
-                            text = stringResource(R.string.waiting_for_readiness)
+                            text = stringResource(R.string.waiting_for_readiness),
+                            modifier = Modifier.padding(top = MaterialTheme.space.large)
                         )
                     }
                 }

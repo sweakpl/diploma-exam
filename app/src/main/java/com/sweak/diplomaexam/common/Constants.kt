@@ -16,3 +16,4 @@ var DUMMY_HAS_STUDENT_REQUESTED_REDRAW: Boolean = false
 var DUMMY_HAS_EXAMINER_ALLOWED_REDRAW: Boolean = false
 var DUMMY_ARE_QUESTIONS_CONFIRMED: Boolean = false
 var DUMMY_DRAWN_QUESTIONS: List<ExamQuestion> = emptyList()
+var DUMMY_IS_STUDENT_READY_TO_ANSWER = false

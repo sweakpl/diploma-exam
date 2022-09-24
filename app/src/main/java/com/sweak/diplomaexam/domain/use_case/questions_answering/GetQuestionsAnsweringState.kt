@@ -9,17 +9,34 @@ import javax.inject.Inject
 
 class GetQuestionsAnsweringState @Inject constructor() {
 
+    private var state: QuestionsAnsweringState = QuestionsAnsweringState()
+
     operator fun invoke() = flow<Resource<QuestionsAnsweringState>> {
         delay(3000)
-        emit(
-            Resource.Success(
-                QuestionsAnsweringState(
-                    currentUser = User(DUMMY_USER_ROLE, DUMMY_USER_EMAIL),
-                    otherUser = User(DUMMY_OTHER_USER_ROLE, DUMMY_OTHER_USER_EMAIL),
-                    questions = DUMMY_DRAWN_QUESTIONS,
-                    isWaitingForStudentReadiness = true
-                )
-            )
+
+        state = state.copy(
+            currentUser = User(DUMMY_USER_ROLE, DUMMY_USER_EMAIL),
+            otherUser = User(DUMMY_OTHER_USER_ROLE, DUMMY_OTHER_USER_EMAIL),
+            questions = DUMMY_DRAWN_QUESTIONS,
+            isWaitingForStudentReadiness = true
         )
+        emit(Resource.Success(state))
+
+        if (DUMMY_USER_ROLE == UserRole.USER_STUDENT) {
+            while (true) {
+                delay(3000)
+
+                if (DUMMY_IS_STUDENT_READY_TO_ANSWER) {
+                    state = state.copy(isWaitingForStudentReadiness = false)
+                    emit(Resource.Success(state))
+                    break
+                }
+            }
+        } else if (DUMMY_USER_ROLE == UserRole.USER_EXAMINER) {
+            delay(10000)
+
+            state = state.copy(isWaitingForStudentReadiness = false)
+            emit(Resource.Success(state))
+        }
     }
 }
