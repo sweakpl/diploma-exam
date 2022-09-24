@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DoneOutline
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -94,10 +97,10 @@ fun Header(
                                     .wrapContentWidth()
                             ) {
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_person),
+                                    imageVector = Icons.Default.PersonOutline,
                                     contentDescription = "User in session icon",
                                     tint = MaterialTheme.colors.onSurface,
-                                    modifier = Modifier.padding(end = MaterialTheme.space.small)
+                                    modifier = Modifier.size(size = 24.dp)
                                 )
 
                                 Text(
@@ -106,7 +109,8 @@ fun Header(
                                     color = MaterialTheme.colors.onSurface,
                                     textAlign = TextAlign.Start,
                                     overflow = TextOverflow.Ellipsis,
-                                    maxLines = 1
+                                    maxLines = 1,
+                                    modifier = Modifier.padding(start = MaterialTheme.space.small)
                                 )
                             }
                         }
@@ -134,9 +138,10 @@ fun Header(
                     modifier = Modifier.size(36.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_group),
+                        imageVector = Icons.Default.Group,
                         contentDescription = "Session participants button",
-                        tint = MaterialTheme.colors.onPrimary
+                        tint = MaterialTheme.colors.onPrimary,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
 
@@ -146,9 +151,10 @@ fun Header(
                     enabled = proceedButtonEnabled
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_done),
+                        imageVector = Icons.Default.DoneOutline,
                         contentDescription = "Proceed with the session button",
-                        tint = MaterialTheme.colors.onPrimary
+                        tint = MaterialTheme.colors.onPrimary,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
@@ -170,9 +176,10 @@ fun Header(
                 modifier = Modifier.size(36.dp)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_group),
+                    imageVector = Icons.Default.Group,
                     contentDescription = "Session participants button",
-                    tint = MaterialTheme.colors.onPrimary
+                    tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
@@ -188,9 +195,10 @@ fun Header(
                 enabled = proceedButtonEnabled
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_done),
+                    imageVector = Icons.Default.DoneOutline,
                     contentDescription = "Proceed with the session button",
-                    tint = MaterialTheme.colors.onPrimary
+                    tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }

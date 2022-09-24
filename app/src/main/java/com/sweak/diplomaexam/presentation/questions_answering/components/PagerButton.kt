@@ -4,11 +4,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
-import com.sweak.diplomaexam.R
 
 @Composable
 fun PagerButton(
@@ -22,10 +23,8 @@ fun PagerButton(
         enabled = enabled
     ) {
         Icon(
-            painter = painterResource(
-                if (direction == PagerButtonDirection.RIGHT) R.drawable.ic_arrow_forward_ios
-                else R.drawable.ic_arrow_back_ios
-            ),
+            imageVector = if (direction == PagerButtonDirection.RIGHT) Icons.Default.ArrowForwardIos
+            else Icons.Default.ArrowBackIos,
             contentDescription = "Questions page change " +
                     "${if (direction == PagerButtonDirection.RIGHT) "right" else "left"} arrow",
             tint =

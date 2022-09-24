@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
@@ -68,9 +69,10 @@ fun LoginForm(
                     .padding(end = MaterialTheme.space.small)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_help),
+                    imageVector = Icons.Default.Help,
                     contentDescription = "Login help icon",
                     tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.size(size = 24.dp)
                 )
             }
 
@@ -119,7 +121,10 @@ fun LoginForm(
                     onClick = { onEmailAddressChange("") },
                     enabled = !isAuthorizing
                 ) {
-                    Icon(imageVector = Icons.Default.Clear, "Clear text")
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Clear text"
+                    )
                 }
             },
             modifier = Modifier

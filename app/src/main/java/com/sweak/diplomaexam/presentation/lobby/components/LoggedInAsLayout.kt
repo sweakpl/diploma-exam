@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.sweak.diplomaexam.R
@@ -31,7 +32,7 @@ fun LoggedInAsLayout(
             verticalAlignment = Alignment.Top
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_account_circle),
+                imageVector = Icons.Default.AccountCircle,
                 contentDescription = "Logged in account icon",
                 tint = MaterialTheme.colors.onPrimary,
                 modifier = Modifier.size(size = MaterialTheme.space.medium)

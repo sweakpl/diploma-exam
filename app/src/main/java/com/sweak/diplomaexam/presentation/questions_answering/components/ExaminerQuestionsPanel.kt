@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandCircleDown
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -194,94 +196,92 @@ fun CompactExaminerQuestionsPager(
 
         val rotation = remember { Animatable(0f) }
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = MaterialTheme.space.extraSmall)
                 .verticalScroll(rememberScrollState())
         ) {
-            Column {
-                Card(
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.question_with_number,
+                            currentQuestion.number
+                        ),
+                        style = MaterialTheme.typography.h2,
+                        color = MaterialTheme.colors.onSurface,
+                        modifier = Modifier.padding(
+                            bottom = MaterialTheme.space.small,
+                            top = MaterialTheme.space.medium,
+                            start = MaterialTheme.space.medium,
+                            end = MaterialTheme.space.medium
+                        )
+                    )
+
+                    Text(
+                        text = currentQuestion.question,
+                        color = MaterialTheme.colors.onSurface,
+                        modifier = Modifier.padding(
+                            bottom = MaterialTheme.space.medium,
+                            top = MaterialTheme.space.small,
+                            start = MaterialTheme.space.medium,
+                            end = MaterialTheme.space.small
+                        )
+                    )
+                }
+            }
+
+            if (currentQuestion.answer != null) {
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        Text(
-                            text = stringResource(
-                                R.string.question_with_number,
-                                currentQuestion.number
-                            ),
-                            style = MaterialTheme.typography.h2,
-                            color = MaterialTheme.colors.onSurface,
-                            modifier = Modifier.padding(
-                                bottom = MaterialTheme.space.small,
-                                top = MaterialTheme.space.medium,
-                                start = MaterialTheme.space.medium,
-                                end = MaterialTheme.space.medium
-                            )
+                    Text(
+                        text = stringResource(
+                            if (questionsAnswersExpandedStates[page])
+                                R.string.hide_answer
+                            else
+                                R.string.show_answer
                         )
+                    )
 
-                        Text(
-                            text = currentQuestion.question,
-                            color = MaterialTheme.colors.onSurface,
-                            modifier = Modifier.padding(
-                                bottom = MaterialTheme.space.medium,
-                                top = MaterialTheme.space.small,
-                                start = MaterialTheme.space.medium,
-                                end = MaterialTheme.space.small
-                            )
+                    IconButton(
+                        onClick = {
+                            if (!rotation.isRunning) {
+                                composableScope.launch {
+                                    rotation.animateTo(
+                                        targetValue =
+                                        if (questionsAnswersExpandedStates[page]) 0f else 180f
+                                    )
+                                    questionsAnswersExpandedStates[page] =
+                                        !questionsAnswersExpandedStates[page]
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ExpandCircleDown,
+                            contentDescription = "Show the answer button",
+                            tint = MaterialTheme.colors.onPrimary,
+                            modifier = Modifier
+                                .size(size = 24.dp)
+                                .padding(start = MaterialTheme.space.extraSmall)
+                                .rotate(rotation.value)
                         )
                     }
                 }
 
-                if (currentQuestion.answer != null) {
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = stringResource(
-                                if (questionsAnswersExpandedStates[page])
-                                    R.string.hide_answer
-                                else
-                                    R.string.show_answer
-                            )
-                        )
-
-                        IconButton(
-                            onClick = {
-                                if (!rotation.isRunning) {
-                                    composableScope.launch {
-                                        rotation.animateTo(
-                                            targetValue =
-                                            if (questionsAnswersExpandedStates[page]) 0f else 180f
-                                        )
-                                        questionsAnswersExpandedStates[page] =
-                                            !questionsAnswersExpandedStates[page]
-                                    }
-                                }
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_expand_circle),
-                                contentDescription = "Show the answer button",
-                                tint = MaterialTheme.colors.onPrimary,
-                                modifier = Modifier
-                                    .size(size = 24.dp)
-                                    .padding(start = MaterialTheme.space.extraSmall)
-                                    .rotate(rotation.value)
-                            )
-                        }
-                    }
-
-                    AnimatedVisibility(
-                        visible = questionsAnswersExpandedStates[page],
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(text = currentQuestion.answer)
-                    }
+                AnimatedVisibility(
+                    visible = questionsAnswersExpandedStates[page],
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = currentQuestion.answer)
                 }
             }
         }
@@ -391,7 +391,7 @@ fun MediumOrExpandedExaminerQuestionsPager(
                             }
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_expand_circle),
+                                imageVector = Icons.Default.ExpandCircleDown,
                                 contentDescription = "Show the answer button",
                                 tint = MaterialTheme.colors.onPrimary,
                                 modifier = Modifier

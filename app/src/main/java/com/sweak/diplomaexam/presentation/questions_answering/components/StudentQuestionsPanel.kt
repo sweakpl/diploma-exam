@@ -9,11 +9,12 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -247,7 +248,7 @@ fun StudentQuestionsOperations(
                         verticalAlignment = Alignment.Top
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_info),
+                            imageVector = Icons.Default.Info,
                             contentDescription = "Information icon",
                             tint = MaterialTheme.colors.onPrimary,
                             modifier = Modifier.size(size = MaterialTheme.space.medium)
