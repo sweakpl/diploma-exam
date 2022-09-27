@@ -50,4 +50,9 @@
     <string name="prepare">Przygotuj się</string>
     <string name="prepare_and_confirm_readiness">Teraz możesz jeszcze raz spojrzeć na wylosowane pytania i przygotować się do odpowiedzi na nie. Zgłoś swoją gotowość do odpowiedzi przyciskiem \"Zgłoś gotowość\".</string>
     <string name="grade">Ocena</string>
+    <string name="grading">Ocenianie</string>
+    <string name="examination_board_summarizing_exam">Komisja egzaminacyjna podsumowuje egzamin…</string>
+    <string name="cannot_continue">Nie można kontynouwać</string>
+    <string name="grades_missing_cannot_continue">Nie wszystkie oceny zostały jeszcze wystawione - nie można kontynuować.</string>
+    <string name="do_you_want_to_submit_question_grades">Czy chcesz zakończyć odpowiedź na pytania egzaminacyjne i przejść dalej? Upewnij się, że wprowadzono porządane oceny.</string>
 </resources>

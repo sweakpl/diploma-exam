@@ -5,5 +5,6 @@ data class QuestionsAnsweringState(
     val otherUser: User? = null,
     val questions: List<ExamQuestion> = emptyList(),
     val questionNumbersToGradesMap: Map<Int, Grade> = emptyMap(),
-    val isWaitingForStudentReadiness: Boolean = false
+    val isWaitingForStudentReadiness: Boolean = false,
+    val isWaitingForFinalEvaluation: Boolean = false
 )

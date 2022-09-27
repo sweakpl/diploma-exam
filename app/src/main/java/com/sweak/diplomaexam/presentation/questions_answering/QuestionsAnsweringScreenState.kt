@@ -11,5 +11,8 @@ data class QuestionsAnsweringScreenState(
     val questionNumbersToGradesMap: Map<Int, Grade> = emptyMap(),
     val isLoadingResponse: Boolean = false,
     val isWaitingForStudentReadiness: Boolean = false,
-    val studentPreparationDialogVisible: Boolean = true
+    val isWaitingForFinalEvaluation: Boolean = false,
+    val studentPreparationDialogVisible: Boolean = true,
+    val cannotSubmitGradesDialogVisible: Boolean = false,
+    val submitQuestionGradesDialogVisible: Boolean = false
 )

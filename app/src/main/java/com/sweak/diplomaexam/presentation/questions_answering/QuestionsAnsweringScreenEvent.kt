@@ -7,4 +7,8 @@ sealed class QuestionsAnsweringScreenEvent {
     object HidePreparationDialog : QuestionsAnsweringScreenEvent()
     data class SelectGrade(val questionNumber: Int, val grade: Grade) :
         QuestionsAnsweringScreenEvent()
+    object ProceedClick : QuestionsAnsweringScreenEvent()
+    object SubmitQuestionGrades : QuestionsAnsweringScreenEvent()
+    object HideCannotSubmitGradesDialog : QuestionsAnsweringScreenEvent()
+    object HideSubmitQuestionGradesDialog : QuestionsAnsweringScreenEvent()
 }

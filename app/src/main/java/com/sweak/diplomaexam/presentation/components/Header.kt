@@ -35,7 +35,7 @@ fun Header(
     usersInSession: List<User>,
     modifier: Modifier = Modifier,
     proceedButtonEnabled: Boolean = true,
-    onProceedClickListener: () -> Unit = {}
+    onProceedClick: () -> Unit = {}
 ) {
     var isUsersListPopupExpanded by remember { mutableStateOf(false) }
 
@@ -146,7 +146,7 @@ fun Header(
                 }
 
                 IconButton(
-                    onClick = onProceedClickListener,
+                    onClick = onProceedClick,
                     modifier = Modifier.size(36.dp).alpha(if (proceedButtonEnabled) 1f else 0f),
                     enabled = proceedButtonEnabled
                 ) {
@@ -190,7 +190,7 @@ fun Header(
             )
 
             IconButton(
-                onClick = onProceedClickListener,
+                onClick = onProceedClick,
                 modifier = Modifier.size(36.dp).alpha(if (proceedButtonEnabled) 1f else 0f),
                 enabled = proceedButtonEnabled
             ) {

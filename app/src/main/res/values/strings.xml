@@ -51,4 +51,9 @@
     <string name="prepare_and_confirm_readiness">Now you can once again look at the drawn questions and prepare to answer them. Report your readiness to answer by clicking the \"Confirm readiness\" button.</string>
     <string name="ok" translatable="false">OK</string>
     <string name="grade">Grade</string>
+    <string name="grading">Grading</string>
+    <string name="examination_board_summarizing_exam">Examination board is summarizing the exam…</string>
+    <string name="cannot_continue">Cannot continue</string>
+    <string name="grades_missing_cannot_continue">Not all grades have been set - cannot continue.</string>
+    <string name="do_you_want_to_submit_question_grades">Do you want to end the questions answering and continue? Make sure that desired grades are selected.</string>
 </resources>

@@ -244,7 +244,6 @@ fun CompactQuestionsDrawScreen(
                     }
                 } else {
                     LoadingLayout(
-                        text = stringResource(R.string.loading),
                         modifier = Modifier.padding(
                             start = MaterialTheme.space.large,
                             end = MaterialTheme.space.large,
@@ -374,7 +373,6 @@ fun MediumOrExpandedQuestionsDrawScreen(
                     }
                 } else {
                     LoadingLayout(
-                        text = stringResource(R.string.loading),
                         modifier = Modifier.padding(
                             start = MaterialTheme.space.large,
                             end = MaterialTheme.space.large,

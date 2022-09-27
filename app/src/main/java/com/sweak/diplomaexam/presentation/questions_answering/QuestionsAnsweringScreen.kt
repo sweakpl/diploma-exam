@@ -17,10 +17,7 @@ import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.domain.model.User
-import com.sweak.diplomaexam.presentation.components.Dialog
-import com.sweak.diplomaexam.presentation.components.Header
-import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
-import com.sweak.diplomaexam.presentation.components.LoadingLayout
+import com.sweak.diplomaexam.presentation.components.*
 import com.sweak.diplomaexam.presentation.questions_answering.components.ExaminerQuestionsPanel
 import com.sweak.diplomaexam.presentation.questions_answering.components.ExaminerQuestionsPanelDisplayMode
 import com.sweak.diplomaexam.presentation.questions_answering.components.StudentQuestionsPanel
@@ -46,6 +43,7 @@ fun QuestionsAnsweringScreen(
             questionNumbersToGradesMap = questionsAnsweringState.questionNumbersToGradesMap,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
+            isWaitingForFinalEvaluation = questionsAnsweringState.isWaitingForFinalEvaluation,
             onConfirmReadiness = {
                 questionsAnsweringViewModel.onEvent(
                     QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
@@ -55,6 +53,9 @@ fun QuestionsAnsweringScreen(
                 questionsAnsweringViewModel.onEvent(
                     QuestionsAnsweringScreenEvent.SelectGrade(questionNumber, grade)
                 )
+            },
+            onProceedClick = {
+                questionsAnsweringViewModel.onEvent(QuestionsAnsweringScreenEvent.ProceedClick)
             }
         )
     } else {
@@ -65,6 +66,7 @@ fun QuestionsAnsweringScreen(
             questionNumbersToGradesMap = questionsAnsweringState.questionNumbersToGradesMap,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
+            isWaitingForFinalEvaluation = questionsAnsweringState.isWaitingForFinalEvaluation,
             onConfirmReadiness = {
                 questionsAnsweringViewModel.onEvent(
                     QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
@@ -74,6 +76,9 @@ fun QuestionsAnsweringScreen(
                 questionsAnsweringViewModel.onEvent(
                     QuestionsAnsweringScreenEvent.SelectGrade(questionNumber, grade)
                 )
+            },
+            onProceedClick = {
+                questionsAnsweringViewModel.onEvent(QuestionsAnsweringScreenEvent.ProceedClick)
             }
         )
     }
@@ -98,6 +103,52 @@ fun QuestionsAnsweringScreen(
             positiveButtonText = stringResource(R.string.ok)
         )
     }
+
+    if (questionsAnsweringState.cannotSubmitGradesDialogVisible) {
+        Dialog(
+            title = stringResource(R.string.cannot_continue),
+            message = stringResource(R.string.grades_missing_cannot_continue),
+            onDismissRequest = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideCannotSubmitGradesDialog
+                )
+            },
+            onlyPositiveButton = true,
+            onPositiveClick = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideCannotSubmitGradesDialog
+                )
+            },
+            positiveButtonText = stringResource(R.string.ok)
+        )
+    }
+
+    if (questionsAnsweringState.submitQuestionGradesDialogVisible) {
+        Dialog(
+            title = stringResource(R.string.continue_interrogative),
+            message = stringResource(R.string.do_you_want_to_submit_question_grades),
+            onDismissRequest = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideSubmitQuestionGradesDialog
+                )
+            },
+            onPositiveClick = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideSubmitQuestionGradesDialog
+                )
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.SubmitQuestionGrades
+                )
+            },
+            positiveButtonText = stringResource(R.string.yes),
+            onNegativeClick = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideSubmitQuestionGradesDialog
+                )
+            },
+            negativeButtonText = stringResource(R.string.no)
+        )
+    }
 }
 
 @ExperimentalPagerApi
@@ -110,8 +161,10 @@ fun CompactQuestionsAnsweringScreen(
     questionNumbersToGradesMap: Map<Int, Grade>,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
+    isWaitingForFinalEvaluation: Boolean,
     onConfirmReadiness: () -> Unit,
-    onGradeSelected: (Int, Grade) -> Unit
+    onGradeSelected: (Int, Grade) -> Unit,
+    onProceedClick: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -130,11 +183,14 @@ fun CompactQuestionsAnsweringScreen(
             )
     ) {
         Header(
-            titleText = stringResource(R.string.answering_questions),
+            titleText = stringResource(
+                if (currentUser?.role == UserRole.USER_EXAMINER) R.string.grading
+                else R.string.answering_questions
+            ),
             displayMode = HeaderDisplayMode.COMPACT,
             usersInSession = usersInSession,
             proceedButtonEnabled = currentUser != null && currentUser.role == UserRole.USER_EXAMINER,
-            onProceedClickListener = { /* TODO: Handle proceed */ },
+            onProceedClick = onProceedClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -150,23 +206,41 @@ fun CompactQuestionsAnsweringScreen(
             modifier = Modifier.padding(all = MaterialTheme.space.large)
         ) { targetState ->
             if (targetState) {
-                if (currentUser!!.role == UserRole.USER_STUDENT) {
-                    StudentQuestionsPanel(
-                        questions = questions,
-                        displayMode = StudentQuestionsPanelDisplayMode.COMPACT,
-                        isLoadingResponse = isLoadingResponse,
-                        isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                        onConfirmReadiness = onConfirmReadiness
-                    )
-                } else {
-                    ExaminerQuestionsPanel(
-                        questions = questions,
-                        questionNumbersToGradesMap = questionNumbersToGradesMap,
-                        displayMode = ExaminerQuestionsPanelDisplayMode.COMPACT,
-                        isLoadingResponse = isLoadingResponse,
-                        isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                        onGradeSelected = onGradeSelected
-                    )
+                AnimatedContent(targetState = isWaitingForFinalEvaluation) { state ->
+                    if (!state) {
+                        if (currentUser!!.role == UserRole.USER_STUDENT) {
+                            StudentQuestionsPanel(
+                                questions = questions,
+                                displayMode = StudentQuestionsPanelDisplayMode.COMPACT,
+                                isLoadingResponse = isLoadingResponse,
+                                isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                                onConfirmReadiness = onConfirmReadiness
+                            )
+                        } else {
+                            ExaminerQuestionsPanel(
+                                questions = questions,
+                                questionNumbersToGradesMap = questionNumbersToGradesMap,
+                                displayMode = ExaminerQuestionsPanelDisplayMode.COMPACT,
+                                isLoadingResponse = isLoadingResponse,
+                                isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                                onGradeSelected = onGradeSelected
+                            )
+                        }
+                    } else {
+                        if (currentUser!!.role == UserRole.USER_STUDENT) {
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                LoadingLayout(
+                                    text = stringResource(R.string.examination_board_summarizing_exam)
+                                )
+                            }
+                        } else {
+                            // TODO: Show additional grades component
+                        }
+                    }
                 }
             } else {
                 Column(
@@ -174,7 +248,7 @@ fun CompactQuestionsAnsweringScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    LoadingLayout(text = stringResource(R.string.loading))
+                    LoadingLayout()
                 }
             }
         }
@@ -191,8 +265,10 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     questionNumbersToGradesMap: Map<Int, Grade>,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
+    isWaitingForFinalEvaluation: Boolean,
     onConfirmReadiness: () -> Unit,
-    onGradeSelected: (Int, Grade) -> Unit
+    onGradeSelected: (Int, Grade) -> Unit,
+    onProceedClick: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -215,7 +291,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
             displayMode = HeaderDisplayMode.MEDIUM_OR_EXPANDED,
             usersInSession = usersInSession,
             proceedButtonEnabled = currentUser != null && currentUser.role == UserRole.USER_EXAMINER,
-            onProceedClickListener = { /* TODO: Handle proceed */ },
+            onProceedClick = onProceedClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -234,23 +310,41 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
             )
         ) { targetState ->
             if (targetState) {
-                if (currentUser!!.role == UserRole.USER_STUDENT) {
-                    StudentQuestionsPanel(
-                        questions = questions,
-                        displayMode = StudentQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
-                        isLoadingResponse = isLoadingResponse,
-                        isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                        onConfirmReadiness = onConfirmReadiness
-                    )
-                } else {
-                    ExaminerQuestionsPanel(
-                        questions = questions,
-                        questionNumbersToGradesMap = questionNumbersToGradesMap,
-                        displayMode = ExaminerQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
-                        isLoadingResponse = isLoadingResponse,
-                        isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                        onGradeSelected = onGradeSelected
-                    )
+                AnimatedContent(targetState = isWaitingForFinalEvaluation) { state ->
+                    if (!state) {
+                        if (currentUser!!.role == UserRole.USER_STUDENT) {
+                            StudentQuestionsPanel(
+                                questions = questions,
+                                displayMode = StudentQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
+                                isLoadingResponse = isLoadingResponse,
+                                isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                                onConfirmReadiness = onConfirmReadiness
+                            )
+                        } else {
+                            ExaminerQuestionsPanel(
+                                questions = questions,
+                                questionNumbersToGradesMap = questionNumbersToGradesMap,
+                                displayMode = ExaminerQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
+                                isLoadingResponse = isLoadingResponse,
+                                isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                                onGradeSelected = onGradeSelected
+                            )
+                        }
+                    } else {
+                        if (currentUser!!.role == UserRole.USER_STUDENT) {
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                LoadingLayout(
+                                    text = stringResource(R.string.examination_board_summarizing_exam)
+                                )
+                            }
+                        } else {
+                            // TODO: Show additional grades component
+                        }
+                    }
                 }
             } else {
                 Column(
@@ -258,7 +352,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    LoadingLayout(text = stringResource(R.string.loading))
+                    LoadingLayout()
                 }
             }
         }

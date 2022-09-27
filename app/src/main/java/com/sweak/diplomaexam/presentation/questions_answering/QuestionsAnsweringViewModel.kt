@@ -6,8 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.common.Resource
+import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.domain.use_case.questions_answering.ConfirmReadinessToAnswer
 import com.sweak.diplomaexam.domain.use_case.questions_answering.GetQuestionsAnsweringState
+import com.sweak.diplomaexam.domain.use_case.questions_answering.SubmitQuestionGrades
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -18,6 +20,7 @@ import javax.inject.Inject
 class QuestionsAnsweringViewModel @Inject constructor(
     getQuestionsAnsweringState: GetQuestionsAnsweringState,
     private val confirmReadinessToAnswer: ConfirmReadinessToAnswer,
+    private val submitQuestionGrades: SubmitQuestionGrades
 ) : ViewModel() {
 
     var state by mutableStateOf(QuestionsAnsweringScreenState())
@@ -35,7 +38,8 @@ class QuestionsAnsweringViewModel @Inject constructor(
                             questions = it.data.questions,
                             questionNumbersToGradesMap = it.data.questionNumbersToGradesMap,
                             isLoadingResponse = !hasFinalizedRequest,
-                            isWaitingForStudentReadiness = it.data.isWaitingForStudentReadiness
+                            isWaitingForStudentReadiness = it.data.isWaitingForStudentReadiness,
+                            isWaitingForFinalEvaluation = it.data.isWaitingForFinalEvaluation
                         )
                     }
                 }
@@ -59,11 +63,35 @@ class QuestionsAnsweringViewModel @Inject constructor(
                     questionNumbersToGradesMap = newQuestionNumbersToGradesMap
                 )
             }
+            is QuestionsAnsweringScreenEvent.ProceedClick -> {
+                if (!state.isWaitingForFinalEvaluation) {
+                    state.questions.forEach {
+                        if (!state.questionNumbersToGradesMap.containsKey(it.number) ||
+                            state.questionNumbersToGradesMap[it.number] !is Grade
+                        ) {
+                            state = state.copy(cannotSubmitGradesDialogVisible = true)
+                            return
+                        }
+                    }
+
+                    state = state.copy(submitQuestionGradesDialogVisible = true)
+                }
+            }
+            is QuestionsAnsweringScreenEvent.HideCannotSubmitGradesDialog -> {
+                state = state.copy(cannotSubmitGradesDialogVisible = false)
+            }
+            is QuestionsAnsweringScreenEvent.HideSubmitQuestionGradesDialog -> {
+                state = state.copy(submitQuestionGradesDialogVisible = false)
+            }
+            is QuestionsAnsweringScreenEvent.SubmitQuestionGrades -> submitGradesForQuestions()
         }
     }
 
     private fun confirmReadiness() =
         performRequest { viewModelScope.launch { confirmReadinessToAnswer() } }
+
+    private fun submitGradesForQuestions() =
+        performRequest { viewModelScope.launch { submitQuestionGrades() } }
 
     private fun performRequest(request: () -> Unit) {
         hasFinalizedRequest = false
