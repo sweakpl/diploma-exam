@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.presentation.login
 
-import com.sweak.diplomaexam.common.UserRole
+import com.sweak.diplomaexam.domain.model.UserRole
 
 sealed class LoginScreenEvent {
     data class UserRoleChosen(val userRole: UserRole): LoginScreenEvent()

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.common.*
+import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.domain.use_case.login.AuthenticateUser
 import com.sweak.diplomaexam.domain.use_case.login.ValidateEmail
 import com.sweak.diplomaexam.presentation.ui.util.UiText

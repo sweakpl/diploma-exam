@@ -1,7 +1,5 @@
 package com.sweak.diplomaexam.domain.model
 
-import com.sweak.diplomaexam.common.UserRole
-
 data class QuestionsDrawState(
     val currentUser: User? = null,
     val otherUser: User? = null,

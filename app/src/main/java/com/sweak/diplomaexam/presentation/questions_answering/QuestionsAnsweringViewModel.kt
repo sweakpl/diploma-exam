@@ -33,6 +33,7 @@ class QuestionsAnsweringViewModel @Inject constructor(
                             currentUser = it.data.currentUser,
                             otherUser = it.data.otherUser,
                             questions = it.data.questions,
+                            questionNumbersToGradesMap = it.data.questionNumbersToGradesMap,
                             isLoadingResponse = !hasFinalizedRequest,
                             isWaitingForStudentReadiness = it.data.isWaitingForStudentReadiness
                         )
@@ -48,6 +49,16 @@ class QuestionsAnsweringViewModel @Inject constructor(
             is QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer -> confirmReadiness()
             is QuestionsAnsweringScreenEvent.HidePreparationDialog ->
                 state = state.copy(studentPreparationDialogVisible = false)
+            is QuestionsAnsweringScreenEvent.SelectGrade -> {
+                val newQuestionNumbersToGradesMap =
+                    state.questionNumbersToGradesMap.toMutableMap().apply {
+                        this[event.questionNumber] = event.grade
+                    }
+
+                state = state.copy(
+                    questionNumbersToGradesMap = newQuestionNumbersToGradesMap
+                )
+            }
         }
     }
 

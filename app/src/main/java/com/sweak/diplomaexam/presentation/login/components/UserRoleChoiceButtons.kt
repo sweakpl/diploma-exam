@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.common.UserRole
+import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.presentation.components.ThickWhiteButton
 import com.sweak.diplomaexam.presentation.ui.theme.space
 

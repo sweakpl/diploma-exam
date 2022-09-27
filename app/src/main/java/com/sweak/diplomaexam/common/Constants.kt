@@ -1,6 +1,7 @@
 package com.sweak.diplomaexam.common
 
 import com.sweak.diplomaexam.domain.model.ExamQuestion
+import com.sweak.diplomaexam.domain.model.UserRole
 
 // Retrofit base URL
 const val BASE_URL = "https://diploma-examination-system.herokuapp.com/"

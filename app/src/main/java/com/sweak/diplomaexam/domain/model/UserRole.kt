@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.common
+package com.sweak.diplomaexam.domain.model
 
 enum class UserRole {
     USER_STUDENT, USER_EXAMINER

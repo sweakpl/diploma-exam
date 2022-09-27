@@ -50,4 +50,5 @@
     <string name="prepare">Prepare</string>
     <string name="prepare_and_confirm_readiness">Now you can once again look at the drawn questions and prepare to answer them. Report your readiness to answer by clicking the \"Confirm readiness\" button.</string>
     <string name="ok" translatable="false">OK</string>
+    <string name="grade">Grade</string>
 </resources>

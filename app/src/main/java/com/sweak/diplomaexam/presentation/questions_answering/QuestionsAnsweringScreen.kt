@@ -13,8 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.common.UserRole
+import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.domain.model.ExamQuestion
+import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.presentation.components.Dialog
 import com.sweak.diplomaexam.presentation.components.Header
@@ -42,11 +43,17 @@ fun QuestionsAnsweringScreen(
             currentUser = questionsAnsweringState.currentUser,
             otherUser = questionsAnsweringState.otherUser,
             questions = questionsAnsweringState.questions,
+            questionNumbersToGradesMap = questionsAnsweringState.questionNumbersToGradesMap,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
             onConfirmReadiness = {
                 questionsAnsweringViewModel.onEvent(
                     QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
+                )
+            },
+            onGradeSelected = { questionNumber, grade ->
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.SelectGrade(questionNumber, grade)
                 )
             }
         )
@@ -55,11 +62,17 @@ fun QuestionsAnsweringScreen(
             currentUser = questionsAnsweringState.currentUser,
             otherUser = questionsAnsweringState.otherUser,
             questions = questionsAnsweringState.questions,
+            questionNumbersToGradesMap = questionsAnsweringState.questionNumbersToGradesMap,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
             onConfirmReadiness = {
                 questionsAnsweringViewModel.onEvent(
                     QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
+                )
+            },
+            onGradeSelected = { questionNumber, grade ->
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.SelectGrade(questionNumber, grade)
                 )
             }
         )
@@ -94,9 +107,11 @@ fun CompactQuestionsAnsweringScreen(
     currentUser: User?,
     otherUser: User?,
     questions: List<ExamQuestion>,
+    questionNumbersToGradesMap: Map<Int, Grade>,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
-    onConfirmReadiness: () -> Unit
+    onConfirmReadiness: () -> Unit,
+    onGradeSelected: (Int, Grade) -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -146,9 +161,11 @@ fun CompactQuestionsAnsweringScreen(
                 } else {
                     ExaminerQuestionsPanel(
                         questions = questions,
+                        questionNumbersToGradesMap = questionNumbersToGradesMap,
                         displayMode = ExaminerQuestionsPanelDisplayMode.COMPACT,
                         isLoadingResponse = isLoadingResponse,
-                        isWaitingForStudentReadiness = isWaitingForStudentReadiness
+                        isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                        onGradeSelected = onGradeSelected
                     )
                 }
             } else {
@@ -171,9 +188,11 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     currentUser: User?,
     otherUser: User?,
     questions: List<ExamQuestion>,
+    questionNumbersToGradesMap: Map<Int, Grade>,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
-    onConfirmReadiness: () -> Unit
+    onConfirmReadiness: () -> Unit,
+    onGradeSelected: (Int, Grade) -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -226,9 +245,11 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
                 } else {
                     ExaminerQuestionsPanel(
                         questions = questions,
+                        questionNumbersToGradesMap = questionNumbersToGradesMap,
                         displayMode = ExaminerQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
                         isLoadingResponse = isLoadingResponse,
-                        isWaitingForStudentReadiness = isWaitingForStudentReadiness
+                        isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                        onGradeSelected = onGradeSelected
                     )
                 }
             } else {

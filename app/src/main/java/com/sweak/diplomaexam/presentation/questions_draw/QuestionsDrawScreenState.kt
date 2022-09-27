@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.presentation.questions_draw
 
-import com.sweak.diplomaexam.common.UserRole
+import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.User
 

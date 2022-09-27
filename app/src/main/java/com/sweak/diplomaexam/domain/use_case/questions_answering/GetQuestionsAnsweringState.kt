@@ -3,6 +3,7 @@ package com.sweak.diplomaexam.domain.use_case.questions_answering
 import com.sweak.diplomaexam.common.*
 import com.sweak.diplomaexam.domain.model.QuestionsAnsweringState
 import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.domain.model.UserRole
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -18,6 +19,7 @@ class GetQuestionsAnsweringState @Inject constructor() {
             currentUser = User(DUMMY_USER_ROLE, DUMMY_USER_EMAIL),
             otherUser = User(DUMMY_OTHER_USER_ROLE, DUMMY_OTHER_USER_EMAIL),
             questions = DUMMY_DRAWN_QUESTIONS,
+            questionNumbersToGradesMap = emptyMap(),
             isWaitingForStudentReadiness = true
         )
         emit(Resource.Success(state))
