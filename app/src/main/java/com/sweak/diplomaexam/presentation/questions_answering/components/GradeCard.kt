@@ -1,9 +1,6 @@
 package com.sweak.diplomaexam.presentation.questions_answering.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -45,8 +42,7 @@ fun GradeCard(
                     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
                     OutlinedTextField(
-                        value =
-                        grade?.stringRepresentation ?: "",
+                        value = grade?.stringRepresentation ?: "",
                         onValueChange = {},
                         readOnly = true,
                         textStyle = MaterialTheme.typography.body1.copy(
@@ -99,21 +95,27 @@ fun GradeCard(
         } else if (gradeCardOrientation == GradeCardOrientation.VERTICAL) {
             Column(
                 horizontalAlignment = Alignment.Start,
-                modifier = Modifier.padding(all = MaterialTheme.space.medium)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = MaterialTheme.space.medium)
             ) {
                 Text(
                     text = text,
                     style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.onSurface
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
-                Column(modifier = Modifier.padding(top = MaterialTheme.space.medium)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = MaterialTheme.space.medium)
+                ) {
                     var expanded by remember { mutableStateOf(false) }
                     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
                     OutlinedTextField(
-                        value =
-                        grade?.stringRepresentation ?: "",
+                        value = grade?.stringRepresentation ?: "",
                         onValueChange = {},
                         readOnly = true,
                         textStyle = MaterialTheme.typography.body1.copy(
@@ -138,9 +140,11 @@ fun GradeCard(
                                 )
                             }
                         },
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
-                            textFieldSize = coordinates.size.toSize()
-                        }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned { coordinates ->
+                                textFieldSize = coordinates.size.toSize()
+                            }
                     )
 
                     DropdownMenu(

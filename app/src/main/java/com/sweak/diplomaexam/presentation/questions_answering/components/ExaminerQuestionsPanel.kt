@@ -36,7 +36,7 @@ fun ExaminerQuestionsPanel(
     displayMode: ExaminerQuestionsPanelDisplayMode,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
-    onGradeSelected: (Int, Grade) -> Unit,
+    onQuestionGradeSelected: (Int, Grade) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val composableScope = rememberCoroutineScope()
@@ -84,7 +84,7 @@ fun ExaminerQuestionsPanel(
                 questionNumbersToGradesMap = questionNumbersToGradesMap,
                 isWaitingForStudentReadiness = isWaitingForStudentReadiness,
                 onGradeSelected = { questionNumber, grade ->
-                    onGradeSelected(questionNumber, grade)
+                    onQuestionGradeSelected(questionNumber, grade)
                 },
                 modifier = Modifier.weight(1f)
             )
@@ -143,8 +143,8 @@ fun ExaminerQuestionsPanel(
                 questionNumbersToGradesMap = questionNumbersToGradesMap,
                 isLoadingResponse = isLoadingResponse,
                 isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                onGradeSelected = { questionNumber, grade ->
-                    onGradeSelected(questionNumber, grade)
+                onQuestionGradeSelected = { questionNumber, grade ->
+                    onQuestionGradeSelected(questionNumber, grade)
                 },
                 modifier = Modifier.weight(1f)
             )
@@ -329,7 +329,7 @@ fun MediumOrExpandedExaminerQuestionsPager(
     questionNumbersToGradesMap: Map<Int, Grade>,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
-    onGradeSelected: (Int, Grade) -> Unit,
+    onQuestionGradeSelected: (Int, Grade) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val composableScope = rememberCoroutineScope()
@@ -467,7 +467,7 @@ fun MediumOrExpandedExaminerQuestionsPager(
                                 text = stringResource(R.string.grade),
                                 grade = questionNumbersToGradesMap[currentQuestion.number],
                                 onGradeSelected = { grade ->
-                                    onGradeSelected(currentQuestion.number, grade)
+                                    onQuestionGradeSelected(currentQuestion.number, grade)
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             )

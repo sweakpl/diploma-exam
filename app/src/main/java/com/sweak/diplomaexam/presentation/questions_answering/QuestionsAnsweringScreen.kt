@@ -1,27 +1,31 @@
 package com.sweak.diplomaexam.presentation.questions_answering
 
+import android.content.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.domain.model.User
-import com.sweak.diplomaexam.presentation.components.*
-import com.sweak.diplomaexam.presentation.questions_answering.components.ExaminerQuestionsPanel
-import com.sweak.diplomaexam.presentation.questions_answering.components.ExaminerQuestionsPanelDisplayMode
-import com.sweak.diplomaexam.presentation.questions_answering.components.StudentQuestionsPanel
-import com.sweak.diplomaexam.presentation.questions_answering.components.StudentQuestionsPanelDisplayMode
+import com.sweak.diplomaexam.domain.model.UserRole
+import com.sweak.diplomaexam.presentation.components.Dialog
+import com.sweak.diplomaexam.presentation.components.Header
+import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
+import com.sweak.diplomaexam.presentation.components.LoadingLayout
+import com.sweak.diplomaexam.presentation.questions_answering.components.*
 import com.sweak.diplomaexam.presentation.ui.theme.space
 import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
 import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
@@ -30,8 +34,21 @@ import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 @ExperimentalPagerApi
 @Composable
 fun QuestionsAnsweringScreen(
-    questionsAnsweringViewModel: QuestionsAnsweringViewModel = hiltViewModel()
+    questionsAnsweringViewModel: QuestionsAnsweringViewModel = hiltViewModel(),
+    navController: NavController
 ) {
+    val context: Context = LocalContext.current
+
+    LaunchedEffect(key1 = context) {
+        questionsAnsweringViewModel.gradingCompletedEvents.collect { event ->
+            when (event) {
+                is QuestionsAnsweringViewModel.GradingCompletedEvent.Success -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
+
     val windowInfo = rememberWindowInfo()
     val questionsAnsweringState = questionsAnsweringViewModel.state
 
@@ -41,6 +58,8 @@ fun QuestionsAnsweringScreen(
             otherUser = questionsAnsweringState.otherUser,
             questions = questionsAnsweringState.questions,
             questionNumbersToGradesMap = questionsAnsweringState.questionNumbersToGradesMap,
+            thesisGrade = questionsAnsweringState.thesisGrade,
+            courseOfStudiesGrade = questionsAnsweringState.courseOfStudiesGrade,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
             isWaitingForFinalEvaluation = questionsAnsweringState.isWaitingForFinalEvaluation,
@@ -49,9 +68,19 @@ fun QuestionsAnsweringScreen(
                     QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
                 )
             },
-            onGradeSelected = { questionNumber, grade ->
+            onQuestionGradeSelected = { questionNumber, grade ->
                 questionsAnsweringViewModel.onEvent(
-                    QuestionsAnsweringScreenEvent.SelectGrade(questionNumber, grade)
+                    QuestionsAnsweringScreenEvent.SelectQuestionGrade(questionNumber, grade)
+                )
+            },
+            onThesisGradeSelected = { grade ->
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.SelectThesisGrade(grade)
+                )
+            },
+            onCourseOfStudiesGradeSelected = { grade ->
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.SelectCourseOfStudiesGrade(grade)
                 )
             },
             onProceedClick = {
@@ -64,6 +93,8 @@ fun QuestionsAnsweringScreen(
             otherUser = questionsAnsweringState.otherUser,
             questions = questionsAnsweringState.questions,
             questionNumbersToGradesMap = questionsAnsweringState.questionNumbersToGradesMap,
+            thesisGrade = questionsAnsweringState.thesisGrade,
+            courseOfStudiesGrade = questionsAnsweringState.courseOfStudiesGrade,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
             isWaitingForFinalEvaluation = questionsAnsweringState.isWaitingForFinalEvaluation,
@@ -72,9 +103,19 @@ fun QuestionsAnsweringScreen(
                     QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
                 )
             },
-            onGradeSelected = { questionNumber, grade ->
+            onQuestionGradeSelected = { questionNumber, grade ->
                 questionsAnsweringViewModel.onEvent(
-                    QuestionsAnsweringScreenEvent.SelectGrade(questionNumber, grade)
+                    QuestionsAnsweringScreenEvent.SelectQuestionGrade(questionNumber, grade)
+                )
+            },
+            onThesisGradeSelected = { grade ->
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.SelectThesisGrade(grade)
+                )
+            },
+            onCourseOfStudiesGradeSelected = { grade ->
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.SelectCourseOfStudiesGrade(grade)
                 )
             },
             onProceedClick = {
@@ -149,6 +190,33 @@ fun QuestionsAnsweringScreen(
             negativeButtonText = stringResource(R.string.no)
         )
     }
+
+    if (questionsAnsweringState.submitAdditionalGradesDialogVisible) {
+        Dialog(
+            title = stringResource(R.string.continue_interrogative),
+            message = stringResource(R.string.do_you_want_to_submit_additional_grades),
+            onDismissRequest = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideSubmitAdditionalGradesDialog
+                )
+            },
+            onPositiveClick = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideSubmitAdditionalGradesDialog
+                )
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.SubmitAdditionalGrades
+                )
+            },
+            positiveButtonText = stringResource(R.string.yes),
+            onNegativeClick = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideSubmitAdditionalGradesDialog
+                )
+            },
+            negativeButtonText = stringResource(R.string.no)
+        )
+    }
 }
 
 @ExperimentalPagerApi
@@ -159,11 +227,15 @@ fun CompactQuestionsAnsweringScreen(
     otherUser: User?,
     questions: List<ExamQuestion>,
     questionNumbersToGradesMap: Map<Int, Grade>,
+    thesisGrade: Grade?,
+    courseOfStudiesGrade: Grade?,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
     isWaitingForFinalEvaluation: Boolean,
     onConfirmReadiness: () -> Unit,
-    onGradeSelected: (Int, Grade) -> Unit,
+    onQuestionGradeSelected: (Int, Grade) -> Unit,
+    onThesisGradeSelected: (Grade) -> Unit,
+    onCourseOfStudiesGradeSelected: (Grade) -> Unit,
     onProceedClick: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
@@ -223,7 +295,7 @@ fun CompactQuestionsAnsweringScreen(
                                 displayMode = ExaminerQuestionsPanelDisplayMode.COMPACT,
                                 isLoadingResponse = isLoadingResponse,
                                 isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                                onGradeSelected = onGradeSelected
+                                onQuestionGradeSelected = onQuestionGradeSelected
                             )
                         }
                     } else {
@@ -238,7 +310,14 @@ fun CompactQuestionsAnsweringScreen(
                                 )
                             }
                         } else {
-                            // TODO: Show additional grades component
+                            ExaminerAdditionalGradesPanel(
+                                displayMode = ExaminerAdditionalGradesPanelDisplayMode.COMPACT,
+                                thesisGrade = thesisGrade,
+                                onThesisGradeSelected = onThesisGradeSelected,
+                                isLoadingResponse = isLoadingResponse,
+                                courseOfStudiesGrade = courseOfStudiesGrade,
+                                onCourseOfStudiesGradeSelected = onCourseOfStudiesGradeSelected
+                            )
                         }
                     }
                 }
@@ -263,11 +342,15 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     otherUser: User?,
     questions: List<ExamQuestion>,
     questionNumbersToGradesMap: Map<Int, Grade>,
+    thesisGrade: Grade?,
+    courseOfStudiesGrade: Grade?,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
     isWaitingForFinalEvaluation: Boolean,
     onConfirmReadiness: () -> Unit,
-    onGradeSelected: (Int, Grade) -> Unit,
+    onQuestionGradeSelected: (Int, Grade) -> Unit,
+    onThesisGradeSelected: (Grade) -> Unit,
+    onCourseOfStudiesGradeSelected: (Grade) -> Unit,
     onProceedClick: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
@@ -327,7 +410,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
                                 displayMode = ExaminerQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
                                 isLoadingResponse = isLoadingResponse,
                                 isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                                onGradeSelected = onGradeSelected
+                                onQuestionGradeSelected = onQuestionGradeSelected
                             )
                         }
                     } else {
@@ -342,7 +425,14 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
                                 )
                             }
                         } else {
-                            // TODO: Show additional grades component
+                            ExaminerAdditionalGradesPanel(
+                                displayMode = ExaminerAdditionalGradesPanelDisplayMode.MEDIUM_OR_EXPANDED,
+                                thesisGrade = thesisGrade,
+                                onThesisGradeSelected = onThesisGradeSelected,
+                                isLoadingResponse = isLoadingResponse,
+                                courseOfStudiesGrade = courseOfStudiesGrade,
+                                onCourseOfStudiesGradeSelected = onCourseOfStudiesGradeSelected
+                            )
                         }
                     }
                 }

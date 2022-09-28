@@ -55,4 +55,8 @@
     <string name="cannot_continue">Nie można kontynouwać</string>
     <string name="grades_missing_cannot_continue">Nie wszystkie oceny zostały jeszcze wystawione - nie można kontynuować.</string>
     <string name="do_you_want_to_submit_question_grades">Czy chcesz zakończyć odpowiedź na pytania egzaminacyjne i przejść dalej? Upewnij się, że wprowadzono porządane oceny.</string>
+    <string name="additional_grades_prompt">Na wynik studiów, oprócz oceny za egzamin dyplomowy, składają się również oceny: pracy dyplomowej oraz toku studiów. Proszę je wprowadzić.</string>
+    <string name="thesis_presentation_grade">Ocena za prezentację pracy dyplomowej:</string>
+    <string name="course_of_studies_grade">Średnia ocena przebiegu studiów:</string>
+    <string name="do_you_want_to_submit_additional_grades">Czy chcesz zakończyć uzupełnianie składowych wyniku studiów i przejść do podsumowania? Upewnij się, że wprowadzono porządane oceny.</string>
 </resources>

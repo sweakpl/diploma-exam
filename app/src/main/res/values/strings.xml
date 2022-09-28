@@ -56,4 +56,8 @@
     <string name="cannot_continue">Cannot continue</string>
     <string name="grades_missing_cannot_continue">Not all grades have been set - cannot continue.</string>
     <string name="do_you_want_to_submit_question_grades">Do you want to end the questions answering and continue? Make sure that desired grades are selected.</string>
+    <string name="additional_grades_prompt">Besides the diploma exam grade, the studies evaluation also consists of the thesis grade and the grade of the corse of studies. Please enter them.</string>
+    <string name="thesis_presentation_grade">Grade for the presentation of the thesis:</string>
+    <string name="course_of_studies_grade">Mean grade for the course of studies:</string>
+    <string name="do_you_want_to_submit_additional_grades">Do you want to finish completing the additional grades and go to the summary? Make sure that desired grades are selected.</string>
 </resources>

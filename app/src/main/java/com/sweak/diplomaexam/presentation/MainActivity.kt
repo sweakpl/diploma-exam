@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(route = Screen.QuestionsAnsweringScreen.route) {
-                        QuestionsAnsweringScreen()
+                        QuestionsAnsweringScreen(navController = navController)
                     }
                 }
             }

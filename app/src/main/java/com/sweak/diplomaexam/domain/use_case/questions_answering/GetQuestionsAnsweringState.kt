@@ -38,6 +38,11 @@ class GetQuestionsAnsweringState @Inject constructor() {
 
             state = state.copy(isWaitingForFinalEvaluation = true)
             emit(Resource.Success(state))
+
+            delay(10000)
+
+            state = state.copy(isGradingCompleted = true)
+            emit(Resource.Success(state))
         } else if (DUMMY_USER_ROLE == UserRole.USER_EXAMINER) {
             delay(10000)
 
@@ -49,6 +54,16 @@ class GetQuestionsAnsweringState @Inject constructor() {
 
                 if (DUMMY_ARE_QUESTION_GRADES_CONFIRMED) {
                     state = state.copy(isWaitingForFinalEvaluation = true)
+                    emit(Resource.Success(state))
+                    break
+                }
+            }
+
+            while (true) {
+                delay(3000)
+
+                if (DUMMY_ARE_ADDITIONAL_GRADES_CONFIRMED) {
+                    state = state.copy(isGradingCompleted = true)
                     emit(Resource.Success(state))
                     break
                 }
