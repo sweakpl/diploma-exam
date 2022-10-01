@@ -1,6 +1,7 @@
 package com.sweak.diplomaexam.common
 
 import com.sweak.diplomaexam.domain.model.ExamQuestion
+import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.domain.model.UserRole
 
 // Retrofit base URL
@@ -20,3 +21,6 @@ var DUMMY_DRAWN_QUESTIONS: List<ExamQuestion> = emptyList()
 var DUMMY_IS_STUDENT_READY_TO_ANSWER = false
 var DUMMY_ARE_QUESTION_GRADES_CONFIRMED = false
 var DUMMY_ARE_ADDITIONAL_GRADES_CONFIRMED = false
+var DUMMY_DIPLOMA_EXAM_GRADE: Grade = Grade.C
+var DUMMY_THESIS_GRADE: Grade = Grade.E
+var DUMMY_COURSE_OF_STUDIES_GRADE: Grade = Grade.D

@@ -59,4 +59,11 @@
     <string name="thesis_presentation_grade">Ocena za prezentację pracy dyplomowej:</string>
     <string name="course_of_studies_grade">Średnia ocena przebiegu studiów:</string>
     <string name="do_you_want_to_submit_additional_grades">Czy chcesz zakończyć uzupełnianie składowych wyniku studiów i przejść do podsumowania? Upewnij się, że wprowadzono porządane oceny.</string>
+    <string name="final_score">Ocena końcowa</string>
+    <string name="thank_you_for_participation">Dziękujemy za udział w egzaminie dyplomowym!</string>
+    <string name="finish_exam">Zakończ egzamin</string>
+    <string name="final_score_calculation_description">Wynik końcowy został wyznaczony na podstawie oceny za egzamin dyplomowy, oceny za prezentację pracy dyplomowej oraz oceny toku studiów.</string>
+    <string name="diploma_exam">Egzamin dyplomowy:</string>
+    <string name="thesis">Praca dyplomowa:</string>
+    <string name="course_of_studies">Tok studiów:</string>
 </resources>

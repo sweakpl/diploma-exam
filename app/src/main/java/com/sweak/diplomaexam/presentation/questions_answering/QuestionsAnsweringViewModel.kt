@@ -117,10 +117,18 @@ class QuestionsAnsweringViewModel @Inject constructor(
         performRequest { viewModelScope.launch { confirmReadinessToAnswer() } }
 
     private fun submitGradesForQuestions() =
-        performRequest { viewModelScope.launch { submitQuestionGrades() } }
+        performRequest {
+            viewModelScope.launch {
+                submitQuestionGrades(state.questionNumbersToGradesMap.values.toList())
+            }
+        }
 
     private fun submitGradesForAdditional() =
-        performRequest { viewModelScope.launch { submitAdditionalGrades() } }
+        performRequest {
+            viewModelScope.launch {
+                submitAdditionalGrades(state.thesisGrade, state.courseOfStudiesGrade)
+            }
+        }
 
     private fun performRequest(request: () -> Unit) {
         hasFinalizedRequest = false

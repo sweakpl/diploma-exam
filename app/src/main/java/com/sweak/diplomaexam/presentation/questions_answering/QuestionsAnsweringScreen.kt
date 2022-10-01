@@ -21,6 +21,7 @@ import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.domain.model.UserRole
+import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.components.Dialog
 import com.sweak.diplomaexam.presentation.components.Header
 import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
@@ -43,7 +44,11 @@ fun QuestionsAnsweringScreen(
         questionsAnsweringViewModel.gradingCompletedEvents.collect { event ->
             when (event) {
                 is QuestionsAnsweringViewModel.GradingCompletedEvent.Success -> {
-                    navController.popBackStack()
+                    navController.navigate(Screen.ExamScoreScreen.route) {
+                        popUpTo(Screen.QuestionsAnsweringScreen.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }

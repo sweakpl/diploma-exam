@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.sweak.diplomaexam.presentation.exam_score.ExamScoreScreen
 import com.sweak.diplomaexam.presentation.lobby.LobbyScreen
 import com.sweak.diplomaexam.presentation.login.LoginScreen
 import com.sweak.diplomaexam.presentation.questions_answering.QuestionsAnsweringScreen
@@ -47,6 +48,10 @@ class MainActivity : ComponentActivity() {
 
                     composable(route = Screen.QuestionsAnsweringScreen.route) {
                         QuestionsAnsweringScreen(navController = navController)
+                    }
+
+                    composable(route = Screen.ExamScoreScreen.route) {
+                        ExamScoreScreen(navController = navController)
                     }
                 }
             }

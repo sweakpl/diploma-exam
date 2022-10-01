@@ -60,4 +60,11 @@
     <string name="thesis_presentation_grade">Grade for the presentation of the thesis:</string>
     <string name="course_of_studies_grade">Mean grade for the course of studies:</string>
     <string name="do_you_want_to_submit_additional_grades">Do you want to finish completing the additional grades and go to the summary? Make sure that desired grades are selected.</string>
+    <string name="final_score">Final score</string>
+    <string name="thank_you_for_participation">Thank you for participating in the Diploma Exam!</string>
+    <string name="finish_exam">Finish the exam</string>
+    <string name="final_score_calculation_description">The final result was determined on the basis of the grade for the diploma exam, the grade for the presentation of the thesis and the grade for the course of studies.</string>
+    <string name="diploma_exam">Diploma Exam:</string>
+    <string name="thesis">Thesis:</string>
+    <string name="course_of_studies">Course o studies:</string>
 </resources>
