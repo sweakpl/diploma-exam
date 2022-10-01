@@ -3,15 +3,18 @@ package com.sweak.diplomaexam.presentation.exam_score
 import android.content.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProgressIndicatorDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -279,9 +282,19 @@ fun GradeProgressBar(
     size: GradeProgressBarSize,
     modifier: Modifier = Modifier
 ) {
+    val progress = remember { Animatable(0f) }
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = context) {
+        progress.animateTo(
+            targetValue = progressFromGrade(grade),
+            animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
+        )
+    }
+
     Box(modifier = modifier) {
         CircularProgressIndicator(
-            progress = progressFromGrade(grade),
+            progress = progress.value,
             color = MaterialTheme.colors.onPrimary,
             strokeWidth =
             if (size == GradeProgressBarSize.LARGE) MaterialTheme.space.medium

@@ -66,5 +66,5 @@
     <string name="final_score_calculation_description">The final result was determined on the basis of the grade for the diploma exam, the grade for the presentation of the thesis and the grade for the course of studies.</string>
     <string name="diploma_exam">Diploma Exam:</string>
     <string name="thesis">Thesis:</string>
-    <string name="course_of_studies">Course o studies:</string>
+    <string name="course_of_studies">Course of studies:</string>
 </resources>
