@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.domain.use_case.questions_draw
 
-import com.sweak.diplomaexam.common.DUMMY_HAS_EXAMINER_ALLOWED_REDRAW
+import com.sweak.diplomaexam.domain.DUMMY_HAS_EXAMINER_ALLOWED_REDRAW
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 

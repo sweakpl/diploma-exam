@@ -1,6 +1,7 @@
 package com.sweak.diplomaexam.domain.use_case.questions_draw
 
-import com.sweak.diplomaexam.common.*
+import com.sweak.diplomaexam.domain.*
+import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.QuestionsDrawState
 import com.sweak.diplomaexam.domain.model.User

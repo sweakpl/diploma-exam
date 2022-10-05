@@ -8,7 +8,7 @@
     <string name="please_login">Proszę, zaloguj się:</string>
     <string name="login">Zaloguj się</string>
     <string name="password">Hasło</string>
-    <string name="invalid_email_error">E-mail jest nieprawdłowy!</string>
+    <string name="invalid_email_error">E-mail jest nieprawidłowy!</string>
     <string name="wrong_credentials_error">Niepoprawny e-mail lub hasło!</string>
     <string name="blank_password_error">Hasło jest puste!</string>
     <string name="login_help_examiner_message">Do zalogowania się użyj swojego maila w domenie pk.edu.pl. Powinien być on zarejestrowany przez administratora sesji. W razie problemów, skontaktuj się z administratorem.</string>

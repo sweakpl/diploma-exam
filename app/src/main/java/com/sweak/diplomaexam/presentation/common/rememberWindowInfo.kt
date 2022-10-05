@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.presentation.ui.util
+package com.sweak.diplomaexam.presentation.common
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration

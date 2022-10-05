@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sweak.diplomaexam.common.Resource
+import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.use_case.questions_draw.AllowQuestionsRedraw
 import com.sweak.diplomaexam.domain.use_case.questions_draw.AcceptDrawnQuestions
 import com.sweak.diplomaexam.domain.use_case.questions_draw.DrawNewQuestions

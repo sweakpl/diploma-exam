@@ -16,10 +16,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.presentation.Screen
+import com.sweak.diplomaexam.presentation.common.WindowInfo
+import com.sweak.diplomaexam.presentation.common.rememberWindowInfo
 import com.sweak.diplomaexam.presentation.components.Dialog
 import com.sweak.diplomaexam.presentation.components.Header
 import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
@@ -28,8 +30,6 @@ import com.sweak.diplomaexam.presentation.questions_draw.components.DrawnQuestio
 import com.sweak.diplomaexam.presentation.questions_draw.components.DrawnQuestionsOperations
 import com.sweak.diplomaexam.presentation.questions_draw.components.QuestionsDrawPrompt
 import com.sweak.diplomaexam.presentation.ui.theme.space
-import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
-import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 
 @ExperimentalAnimationApi
 @Composable

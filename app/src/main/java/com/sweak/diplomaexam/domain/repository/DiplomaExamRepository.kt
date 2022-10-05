@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.domain.repository
 
-import com.sweak.diplomaexam.common.Resource
+import com.sweak.diplomaexam.domain.common.Resource
 
 interface DiplomaExamRepository {
 

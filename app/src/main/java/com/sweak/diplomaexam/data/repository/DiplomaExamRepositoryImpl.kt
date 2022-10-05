@@ -1,10 +1,9 @@
 package com.sweak.diplomaexam.data.repository
 
-import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.common.Resource
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
+import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.Error
 import com.sweak.diplomaexam.domain.repository.DiplomaExamRepository
-import com.sweak.diplomaexam.presentation.ui.util.UiText
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -17,11 +16,14 @@ class DiplomaExamRepositoryImpl @Inject constructor(
         return try {
             Resource.Success(api.getHello().body().toString())
         } catch (httpException: HttpException) {
-            Resource.Error(
-                UiText.DynamicString(httpException.localizedMessage ?: httpException.message())
+            Resource.Failure(
+                Error.HttpError(
+                    httpException.code(),
+                    httpException.localizedMessage ?: httpException.message
+                )
             )
         } catch (ioException: IOException) {
-            Resource.Error(UiText.StringResource(R.string.cant_reach_server))
+            Resource.Failure(Error.IOError(ioException.message))
         }
     }
 }

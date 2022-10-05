@@ -15,12 +15,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.presentation.Screen
+import com.sweak.diplomaexam.presentation.common.WindowInfo
+import com.sweak.diplomaexam.presentation.common.rememberWindowInfo
 import com.sweak.diplomaexam.presentation.components.WelcomeLayout
 import com.sweak.diplomaexam.presentation.lobby.components.LoggedInAsLayout
 import com.sweak.diplomaexam.presentation.lobby.components.WaitingForParticipantLayout
 import com.sweak.diplomaexam.presentation.ui.theme.space
-import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
-import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 
 @ExperimentalAnimationApi
 @Composable

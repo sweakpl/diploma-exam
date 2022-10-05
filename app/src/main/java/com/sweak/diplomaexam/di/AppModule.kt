@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.di
 
-import com.sweak.diplomaexam.common.BASE_URL
+import com.sweak.diplomaexam.data.common.BASE_URL
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.data.repository.DiplomaExamRepositoryImpl
 import com.sweak.diplomaexam.domain.repository.DiplomaExamRepository

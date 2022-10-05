@@ -22,14 +22,14 @@ import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.presentation.Screen
+import com.sweak.diplomaexam.presentation.common.WindowInfo
+import com.sweak.diplomaexam.presentation.common.rememberWindowInfo
 import com.sweak.diplomaexam.presentation.components.Dialog
 import com.sweak.diplomaexam.presentation.components.Header
 import com.sweak.diplomaexam.presentation.components.HeaderDisplayMode
 import com.sweak.diplomaexam.presentation.components.LoadingLayout
 import com.sweak.diplomaexam.presentation.questions_answering.components.*
 import com.sweak.diplomaexam.presentation.ui.theme.space
-import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
-import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 
 @ExperimentalAnimationApi
 @ExperimentalPagerApi

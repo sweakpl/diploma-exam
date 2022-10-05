@@ -1,6 +1,9 @@
 package com.sweak.diplomaexam.domain.use_case.lobby
 
-import com.sweak.diplomaexam.common.*
+import com.sweak.diplomaexam.domain.DUMMY_HAS_SESSION_BEEN_STARTED
+import com.sweak.diplomaexam.domain.DUMMY_USER_EMAIL
+import com.sweak.diplomaexam.domain.DUMMY_USER_ROLE
+import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.LobbyState
 import com.sweak.diplomaexam.domain.model.User
 import com.sweak.diplomaexam.domain.model.UserRole

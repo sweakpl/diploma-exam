@@ -27,11 +27,11 @@ import androidx.navigation.NavController
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.presentation.Screen
+import com.sweak.diplomaexam.presentation.common.WindowInfo
+import com.sweak.diplomaexam.presentation.common.rememberWindowInfo
 import com.sweak.diplomaexam.presentation.components.LoadingLayout
 import com.sweak.diplomaexam.presentation.components.ThickWhiteButton
 import com.sweak.diplomaexam.presentation.ui.theme.space
-import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
-import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 
 @ExperimentalAnimationApi
 @Composable
@@ -61,7 +61,7 @@ fun ExamScoreScreen(
             diplomaExamGrade = examScoreState.diplomaExamGrade,
             thesisGrade = examScoreState.thesisGrade,
             courseOfStudiesGrade = examScoreState.courseOfStudiesGrade,
-            onFinishExam = { examScoreViewModel.finishExam() }
+            onFinishExam = { examScoreViewModel.onEvent(ExamScoreScreenEvent.FinishExam) }
         )
     } else {
         MediumOrExpandedExamScoreScreen(
@@ -70,7 +70,7 @@ fun ExamScoreScreen(
             diplomaExamGrade = examScoreState.diplomaExamGrade,
             thesisGrade = examScoreState.thesisGrade,
             courseOfStudiesGrade = examScoreState.courseOfStudiesGrade,
-            onFinishExam = { examScoreViewModel.finishExam() }
+            onFinishExam = { examScoreViewModel.onEvent(ExamScoreScreenEvent.FinishExam) }
         )
     }
 }

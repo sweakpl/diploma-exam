@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.presentation.ui.util
+package com.sweak.diplomaexam.presentation.common
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable

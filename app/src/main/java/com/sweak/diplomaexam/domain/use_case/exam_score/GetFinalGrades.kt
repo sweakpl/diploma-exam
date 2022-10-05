@@ -1,9 +1,9 @@
 package com.sweak.diplomaexam.domain.use_case.exam_score
 
-import com.sweak.diplomaexam.common.DUMMY_COURSE_OF_STUDIES_GRADE
-import com.sweak.diplomaexam.common.DUMMY_DIPLOMA_EXAM_GRADE
-import com.sweak.diplomaexam.common.DUMMY_THESIS_GRADE
-import com.sweak.diplomaexam.common.Resource
+import com.sweak.diplomaexam.domain.DUMMY_COURSE_OF_STUDIES_GRADE
+import com.sweak.diplomaexam.domain.DUMMY_DIPLOMA_EXAM_GRADE
+import com.sweak.diplomaexam.domain.DUMMY_THESIS_GRADE
+import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.ExamScoreState
 import com.sweak.diplomaexam.domain.model.Grade
 import kotlinx.coroutines.delay

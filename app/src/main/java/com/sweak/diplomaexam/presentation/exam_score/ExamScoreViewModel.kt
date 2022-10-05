@@ -5,7 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sweak.diplomaexam.common.*
+import com.sweak.diplomaexam.domain.*
+import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.domain.use_case.exam_score.GetFinalGrades
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,7 +46,13 @@ class ExamScoreViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun finishExam() = viewModelScope.launch {
+    fun onEvent(event: ExamScoreScreenEvent) {
+        when (event) {
+            is ExamScoreScreenEvent.FinishExam -> finishExam()
+        }
+    }
+
+    private fun finishExam() = viewModelScope.launch {
         DUMMY_HAS_SESSION_BEEN_STARTED = false
         DUMMY_HAVE_QUESTIONS_BEEN_DRAWN = false
         DUMMY_HAS_STUDENT_REQUESTED_REDRAW = false

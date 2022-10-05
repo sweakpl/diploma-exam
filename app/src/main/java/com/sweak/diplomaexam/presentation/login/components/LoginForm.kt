@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.presentation.components.ThickWhiteButton
 import com.sweak.diplomaexam.presentation.ui.theme.space
-import com.sweak.diplomaexam.presentation.ui.util.UiText
+import com.sweak.diplomaexam.presentation.common.UiText
 
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi

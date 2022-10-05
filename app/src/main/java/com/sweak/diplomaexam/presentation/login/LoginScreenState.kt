@@ -1,7 +1,7 @@
 package com.sweak.diplomaexam.presentation.login
 
 import com.sweak.diplomaexam.domain.model.UserRole
-import com.sweak.diplomaexam.presentation.ui.util.UiText
+import com.sweak.diplomaexam.presentation.common.UiText
 
 data class LoginScreenState(
     val userRole: UserRole? = null,

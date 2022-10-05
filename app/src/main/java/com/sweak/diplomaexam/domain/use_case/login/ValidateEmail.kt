@@ -1,7 +1,5 @@
 package com.sweak.diplomaexam.domain.use_case.login
 
-import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.presentation.ui.util.UiText
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -11,26 +9,15 @@ class ValidateEmail @Inject constructor() {
         "^[a-z]+\\.[a-z]+(-[a-z]+)?@(student\\.)?pk\\.edu\\.pl\$"
     )
 
-    operator fun invoke(email: String): ValidationResult {
+    operator fun invoke(email: String): Boolean {
         if (email.isBlank()) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = UiText.StringResource(R.string.invalid_email_error)
-            )
+            return false
         }
 
         if (!validationEmailPattern.matcher(email).matches()) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = UiText.StringResource(R.string.invalid_email_error)
-            )
+            return false
         }
 
-        return ValidationResult(successful = true)
+        return true
     }
-
-    data class ValidationResult(
-        val successful: Boolean,
-        val errorMessage: UiText? = null
-    )
 }

@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.domain.use_case.lobby
 
-import com.sweak.diplomaexam.common.DUMMY_HAS_SESSION_BEEN_STARTED
+import com.sweak.diplomaexam.domain.DUMMY_HAS_SESSION_BEEN_STARTED
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 

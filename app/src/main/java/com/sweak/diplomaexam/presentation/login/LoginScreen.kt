@@ -19,13 +19,13 @@ import androidx.navigation.NavController
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.presentation.Screen
+import com.sweak.diplomaexam.presentation.common.WindowInfo
+import com.sweak.diplomaexam.presentation.common.rememberWindowInfo
 import com.sweak.diplomaexam.presentation.components.Dialog
 import com.sweak.diplomaexam.presentation.components.WelcomeLayout
 import com.sweak.diplomaexam.presentation.login.components.LoginForm
 import com.sweak.diplomaexam.presentation.login.components.UserRoleChoiceButtons
 import com.sweak.diplomaexam.presentation.ui.theme.space
-import com.sweak.diplomaexam.presentation.ui.util.WindowInfo
-import com.sweak.diplomaexam.presentation.ui.util.rememberWindowInfo
 
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi

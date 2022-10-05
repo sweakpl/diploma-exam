@@ -1,11 +1,8 @@
-package com.sweak.diplomaexam.common
+package com.sweak.diplomaexam.domain
 
 import com.sweak.diplomaexam.domain.model.ExamQuestion
 import com.sweak.diplomaexam.domain.model.Grade
 import com.sweak.diplomaexam.domain.model.UserRole
-
-// Retrofit base URL
-const val BASE_URL = "https://diploma-examination-system.herokuapp.com/"
 
 // Dummy state variables - USED ONLY TO SIMULATE APP BEHAVIOR!
 lateinit var DUMMY_USER_ROLE: UserRole

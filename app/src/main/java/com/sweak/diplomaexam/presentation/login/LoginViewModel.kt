@@ -6,11 +6,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.common.*
+import com.sweak.diplomaexam.domain.DUMMY_OTHER_USER_EMAIL
+import com.sweak.diplomaexam.domain.DUMMY_OTHER_USER_ROLE
+import com.sweak.diplomaexam.domain.DUMMY_USER_EMAIL
+import com.sweak.diplomaexam.domain.DUMMY_USER_ROLE
+import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.Error
 import com.sweak.diplomaexam.domain.model.UserRole
 import com.sweak.diplomaexam.domain.use_case.login.AuthenticateUser
 import com.sweak.diplomaexam.domain.use_case.login.ValidateEmail
-import com.sweak.diplomaexam.presentation.ui.util.UiText
+import com.sweak.diplomaexam.presentation.common.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
@@ -48,10 +53,8 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login() {
-        val emailResult = validateEmail(state.email)
-
-        if (!emailResult.successful) {
-            state = state.copy(errorMessage = emailResult.errorMessage)
+        if (!validateEmail(state.email)) {
+            state = state.copy(errorMessage = UiText.StringResource(R.string.invalid_email_error))
             return
         }
 
@@ -65,7 +68,9 @@ class LoginViewModel @Inject constructor(
                 is Resource.Loading -> state = state.copy(isAuthorizing = true)
                 is Resource.Success -> {
                     state = state.copy(
-                        errorMessage = it.data?.errorMessage,
+                        errorMessage =
+                        if (it.data?.successful == true) null
+                        else UiText.StringResource(R.string.wrong_credentials_error),
                         isAuthorizing = false
                     )
 
@@ -84,8 +89,17 @@ class LoginViewModel @Inject constructor(
                         authenticateEventChannel.send(AuthenticationEvent.Success)
                     }
                 }
-                is Resource.Error -> state = state.copy(
-                    errorMessage = it.data?.errorMessage,
+                is Resource.Failure -> state = state.copy(
+                    errorMessage = when (it.data?.error) {
+                        is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+                        is Error.HttpError -> {
+                            if (it.data.error.message != null)
+                                UiText.DynamicString(it.data.error.message)
+                            else
+                                UiText.StringResource(R.string.unknown_error)
+                        }
+                        else -> UiText.StringResource(R.string.unknown_error)
+                    },
                     isAuthorizing = false
                 )
             }
