@@ -1,6 +1,9 @@
 package com.sweak.diplomaexam.di
 
+import android.app.Application
 import com.sweak.diplomaexam.data.common.BASE_URL
+import com.sweak.diplomaexam.data.local.UserSessionManager
+import com.sweak.diplomaexam.data.local.UserSessionManagerImpl
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.data.repository.AuthenticationRepositoryImpl
 import com.sweak.diplomaexam.domain.repository.AuthenticationRepository
@@ -19,18 +22,24 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDiplomaExamApi(): DiplomaExamApi {
-        return Retrofit.Builder()
+    fun provideDiplomaExamApi(): DiplomaExamApi =
+        Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(DiplomaExamApi::class.java)
-    }
 
     @Provides
     @Singleton
-    fun provideDiplomaExamRepository(api: DiplomaExamApi): AuthenticationRepository {
-        return AuthenticationRepositoryImpl(api)
-    }
+    fun provideAuthenticationRepository(
+        api: DiplomaExamApi,
+        userSessionManager: UserSessionManager
+    ): AuthenticationRepository =
+        AuthenticationRepositoryImpl(api, userSessionManager)
+
+    @Provides
+    @Singleton
+    fun provideUserSessionManager(app: Application): UserSessionManager =
+        UserSessionManagerImpl(app)
 }
