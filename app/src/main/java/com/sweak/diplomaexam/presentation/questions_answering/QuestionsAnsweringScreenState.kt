@@ -1,8 +1,8 @@
 package com.sweak.diplomaexam.presentation.questions_answering
 
-import com.sweak.diplomaexam.domain.model.ExamQuestion
-import com.sweak.diplomaexam.domain.model.Grade
-import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.domain.model.common.ExamQuestion
+import com.sweak.diplomaexam.domain.model.common.Grade
+import com.sweak.diplomaexam.domain.model.common.User
 
 data class QuestionsAnsweringScreenState(
     val currentUser: User? = null,

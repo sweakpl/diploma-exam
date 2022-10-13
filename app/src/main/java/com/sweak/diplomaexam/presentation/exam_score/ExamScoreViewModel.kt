@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.domain.*
 import com.sweak.diplomaexam.domain.common.Resource
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.domain.use_case.exam_score.GetFinalGrades
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

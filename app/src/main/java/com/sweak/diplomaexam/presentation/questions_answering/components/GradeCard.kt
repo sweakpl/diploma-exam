@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.toSize
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable

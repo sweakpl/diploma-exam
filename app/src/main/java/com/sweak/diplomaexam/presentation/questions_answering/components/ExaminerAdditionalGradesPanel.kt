@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.presentation.components.LoadingLayout
 import com.sweak.diplomaexam.presentation.ui.theme.space
 

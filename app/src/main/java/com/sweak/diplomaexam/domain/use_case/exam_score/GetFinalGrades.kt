@@ -4,8 +4,8 @@ import com.sweak.diplomaexam.domain.DUMMY_COURSE_OF_STUDIES_GRADE
 import com.sweak.diplomaexam.domain.DUMMY_DIPLOMA_EXAM_GRADE
 import com.sweak.diplomaexam.domain.DUMMY_THESIS_GRADE
 import com.sweak.diplomaexam.domain.common.Resource
-import com.sweak.diplomaexam.domain.model.ExamScoreState
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.exam_score.ExamScoreState
+import com.sweak.diplomaexam.domain.model.common.Grade
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import java.math.RoundingMode

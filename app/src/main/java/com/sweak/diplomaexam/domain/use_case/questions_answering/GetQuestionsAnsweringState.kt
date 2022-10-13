@@ -2,9 +2,9 @@ package com.sweak.diplomaexam.domain.use_case.questions_answering
 
 import com.sweak.diplomaexam.domain.*
 import com.sweak.diplomaexam.domain.common.Resource
-import com.sweak.diplomaexam.domain.model.QuestionsAnsweringState
-import com.sweak.diplomaexam.domain.model.User
-import com.sweak.diplomaexam.domain.model.UserRole
+import com.sweak.diplomaexam.domain.model.questions_answering.QuestionsAnsweringState
+import com.sweak.diplomaexam.domain.model.common.User
+import com.sweak.diplomaexam.domain.model.common.UserRole
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

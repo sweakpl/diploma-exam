@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.domain.model.common.User
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable

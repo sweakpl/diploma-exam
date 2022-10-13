@@ -1,4 +1,6 @@
-package com.sweak.diplomaexam.domain.model
+package com.sweak.diplomaexam.domain.model.exam_score
+
+import com.sweak.diplomaexam.domain.model.common.Grade
 
 data class ExamScoreState(
     val finalGrade: Grade,

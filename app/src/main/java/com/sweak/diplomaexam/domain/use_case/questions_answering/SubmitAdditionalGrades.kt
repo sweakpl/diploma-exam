@@ -3,7 +3,7 @@ package com.sweak.diplomaexam.domain.use_case.questions_answering
 import com.sweak.diplomaexam.domain.DUMMY_ARE_ADDITIONAL_GRADES_CONFIRMED
 import com.sweak.diplomaexam.domain.DUMMY_COURSE_OF_STUDIES_GRADE
 import com.sweak.diplomaexam.domain.DUMMY_THESIS_GRADE
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.common.Grade
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 

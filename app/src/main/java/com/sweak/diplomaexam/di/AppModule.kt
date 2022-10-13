@@ -2,8 +2,8 @@ package com.sweak.diplomaexam.di
 
 import com.sweak.diplomaexam.data.common.BASE_URL
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
-import com.sweak.diplomaexam.data.repository.DiplomaExamRepositoryImpl
-import com.sweak.diplomaexam.domain.repository.DiplomaExamRepository
+import com.sweak.diplomaexam.data.repository.AuthenticationRepositoryImpl
+import com.sweak.diplomaexam.domain.repository.AuthenticationRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,7 +30,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDiplomaExamRepository(api: DiplomaExamApi): DiplomaExamRepository {
-        return DiplomaExamRepositoryImpl(api)
+    fun provideDiplomaExamRepository(api: DiplomaExamApi): AuthenticationRepository {
+        return AuthenticationRepositoryImpl(api)
     }
 }

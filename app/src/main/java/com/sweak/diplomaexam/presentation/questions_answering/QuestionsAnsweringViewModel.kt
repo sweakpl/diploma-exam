@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.domain.common.Resource
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.domain.use_case.questions_answering.ConfirmReadinessToAnswer
 import com.sweak.diplomaexam.domain.use_case.questions_answering.GetQuestionsAnsweringState
 import com.sweak.diplomaexam.domain.use_case.questions_answering.SubmitAdditionalGrades

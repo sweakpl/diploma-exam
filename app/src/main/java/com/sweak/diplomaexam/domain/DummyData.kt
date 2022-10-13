@@ -1,8 +1,8 @@
 package com.sweak.diplomaexam.domain
 
-import com.sweak.diplomaexam.domain.model.ExamQuestion
-import com.sweak.diplomaexam.domain.model.Grade
-import com.sweak.diplomaexam.domain.model.UserRole
+import com.sweak.diplomaexam.domain.model.common.ExamQuestion
+import com.sweak.diplomaexam.domain.model.common.Grade
+import com.sweak.diplomaexam.domain.model.common.UserRole
 
 // Dummy state variables - USED ONLY TO SIMULATE APP BEHAVIOR!
 lateinit var DUMMY_USER_ROLE: UserRole

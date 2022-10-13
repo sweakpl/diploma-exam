@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.domain.model
+package com.sweak.diplomaexam.domain.model.common
 
 enum class Grade(val stringRepresentation: String) {
     A("5.0 (A)"),

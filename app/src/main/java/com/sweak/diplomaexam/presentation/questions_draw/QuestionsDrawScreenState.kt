@@ -1,8 +1,8 @@
 package com.sweak.diplomaexam.presentation.questions_draw
 
-import com.sweak.diplomaexam.domain.model.UserRole
-import com.sweak.diplomaexam.domain.model.ExamQuestion
-import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.domain.model.common.UserRole
+import com.sweak.diplomaexam.domain.model.common.ExamQuestion
+import com.sweak.diplomaexam.domain.model.common.User
 
 data class QuestionsDrawScreenState(
     val currentUser: User? = null,

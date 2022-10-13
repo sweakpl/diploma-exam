@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.common.WindowInfo
 import com.sweak.diplomaexam.presentation.common.rememberWindowInfo

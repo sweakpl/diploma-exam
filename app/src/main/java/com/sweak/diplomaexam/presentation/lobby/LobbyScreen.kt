@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.domain.model.common.User
 import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.common.WindowInfo
 import com.sweak.diplomaexam.presentation.common.rememberWindowInfo

@@ -16,9 +16,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.domain.model.ExamQuestion
-import com.sweak.diplomaexam.domain.model.User
-import com.sweak.diplomaexam.domain.model.UserRole
+import com.sweak.diplomaexam.domain.model.common.ExamQuestion
+import com.sweak.diplomaexam.domain.model.common.User
+import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.common.WindowInfo
 import com.sweak.diplomaexam.presentation.common.rememberWindowInfo

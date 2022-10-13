@@ -11,8 +11,8 @@ import com.sweak.diplomaexam.domain.DUMMY_OTHER_USER_ROLE
 import com.sweak.diplomaexam.domain.DUMMY_USER_EMAIL
 import com.sweak.diplomaexam.domain.DUMMY_USER_ROLE
 import com.sweak.diplomaexam.domain.common.Resource
-import com.sweak.diplomaexam.domain.model.Error
-import com.sweak.diplomaexam.domain.model.UserRole
+import com.sweak.diplomaexam.domain.model.common.Error
+import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.domain.use_case.login.AuthenticateUser
 import com.sweak.diplomaexam.domain.use_case.login.ValidateEmail
 import com.sweak.diplomaexam.presentation.common.UiText
@@ -70,7 +70,7 @@ class LoginViewModel @Inject constructor(
                     state = state.copy(
                         errorMessage =
                         if (it.data?.successful == true) null
-                        else UiText.StringResource(R.string.wrong_credentials_error),
+                        else UiText.StringResource(R.string.unknown_error),
                         isAuthorizing = false
                     )
 
@@ -98,6 +98,8 @@ class LoginViewModel @Inject constructor(
                             else
                                 UiText.StringResource(R.string.unknown_error)
                         }
+                        is Error.UnauthorizedError ->
+                            UiText.StringResource(R.string.wrong_credentials_error)
                         else -> UiText.StringResource(R.string.unknown_error)
                     },
                     isAuthorizing = false

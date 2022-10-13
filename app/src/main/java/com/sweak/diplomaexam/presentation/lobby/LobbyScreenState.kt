@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.presentation.lobby
 
-import com.sweak.diplomaexam.domain.model.User
+import com.sweak.diplomaexam.domain.model.common.User
 
 data class LobbyScreenState(
     val user: User? = null,

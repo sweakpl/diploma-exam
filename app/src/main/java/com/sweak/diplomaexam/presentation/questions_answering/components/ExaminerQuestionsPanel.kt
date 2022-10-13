@@ -20,8 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.*
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.domain.model.ExamQuestion
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.common.ExamQuestion
+import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.presentation.components.LoadingLayout
 import com.sweak.diplomaexam.presentation.components.LoadingLayoutSize
 import com.sweak.diplomaexam.presentation.ui.theme.space

@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.presentation.questions_answering
 
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.common.Grade
 
 sealed class QuestionsAnsweringScreenEvent {
     object ConfirmReadinessToAnswer : QuestionsAnsweringScreenEvent()

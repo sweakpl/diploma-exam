@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.presentation.exam_score
 
-import com.sweak.diplomaexam.domain.model.Grade
+import com.sweak.diplomaexam.domain.model.common.Grade
 
 data class ExamScoreScreenState(
     val isLoadingResponse: Boolean = true,

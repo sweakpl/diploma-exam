@@ -4,9 +4,9 @@ import com.sweak.diplomaexam.domain.DUMMY_HAS_SESSION_BEEN_STARTED
 import com.sweak.diplomaexam.domain.DUMMY_USER_EMAIL
 import com.sweak.diplomaexam.domain.DUMMY_USER_ROLE
 import com.sweak.diplomaexam.domain.common.Resource
-import com.sweak.diplomaexam.domain.model.LobbyState
-import com.sweak.diplomaexam.domain.model.User
-import com.sweak.diplomaexam.domain.model.UserRole
+import com.sweak.diplomaexam.domain.model.lobby.LobbyState
+import com.sweak.diplomaexam.domain.model.common.User
+import com.sweak.diplomaexam.domain.model.common.UserRole
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
