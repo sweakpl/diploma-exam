@@ -6,7 +6,7 @@ import javax.inject.Inject
 class ValidateEmail @Inject constructor() {
 
     private val validationEmailPattern = Pattern.compile(
-        "^[a-z]+\\.[a-z]+(-[a-z]+)?@(student\\.)?pk\\.edu\\.pl\$"
+        "^[a-z]+(\\.[a-z]+(-[a-z]+)?)?@(student\\.)?pk\\.edu\\.pl\$"
     )
 
     operator fun invoke(email: String): Boolean {
