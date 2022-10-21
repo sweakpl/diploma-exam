@@ -13,7 +13,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -25,18 +24,9 @@ object AppModule {
     fun provideDiplomaExamApi(): DiplomaExamApi =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(DiplomaExamApi::class.java)
-
-    @Provides
-    @Singleton
-    fun provideAuthenticationRepository(
-        api: DiplomaExamApi,
-        userSessionManager: UserSessionManager
-    ): AuthenticationRepository =
-        AuthenticationRepositoryImpl(api, userSessionManager)
 
     @Provides
     @Singleton
