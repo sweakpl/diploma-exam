@@ -63,43 +63,46 @@ class LoginViewModel @Inject constructor(
             return
         }
 
-        authenticateUser(state.email, state.password).onEach {
+        if (state.userRole == null) {
+            state = state.copy(errorMessage = UiText.StringResource(R.string.unknown_error))
+            return
+        }
+
+        authenticateUser(state.email, state.password, state.userRole!!).onEach {
             when (it) {
                 is Resource.Loading -> state = state.copy(isAuthorizing = true)
                 is Resource.Success -> {
-                    state = state.copy(
-                        errorMessage =
-                        if (it.data?.successful == true) null
-                        else UiText.StringResource(R.string.unknown_error),
-                        isAuthorizing = false
-                    )
+                    state = state.copy(isAuthorizing = false)
 
-                    if (it.data?.successful == true) {
-                        DUMMY_USER_ROLE = state.userRole ?: UserRole.USER_STUDENT
-                        DUMMY_USER_EMAIL = state.email
+                    DUMMY_USER_ROLE = state.userRole ?: UserRole.USER_STUDENT
+                    DUMMY_USER_EMAIL = state.email
 
-                        if (DUMMY_USER_ROLE == UserRole.USER_STUDENT) {
-                            DUMMY_OTHER_USER_ROLE = UserRole.USER_EXAMINER
-                            DUMMY_OTHER_USER_EMAIL = "barbara.nowak@pk.edu.pl"
-                        } else {
-                            DUMMY_OTHER_USER_ROLE = UserRole.USER_STUDENT
-                            DUMMY_OTHER_USER_EMAIL = "adam.kowalski@student.pk.edu.pl"
-                        }
-
-                        authenticateEventChannel.send(AuthenticationEvent.Success)
+                    if (DUMMY_USER_ROLE == UserRole.USER_STUDENT) {
+                        DUMMY_OTHER_USER_ROLE = UserRole.USER_EXAMINER
+                        DUMMY_OTHER_USER_EMAIL = "barbara.nowak@pk.edu.pl"
+                    } else {
+                        DUMMY_OTHER_USER_ROLE = UserRole.USER_STUDENT
+                        DUMMY_OTHER_USER_EMAIL = "adam.kowalski@student.pk.edu.pl"
                     }
+
+                    authenticateEventChannel.send(AuthenticationEvent.Success)
                 }
                 is Resource.Failure -> state = state.copy(
-                    errorMessage = when (it.data?.error) {
+                    errorMessage = when (it.error) {
                         is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
                         is Error.HttpError -> {
-                            if (it.data.error.message != null)
-                                UiText.DynamicString(it.data.error.message)
+                            if (it.error.message != null)
+                                UiText.DynamicString(it.error.message)
                             else
                                 UiText.StringResource(R.string.unknown_error)
                         }
                         is Error.UnauthorizedError ->
                             UiText.StringResource(R.string.wrong_credentials_error)
+                        is Error.WrongUserRoleError ->
+                            if (it.error.selectedUserRole == UserRole.USER_STUDENT)
+                                UiText.StringResource(R.string.email_belongs_to_examiner)
+                            else
+                                UiText.StringResource(R.string.email_belongs_to_student)
                         else -> UiText.StringResource(R.string.unknown_error)
                     },
                     isAuthorizing = false

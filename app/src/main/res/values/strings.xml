@@ -67,4 +67,6 @@
     <string name="diploma_exam">Diploma Exam:</string>
     <string name="thesis">Thesis:</string>
     <string name="course_of_studies">Course of studies:</string>
+    <string name="email_belongs_to_examiner">This e-mail belongs to the examiner!</string>
+    <string name="email_belongs_to_student">This e-mail belongs to the student!</string>
 </resources>

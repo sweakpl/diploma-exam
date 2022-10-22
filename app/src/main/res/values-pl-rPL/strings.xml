@@ -66,4 +66,6 @@
     <string name="diploma_exam">Egzamin dyplomowy:</string>
     <string name="thesis">Praca dyplomowa:</string>
     <string name="course_of_studies">Tok studiów:</string>
+    <string name="email_belongs_to_examiner">Ten e-mail należy do egzaminatora!</string>
+    <string name="email_belongs_to_student">Ten e-mail należy do studenta!</string>
 </resources>

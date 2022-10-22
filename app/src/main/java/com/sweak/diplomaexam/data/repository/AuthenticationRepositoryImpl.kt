@@ -5,6 +5,7 @@ import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
+import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.domain.model.login.LoginRequest
 import com.sweak.diplomaexam.domain.model.login.LoginResponse
 import com.sweak.diplomaexam.domain.repository.AuthenticationRepository
@@ -16,9 +17,14 @@ class AuthenticationRepositoryImpl @Inject constructor(
     private val api: DiplomaExamApi,
     private val userSessionManager: UserSessionManager
 ): AuthenticationRepository {
-    override suspend fun login(loginRequest: LoginRequest): Resource<LoginResponse> {
+
+    override suspend fun login(
+        email: String,
+        password: String,
+        selectedUserRole: UserRole
+    ): Resource<LoginResponse> {
         try {
-            val response = api.login(loginRequest)
+            val response = api.login(LoginRequest(email, password))
 
             return when (response.code()) {
                 ResponseCode.OK.codeInt -> {
@@ -27,8 +33,16 @@ class AuthenticationRepositoryImpl @Inject constructor(
                     } else {
                         val loginResponse = response.body()!!
 
-                        userSessionManager.saveSessionToken(loginResponse.accessToken)
-                        Resource.Success(loginResponse)
+                        if (UserRole.fromString(loginResponse.role) == selectedUserRole) {
+                            userSessionManager.saveSessionTokenAndExpiryDate(
+                                loginResponse.token,
+                                loginResponse.expirationDate
+                            )
+
+                            Resource.Success(loginResponse)
+                        } else {
+                            Resource.Failure(Error.WrongUserRoleError(selectedUserRole))
+                        }
                     }
                 }
                 ResponseCode.UNAUTHORIZED.codeInt ->
