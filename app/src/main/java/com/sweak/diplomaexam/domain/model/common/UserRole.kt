@@ -1,7 +1,7 @@
 package com.sweak.diplomaexam.domain.model.common
 
 enum class UserRole(val apiName: String) {
-    USER_STUDENT("STUDENT"), USER_EXAMINER("EXAMINATOR");
+    USER_STUDENT("STUDENT"), USER_EXAMINER("EXAMINER");
 
     override fun toString(): String {
         return apiName
