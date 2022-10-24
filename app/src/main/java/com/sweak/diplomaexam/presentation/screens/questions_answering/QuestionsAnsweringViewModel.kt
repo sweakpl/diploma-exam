@@ -96,12 +96,10 @@ class QuestionsAnsweringViewModel @Inject constructor(
                     }
                 }
             }
-            is QuestionsAnsweringScreenEvent.HideCannotSubmitGradesDialog -> {
+            is QuestionsAnsweringScreenEvent.HideCannotSubmitGradesDialog ->
                 state = state.copy(cannotSubmitGradesDialogVisible = false)
-            }
-            is QuestionsAnsweringScreenEvent.HideSubmitQuestionGradesDialog -> {
+            is QuestionsAnsweringScreenEvent.HideSubmitQuestionGradesDialog ->
                 state = state.copy(submitQuestionGradesDialogVisible = false)
-            }
             is QuestionsAnsweringScreenEvent.SubmitQuestionGrades -> submitGradesForQuestions()
             is QuestionsAnsweringScreenEvent.SelectThesisGrade ->
                 state = state.copy(thesisGrade = event.grade)

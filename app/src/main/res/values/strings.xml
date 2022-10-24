@@ -11,8 +11,8 @@
     <string name="invalid_email_error">The e-mail is invalid!</string>
     <string name="wrong_credentials_error">Wrong email or password!</string>
     <string name="blank_password_error">The password is blank!</string>
-    <string name="login_help_examiner_message">In order to login, use Your email in the pk.edu.pl domain. It should be registered by the session administrator. In case of any problems, contact your administrator.</string>
-    <string name="login_help_student_message">In order to login, use Your email in the student.pk.edu.pl domain. It should be registered by the session administrator. In case of any problems, contact your examiner.</string>
+    <string name="login_help_examiner_message">In order to login, use your email in the pk.edu.pl domain. It should be registered by the session administrator. In case of any problems, contact your administrator.</string>
+    <string name="login_help_student_message">In order to login, use your email in the student.pk.edu.pl domain. It should be registered by the session administrator. In case of any problems, contact your examiner.</string>
     <string name="waiting_for_student">Waiting for the student to join the session…</string>
     <string name="waiting_for_examiner">Waiting for the examiner to join the session…</string>
     <string name="logged_in_as">Logged in as %1$s</string>
@@ -69,4 +69,7 @@
     <string name="course_of_studies">Course of studies:</string>
     <string name="email_belongs_to_examiner">This e-mail belongs to the examiner!</string>
     <string name="email_belongs_to_student">This e-mail belongs to the student!</string>
+    <string name="select_session_student">Select the student with whom you want to conduct the examination session.</string>
+    <string name="confirm_selection">Confirm selection?</string>
+    <string name="do_you_want_to_start_session_with_student">Do you want to start the session with the student %1$s</string>
 </resources>

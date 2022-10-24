@@ -15,7 +15,10 @@ import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
-fun WelcomeLayout(modifier: Modifier = Modifier) {
+fun WelcomeLayout(
+    modifier: Modifier = Modifier,
+    text: String = stringResource(R.string.welcome_to_exam)
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -36,7 +39,7 @@ fun WelcomeLayout(modifier: Modifier = Modifier) {
         )
 
         Text(
-            text = stringResource(R.string.welcome_to_exam),
+            text = text,
             style = MaterialTheme.typography.h2,
             textAlign = TextAlign.Center
         )

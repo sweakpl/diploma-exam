@@ -14,6 +14,7 @@ import com.sweak.diplomaexam.presentation.screens.lobby.LobbyScreen
 import com.sweak.diplomaexam.presentation.screens.login.LoginScreen
 import com.sweak.diplomaexam.presentation.screens.questions_answering.QuestionsAnsweringScreen
 import com.sweak.diplomaexam.presentation.screens.questions_draw.QuestionsDrawScreen
+import com.sweak.diplomaexam.presentation.screens.session_selection.SessionSelectionScreen
 import com.sweak.diplomaexam.presentation.ui.theme.DiplomaExamTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,6 +37,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable(route = Screen.LoginScreen.route) {
                         LoginScreen(navController = navController)
+                    }
+
+                    composable(route = Screen.SessionSelectionScreen.route) {
+                        SessionSelectionScreen(navController = navController)
                     }
 
                     composable(route = Screen.LobbyScreen.route) {

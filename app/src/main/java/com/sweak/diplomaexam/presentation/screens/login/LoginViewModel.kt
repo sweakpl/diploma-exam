@@ -82,10 +82,9 @@ class LoginViewModel @Inject constructor(
                         DUMMY_OTHER_USER_EMAIL = "barbara.nowak@pk.edu.pl"
                     } else {
                         DUMMY_OTHER_USER_ROLE = UserRole.USER_STUDENT
-                        DUMMY_OTHER_USER_EMAIL = "adam.kowalski@student.pk.edu.pl"
                     }
 
-                    authenticateEventChannel.send(AuthenticationEvent.Success)
+                    authenticateEventChannel.send(AuthenticationEvent.Success(state.userRole!!))
                 }
                 is Resource.Failure -> state = state.copy(
                     errorMessage = when (it.error) {
@@ -112,6 +111,6 @@ class LoginViewModel @Inject constructor(
     }
 
     sealed class AuthenticationEvent {
-        object Success : AuthenticationEvent()
+        data class Success(val authenticatedUserRole: UserRole) : AuthenticationEvent()
     }
 }
