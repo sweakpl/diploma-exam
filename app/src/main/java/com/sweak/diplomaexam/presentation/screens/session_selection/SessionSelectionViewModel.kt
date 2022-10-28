@@ -7,19 +7,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.session_selection.AvailableSession
-import com.sweak.diplomaexam.domain.use_case.session_selection.GetSessionSelectionState
+import com.sweak.diplomaexam.domain.use_case.session_selection.GetAvailableSessions
 import com.sweak.diplomaexam.domain.use_case.session_selection.SelectExaminationSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SessionSelectionViewModel @Inject constructor(
-    getSessionSelectionState: GetSessionSelectionState,
+    private val getAvailableSessions: GetAvailableSessions,
     private val selectExaminationSession: SelectExaminationSession
 ) : ViewModel() {
 
@@ -28,26 +27,8 @@ class SessionSelectionViewModel @Inject constructor(
     private val sessionConfirmedEventsChannel = Channel<SessionConfirmedEvent>()
     val sessionConfirmedEvents = sessionConfirmedEventsChannel.receiveAsFlow()
 
-    private var hasFinalizedRequest: Boolean = true
-
     init {
-        getSessionSelectionState().onEach {
-            when (it) {
-                is Resource.Success -> {
-                    if (it.data != null) {
-                        if (it.data.isSessionSelectionConfirmed) {
-                            sessionConfirmedEventsChannel.send(SessionConfirmedEvent.Success)
-                        } else {
-                            state = state.copy(
-                                isLoadingResponse = !hasFinalizedRequest,
-                                availableSessions = it.data.availableSessions
-                            )
-                        }
-                    }
-                }
-                else -> { /* no-op */ }
-            }
-        }.launchIn(viewModelScope)
+        fetchSessionSelectionState()
     }
 
     fun onEvent(event: SessionSelectionScreenEvent) {
@@ -71,15 +52,37 @@ class SessionSelectionViewModel @Inject constructor(
         }
     }
 
-    private fun confirmSessionSelection(availableSession: AvailableSession) = performRequest {
-        viewModelScope.launch { selectExaminationSession(availableSession) }
+    private fun fetchSessionSelectionState() {
+        getAvailableSessions().onEach {
+            when (it) {
+                is Resource.Success -> {
+                    if (it.data != null) {
+                        state = state.copy(
+                            isLoadingResponse = false,
+                            availableSessions = it.data
+                        )
+                    }
+                }
+                is Resource.Loading -> {
+                    state = state.copy(isLoadingResponse = true)
+                }
+                is Resource.Failure -> { /* TODO: Handle error */ }
+            }
+        }.launchIn(viewModelScope)
     }
 
-    private fun performRequest(request: () -> Unit) {
-        hasFinalizedRequest = false
-        state = state.copy(isLoadingResponse = true)
-        request()
-        hasFinalizedRequest = true
+    private fun confirmSessionSelection(selectedSession: AvailableSession) {
+        selectExaminationSession(selectedSession).onEach {
+            when (it) {
+                is Resource.Success -> {
+                    sessionConfirmedEventsChannel.send(SessionConfirmedEvent.Success)
+                }
+                is Resource.Loading -> {
+                    state = state.copy(isLoadingResponse = true)
+                }
+                is Resource.Failure -> { /* TODO: Handle error */ }
+            }
+        }.launchIn(viewModelScope)
     }
 
     sealed class SessionConfirmedEvent {

@@ -8,6 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface DiplomaExamApi {
 
@@ -18,4 +19,10 @@ interface DiplomaExamApi {
     suspend fun getAvailableSessions(
         @Header("Authorization") bearerWithToken: String
     ): Response<List<AvailableSession>>
+
+    @POST("examinationSession/selectExaminerSession/{sessionId}")
+    suspend fun selectSession(
+        @Header("Authorization") bearerWithToken: String,
+        @Path("sessionId") sessionId: Int
+    ): Response<AvailableSession>
 }

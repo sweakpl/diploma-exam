@@ -59,4 +59,39 @@ class SessionSelectionRepositoryImpl @Inject constructor(
             return Resource.Failure(Error.IOError(ioException.message))
         }
     }
+
+    override suspend fun selectSession(selectedSession: AvailableSession): Resource<Unit> {
+        try {
+            val response = diplomaExamApi.selectSession(
+                "Bearer ${userSessionManager.getSessionToken()}",
+                selectedSession.sessionId
+            )
+
+            return when (response.code()) {
+                ResponseCode.OK.codeInt -> {
+                    if (response.body() == null) {
+                        Resource.Failure(Error.UnknownError)
+                    } else {
+                        val confirmedSelectedSession = response.body()!!
+
+                        userSessionManager.saveSessionId(confirmedSelectedSession.id)
+
+                        Resource.Success(Unit)
+                    }
+                }
+                ResponseCode.UNAUTHORIZED.codeInt ->
+                    Resource.Failure(Error.UnauthorizedError(response.message()))
+                else -> Resource.Failure(Error.UnknownError)
+            }
+        } catch (httpException: HttpException) {
+            return Resource.Failure(
+                Error.HttpError(
+                    httpException.code(),
+                    httpException.localizedMessage ?: httpException.message
+                )
+            )
+        } catch (ioException: IOException) {
+            return Resource.Failure(Error.IOError(ioException.message))
+        }
+    }
 }
