@@ -5,9 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sweak.diplomaexam.domain.*
 import com.sweak.diplomaexam.domain.common.Resource
-import com.sweak.diplomaexam.domain.model.common.Grade
+import com.sweak.diplomaexam.domain.use_case.exam_score.CleanupSession
 import com.sweak.diplomaexam.domain.use_case.exam_score.GetFinalGrades
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExamScoreViewModel @Inject constructor(
-    getFinalGrades: GetFinalGrades
+    getFinalGrades: GetFinalGrades,
+    private val cleanupSession: CleanupSession
 ): ViewModel() {
 
     var state by mutableStateOf(ExamScoreScreenState())
@@ -53,19 +53,7 @@ class ExamScoreViewModel @Inject constructor(
     }
 
     private fun finishExam() = viewModelScope.launch {
-        DUMMY_HAS_SESSION_BEEN_STARTED = false
-        DUMMY_HAVE_QUESTIONS_BEEN_DRAWN = false
-        DUMMY_HAS_STUDENT_REQUESTED_REDRAW = false
-        DUMMY_HAS_EXAMINER_ALLOWED_REDRAW = false
-        DUMMY_ARE_QUESTIONS_CONFIRMED = false
-        DUMMY_DRAWN_QUESTIONS = emptyList()
-        DUMMY_IS_STUDENT_READY_TO_ANSWER = false
-        DUMMY_ARE_QUESTION_GRADES_CONFIRMED = false
-        DUMMY_ARE_ADDITIONAL_GRADES_CONFIRMED = false
-        DUMMY_DIPLOMA_EXAM_GRADE = Grade.C
-        DUMMY_THESIS_GRADE = Grade.E
-        DUMMY_COURSE_OF_STUDIES_GRADE = Grade.D
-
+        cleanupSession()
         examFinishedEventsChannel.send(ExamFinishedEvent())
     }
 

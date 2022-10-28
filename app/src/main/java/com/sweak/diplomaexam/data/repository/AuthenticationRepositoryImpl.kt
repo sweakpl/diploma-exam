@@ -34,10 +34,17 @@ class AuthenticationRepositoryImpl @Inject constructor(
                         val loginResponse = response.body()!!
 
                         if (UserRole.fromString(loginResponse.role) == selectedUserRole) {
-                            userSessionManager.saveSessionTokenAndExpiryDate(
-                                loginResponse.token,
-                                loginResponse.expirationDate
-                            )
+                            if (selectedUserRole == UserRole.USER_STUDENT &&
+                                loginResponse.sessionId == null
+                            ) {
+                                return Resource.Failure(Error.UnknownError)
+                            }
+
+                            userSessionManager.apply {
+                                saveSessionToken(loginResponse.token)
+                                saveSessionExpiryDate(loginResponse.expirationDate)
+                                saveSessionId(loginResponse.sessionId ?: -1)
+                            }
 
                             Resource.Success(loginResponse)
                         } else {

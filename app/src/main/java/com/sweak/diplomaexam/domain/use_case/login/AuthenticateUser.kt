@@ -1,7 +1,6 @@
 package com.sweak.diplomaexam.domain.use_case.login
 
 import com.sweak.diplomaexam.domain.common.Resource
-import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.domain.repository.AuthenticationRepository
 import kotlinx.coroutines.flow.Flow
@@ -20,13 +19,7 @@ class AuthenticateUser @Inject constructor(
             emit(Resource.Loading())
 
             when (val loginResponse = repository.login(email, password, selectedUserRole)) {
-                is Resource.Success -> {
-                    if (loginResponse.data?.token != null) {
-                        emit(Resource.Success(Unit))
-                    } else {
-                        emit(Resource.Failure(Error.UnknownError))
-                    }
-                }
+                is Resource.Success -> emit(Resource.Success(Unit))
                 is Resource.Failure -> emit(Resource.Failure(loginResponse.error!!))
                 is Resource.Loading -> { /* no-op */ }
             }
