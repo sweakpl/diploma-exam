@@ -5,8 +5,6 @@ import com.sweak.diplomaexam.data.common.BASE_URL
 import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.local.UserSessionManagerImpl
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
-import com.sweak.diplomaexam.data.repository.AuthenticationRepositoryImpl
-import com.sweak.diplomaexam.domain.repository.AuthenticationRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
