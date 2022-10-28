@@ -6,5 +6,6 @@ data class SessionSelectionScreenState(
     val isLoadingResponse: Boolean = true,
     val availableSessions: List<AvailableSession>? = null,
     val selectedSession: AvailableSession? = null,
-    val sessionSelectionConfirmationDialogVisible: Boolean = false
+    val sessionSelectionConfirmationDialogVisible: Boolean = false,
+    val loadingErrorDialogVisible: Boolean = false
 )

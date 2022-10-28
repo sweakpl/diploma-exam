@@ -111,6 +111,21 @@ fun SessionSelectionScreen(
             negativeButtonText = stringResource(R.string.no)
         )
     }
+
+    if (sessionSelectionScreenState.loadingErrorDialogVisible) {
+        Dialog(
+            title = stringResource(R.string.error_occurred_general),
+            message = stringResource(R.string.error_occurred_general_description),
+            onDismissRequest = {
+                sessionSelectionViewModel.onEvent(SessionSelectionScreenEvent.RetryAfterError)
+            },
+            onlyPositiveButton = true,
+            onPositiveClick = {
+                sessionSelectionViewModel.onEvent(SessionSelectionScreenEvent.RetryAfterError)
+            },
+            positiveButtonText = stringResource(R.string.retry),
+        )
+    }
 }
 
 @ExperimentalAnimationApi
@@ -210,19 +225,19 @@ fun MediumOrExpandedSessionSelectionScreen(
                 .padding(all = MaterialTheme.space.large)
                 .weight(1f)
         ) { state ->
-            if (state) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
-                ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                if (state) {
                     LoadingLayout()
+                } else {
+                    SessionSelectionPanel(
+                        availableSessions = availableSessions ?: emptyList(),
+                        onSessionSelected = onSessionSelected
+                    )
                 }
-            } else {
-                SessionSelectionPanel(
-                    availableSessions = availableSessions ?: emptyList(),
-                    onSessionSelected = onSessionSelected
-                )
             }
         }
     }

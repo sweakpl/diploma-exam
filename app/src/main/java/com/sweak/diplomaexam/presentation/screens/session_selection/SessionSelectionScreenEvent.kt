@@ -8,4 +8,5 @@ sealed class SessionSelectionScreenEvent {
     data class HideSessionSelectionConfirmationDialog(val isConfirmingAfterHiding: Boolean) :
         SessionSelectionScreenEvent()
     object ConfirmSessionSelection : SessionSelectionScreenEvent()
+    object RetryAfterError : SessionSelectionScreenEvent()
 }

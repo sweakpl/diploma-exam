@@ -27,8 +27,10 @@ class SessionSelectionViewModel @Inject constructor(
     private val sessionConfirmedEventsChannel = Channel<SessionConfirmedEvent>()
     val sessionConfirmedEvents = sessionConfirmedEventsChannel.receiveAsFlow()
 
+    private var lastUnsuccessfulOperation: Runnable? = null
+
     init {
-        fetchSessionSelectionState()
+        fetchAvailableSessions()
     }
 
     fun onEvent(event: SessionSelectionScreenEvent) {
@@ -49,10 +51,16 @@ class SessionSelectionViewModel @Inject constructor(
                     confirmSessionSelection(it)
                 }
             }
+            is SessionSelectionScreenEvent.RetryAfterError -> {
+                state = state.copy(loadingErrorDialogVisible = false)
+
+                lastUnsuccessfulOperation?.run()
+                lastUnsuccessfulOperation = null
+            }
         }
     }
 
-    private fun fetchSessionSelectionState() {
+    private fun fetchAvailableSessions() {
         getAvailableSessions().onEach {
             when (it) {
                 is Resource.Success -> {
@@ -66,7 +74,12 @@ class SessionSelectionViewModel @Inject constructor(
                 is Resource.Loading -> {
                     state = state.copy(isLoadingResponse = true)
                 }
-                is Resource.Failure -> { /* TODO: Handle error */ }
+                is Resource.Failure -> {
+                    lastUnsuccessfulOperation = Runnable {
+                        fetchAvailableSessions()
+                    }
+                    state = state.copy(loadingErrorDialogVisible = true)
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -80,7 +93,12 @@ class SessionSelectionViewModel @Inject constructor(
                 is Resource.Loading -> {
                     state = state.copy(isLoadingResponse = true)
                 }
-                is Resource.Failure -> { /* TODO: Handle error */ }
+                is Resource.Failure -> {
+                    lastUnsuccessfulOperation = Runnable {
+                        confirmSessionSelection(selectedSession)
+                    }
+                    state = state.copy(loadingErrorDialogVisible = true)
+                }
             }
         }.launchIn(viewModelScope)
     }
