@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.data.remote
 
-import com.sweak.diplomaexam.data.remote.model.AvailableSession
+import com.sweak.diplomaexam.data.remote.dto.AvailableSessionDto
 import com.sweak.diplomaexam.domain.model.login.LoginRequest
 import com.sweak.diplomaexam.domain.model.login.LoginResponse
 import retrofit2.Response
@@ -18,11 +18,11 @@ interface DiplomaExamApi {
     @GET("examinationSession/getAvailableSessionStudents")
     suspend fun getAvailableSessions(
         @Header("Authorization") bearerWithToken: String
-    ): Response<List<AvailableSession>>
+    ): Response<List<AvailableSessionDto>>
 
     @POST("examinationSession/selectExaminerSession/{sessionId}")
     suspend fun selectSession(
         @Header("Authorization") bearerWithToken: String,
         @Path("sessionId") sessionId: Int
-    ): Response<AvailableSession>
+    ): Response<AvailableSessionDto>
 }

@@ -8,6 +8,6 @@ enum class UserRole(val apiName: String) {
     }
 
     companion object {
-        fun fromString(name: String) = values().firstOrNull { it.apiName == name }
+        fun fromString(name: String) = values().first { it.apiName == name }
     }
 }
