@@ -71,7 +71,6 @@
     <string name="select_session_student">Wybierz studenta, z którym chcesz przeprowadzić egzamin.</string>
     <string name="confirm_selection">Potwierdzić wybór?</string>
     <string name="do_you_want_to_start_session_with_student">Czy chcesz rozpocząć sesję ze studentem %1$s?</string>
-    <string name="error_occurred_general">Wystąpił błąd</string>
-    <string name="error_occurred_general_description">Naciśnij \'Spróbuj ponownie\', aby załadować zawartość ponownie. Jeśli problem nie ustaje, rozważ kontakt z administratorem.</string>
+    <string name="error_occurred">Wystąpił błąd. Sprawdź połączenie internetowe.</string>
     <string name="retry">Spróbuj ponownie</string>
 </resources>

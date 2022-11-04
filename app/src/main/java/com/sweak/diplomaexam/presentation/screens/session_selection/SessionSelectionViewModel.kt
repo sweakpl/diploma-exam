@@ -52,7 +52,7 @@ class SessionSelectionViewModel @Inject constructor(
                 }
             }
             is SessionSelectionScreenEvent.RetryAfterError -> {
-                state = state.copy(loadingErrorDialogVisible = false)
+                state = state.copy(hasErrorOccurred = false)
 
                 lastUnsuccessfulOperation?.run()
                 lastUnsuccessfulOperation = null
@@ -78,7 +78,7 @@ class SessionSelectionViewModel @Inject constructor(
                     lastUnsuccessfulOperation = Runnable {
                         fetchAvailableSessions()
                     }
-                    state = state.copy(loadingErrorDialogVisible = true)
+                    state = state.copy(hasErrorOccurred = true)
                 }
             }
         }.launchIn(viewModelScope)
@@ -97,7 +97,7 @@ class SessionSelectionViewModel @Inject constructor(
                     lastUnsuccessfulOperation = Runnable {
                         confirmSessionSelection(selectedSession)
                     }
-                    state = state.copy(loadingErrorDialogVisible = true)
+                    state = state.copy(hasErrorOccurred = true)
                 }
             }
         }.launchIn(viewModelScope)

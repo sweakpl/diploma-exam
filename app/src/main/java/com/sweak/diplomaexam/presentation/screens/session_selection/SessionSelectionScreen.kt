@@ -22,6 +22,7 @@ import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.screens.common.WindowInfo
 import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
 import com.sweak.diplomaexam.presentation.screens.components.Dialog
+import com.sweak.diplomaexam.presentation.screens.components.ErrorLayout
 import com.sweak.diplomaexam.presentation.screens.components.LoadingLayout
 import com.sweak.diplomaexam.presentation.screens.components.WelcomeLayout
 import com.sweak.diplomaexam.presentation.screens.session_selection.components.SessionSelectionPanel
@@ -56,20 +57,28 @@ fun SessionSelectionScreen(
         CompactSessionSelectionScreen(
             availableSessions = sessionSelectionScreenState.availableSessions,
             isLoadingResponse = sessionSelectionScreenState.isLoadingResponse,
+            hasErrorOccurred = sessionSelectionScreenState.hasErrorOccurred,
             onSessionSelected = {
                 sessionSelectionViewModel.onEvent(
                     SessionSelectionScreenEvent.SelectAvailableSession(it)
                 )
+            },
+            onRetryClick = {
+                sessionSelectionViewModel.onEvent(SessionSelectionScreenEvent.RetryAfterError)
             }
         )
     } else {
         MediumOrExpandedSessionSelectionScreen(
             availableSessions = sessionSelectionScreenState.availableSessions,
             isLoadingResponse = sessionSelectionScreenState.isLoadingResponse,
+            hasErrorOccurred = sessionSelectionScreenState.hasErrorOccurred,
             onSessionSelected = {
                 sessionSelectionViewModel.onEvent(
                     SessionSelectionScreenEvent.SelectAvailableSession(it)
                 )
+            },
+            onRetryClick = {
+                sessionSelectionViewModel.onEvent(SessionSelectionScreenEvent.RetryAfterError)
             }
         )
     }
@@ -111,21 +120,6 @@ fun SessionSelectionScreen(
             negativeButtonText = stringResource(R.string.no)
         )
     }
-
-    if (sessionSelectionScreenState.loadingErrorDialogVisible) {
-        Dialog(
-            title = stringResource(R.string.error_occurred_general),
-            message = stringResource(R.string.error_occurred_general_description),
-            onDismissRequest = {
-                sessionSelectionViewModel.onEvent(SessionSelectionScreenEvent.RetryAfterError)
-            },
-            onlyPositiveButton = true,
-            onPositiveClick = {
-                sessionSelectionViewModel.onEvent(SessionSelectionScreenEvent.RetryAfterError)
-            },
-            positiveButtonText = stringResource(R.string.retry),
-        )
-    }
 }
 
 @ExperimentalAnimationApi
@@ -133,7 +127,9 @@ fun SessionSelectionScreen(
 fun CompactSessionSelectionScreen(
     availableSessions: List<AvailableSession>?,
     isLoadingResponse: Boolean,
-    onSessionSelected: (AvailableSession) -> Unit
+    hasErrorOccurred: Boolean,
+    onSessionSelected: (AvailableSession) -> Unit,
+    onRetryClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -159,21 +155,32 @@ fun CompactSessionSelectionScreen(
             )
 
             AnimatedContent(
-                targetState = isLoadingResponse || availableSessions == null,
+                targetState = hasErrorOccurred,
                 modifier = Modifier.padding(all = MaterialTheme.space.large)
-            ) { state ->
-                if (state) {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        LoadingLayout()
+            ) { targetState ->
+                if (!targetState) {
+                    AnimatedContent(
+                        targetState = isLoadingResponse || availableSessions == null
+                    ) { state ->
+                        if (state) {
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                LoadingLayout()
+                            }
+                        } else {
+                            SessionSelectionPanel(
+                                availableSessions = availableSessions ?: emptyList(),
+                                onSessionSelected = onSessionSelected
+                            )
+                        }
                     }
                 } else {
-                    SessionSelectionPanel(
-                        availableSessions = availableSessions ?: emptyList(),
-                        onSessionSelected = onSessionSelected
+                    ErrorLayout(
+                        onRetryClick = onRetryClick,
+                        modifier = Modifier.verticalScroll(state = rememberScrollState())
                     )
                 }
             }
@@ -186,7 +193,9 @@ fun CompactSessionSelectionScreen(
 fun MediumOrExpandedSessionSelectionScreen(
     availableSessions: List<AvailableSession>?,
     isLoadingResponse: Boolean,
-    onSessionSelected: (AvailableSession) -> Unit
+    hasErrorOccurred: Boolean,
+    onSessionSelected: (AvailableSession) -> Unit,
+    onRetryClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -220,22 +229,33 @@ fun MediumOrExpandedSessionSelectionScreen(
         }
 
         AnimatedContent(
-            targetState = isLoadingResponse || availableSessions == null,
+            targetState = hasErrorOccurred,
             modifier = Modifier
                 .padding(all = MaterialTheme.space.large)
                 .weight(1f)
-        ) { state ->
+        ) { targetState ->
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (state) {
-                    LoadingLayout()
+                if (!targetState) {
+                    AnimatedContent(
+                        targetState = isLoadingResponse || availableSessions == null
+                    ) { state ->
+                        if (state) {
+                            LoadingLayout()
+                        } else {
+                            SessionSelectionPanel(
+                                availableSessions = availableSessions ?: emptyList(),
+                                onSessionSelected = onSessionSelected
+                            )
+                        }
+                    }
                 } else {
-                    SessionSelectionPanel(
-                        availableSessions = availableSessions ?: emptyList(),
-                        onSessionSelected = onSessionSelected
+                    ErrorLayout(
+                        onRetryClick = onRetryClick,
+                        modifier = Modifier.verticalScroll(state = rememberScrollState())
                     )
                 }
             }
