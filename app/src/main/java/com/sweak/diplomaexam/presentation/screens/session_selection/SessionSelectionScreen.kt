@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.model.session_selection.AvailableSession
 import com.sweak.diplomaexam.presentation.Screen
+import com.sweak.diplomaexam.presentation.screens.common.UiText
 import com.sweak.diplomaexam.presentation.screens.common.WindowInfo
 import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
 import com.sweak.diplomaexam.presentation.screens.components.Dialog
@@ -57,7 +58,7 @@ fun SessionSelectionScreen(
         CompactSessionSelectionScreen(
             availableSessions = sessionSelectionScreenState.availableSessions,
             isLoadingResponse = sessionSelectionScreenState.isLoadingResponse,
-            hasErrorOccurred = sessionSelectionScreenState.hasErrorOccurred,
+            errorMessage = sessionSelectionScreenState.errorMessage,
             onSessionSelected = {
                 sessionSelectionViewModel.onEvent(
                     SessionSelectionScreenEvent.SelectAvailableSession(it)
@@ -71,7 +72,7 @@ fun SessionSelectionScreen(
         MediumOrExpandedSessionSelectionScreen(
             availableSessions = sessionSelectionScreenState.availableSessions,
             isLoadingResponse = sessionSelectionScreenState.isLoadingResponse,
-            hasErrorOccurred = sessionSelectionScreenState.hasErrorOccurred,
+            errorMessage = sessionSelectionScreenState.errorMessage,
             onSessionSelected = {
                 sessionSelectionViewModel.onEvent(
                     SessionSelectionScreenEvent.SelectAvailableSession(it)
@@ -127,7 +128,7 @@ fun SessionSelectionScreen(
 fun CompactSessionSelectionScreen(
     availableSessions: List<AvailableSession>?,
     isLoadingResponse: Boolean,
-    hasErrorOccurred: Boolean,
+    errorMessage: UiText?,
     onSessionSelected: (AvailableSession) -> Unit,
     onRetryClick: () -> Unit
 ) {
@@ -155,10 +156,10 @@ fun CompactSessionSelectionScreen(
             )
 
             AnimatedContent(
-                targetState = hasErrorOccurred,
+                targetState = errorMessage == null,
                 modifier = Modifier.padding(all = MaterialTheme.space.large)
             ) { targetState ->
-                if (!targetState) {
+                if (targetState) {
                     AnimatedContent(
                         targetState = isLoadingResponse || availableSessions == null
                     ) { state ->
@@ -180,6 +181,7 @@ fun CompactSessionSelectionScreen(
                 } else {
                     ErrorLayout(
                         onRetryClick = onRetryClick,
+                        text = errorMessage?.asString(),
                         modifier = Modifier.verticalScroll(state = rememberScrollState())
                     )
                 }
@@ -193,7 +195,7 @@ fun CompactSessionSelectionScreen(
 fun MediumOrExpandedSessionSelectionScreen(
     availableSessions: List<AvailableSession>?,
     isLoadingResponse: Boolean,
-    hasErrorOccurred: Boolean,
+    errorMessage: UiText?,
     onSessionSelected: (AvailableSession) -> Unit,
     onRetryClick: () -> Unit
 ) {
@@ -229,7 +231,7 @@ fun MediumOrExpandedSessionSelectionScreen(
         }
 
         AnimatedContent(
-            targetState = hasErrorOccurred,
+            targetState = errorMessage == null,
             modifier = Modifier
                 .padding(all = MaterialTheme.space.large)
                 .weight(1f)
@@ -239,7 +241,7 @@ fun MediumOrExpandedSessionSelectionScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (!targetState) {
+                if (targetState) {
                     AnimatedContent(
                         targetState = isLoadingResponse || availableSessions == null
                     ) { state ->
@@ -255,6 +257,7 @@ fun MediumOrExpandedSessionSelectionScreen(
                 } else {
                     ErrorLayout(
                         onRetryClick = onRetryClick,
+                        text = errorMessage?.asString(),
                         modifier = Modifier.verticalScroll(state = rememberScrollState())
                     )
                 }

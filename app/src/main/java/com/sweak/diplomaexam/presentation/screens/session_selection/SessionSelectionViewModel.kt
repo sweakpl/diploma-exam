@@ -5,10 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.session_selection.AvailableSession
 import com.sweak.diplomaexam.domain.use_case.session_selection.GetAvailableSessions
 import com.sweak.diplomaexam.domain.use_case.session_selection.SelectExaminationSession
+import com.sweak.diplomaexam.presentation.screens.common.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
@@ -52,7 +55,7 @@ class SessionSelectionViewModel @Inject constructor(
                 }
             }
             is SessionSelectionScreenEvent.RetryAfterError -> {
-                state = state.copy(hasErrorOccurred = false)
+                state = state.copy(errorMessage = null)
 
                 lastUnsuccessfulOperation?.run()
                 lastUnsuccessfulOperation = null
@@ -78,7 +81,20 @@ class SessionSelectionViewModel @Inject constructor(
                     lastUnsuccessfulOperation = Runnable {
                         fetchAvailableSessions()
                     }
-                    state = state.copy(hasErrorOccurred = true)
+                    state = state.copy(
+                        errorMessage = when(it.error) {
+                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+                            is Error.HttpError -> {
+                                if (it.error.message != null)
+                                    UiText.DynamicString(it.error.message)
+                                else
+                                    UiText.StringResource(R.string.unknown_error)
+                            }
+                            is Error.UnauthorizedError ->
+                                UiText.StringResource(R.string.no_permission)
+                            else -> UiText.StringResource(R.string.unknown_error)
+                        }
+                    )
                 }
             }
         }.launchIn(viewModelScope)
@@ -97,7 +113,20 @@ class SessionSelectionViewModel @Inject constructor(
                     lastUnsuccessfulOperation = Runnable {
                         confirmSessionSelection(selectedSession)
                     }
-                    state = state.copy(hasErrorOccurred = true)
+                    state = state.copy(
+                        errorMessage = when(it.error) {
+                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+                            is Error.HttpError -> {
+                                if (it.error.message != null)
+                                    UiText.DynamicString(it.error.message)
+                                else
+                                    UiText.StringResource(R.string.unknown_error)
+                            }
+                            is Error.UnauthorizedError ->
+                                UiText.StringResource(R.string.no_permission)
+                            else -> UiText.StringResource(R.string.unknown_error)
+                        }
+                    )
                 }
             }
         }.launchIn(viewModelScope)

@@ -20,7 +20,8 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 @Composable
 fun ErrorLayout(
     onRetryClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    text: String? = stringResource(R.string.error_occurred)
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -37,7 +38,7 @@ fun ErrorLayout(
         )
 
         Text(
-            text = stringResource(R.string.error_occurred),
+            text = text ?: stringResource(R.string.error_occurred),
             style = MaterialTheme.typography.h2,
             color = MaterialTheme.colors.onPrimary,
             textAlign = TextAlign.Center,

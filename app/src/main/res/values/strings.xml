@@ -72,6 +72,7 @@
     <string name="select_session_student">Select the student with whom you want to conduct the examination session.</string>
     <string name="confirm_selection">Confirm selection?</string>
     <string name="do_you_want_to_start_session_with_student">Do you want to start the session with the student %1$s</string>
-    <string name="error_occurred">An error occurred. Check your internet connection.</string>
+    <string name="error_occurred">An error occurred.</string>
     <string name="retry">Retry</string>
+    <string name="no_permission">No permission to do that action.</string>
 </resources>
