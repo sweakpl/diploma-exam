@@ -156,34 +156,32 @@ fun CompactSessionSelectionScreen(
             )
 
             AnimatedContent(
-                targetState = errorMessage == null,
+                targetState =
+                if (errorMessage != null) AnimatedComponentTargetState.ERROR
+                else if (isLoadingResponse || availableSessions == null)
+                    AnimatedComponentTargetState.LOADING
+                else AnimatedComponentTargetState.SUCCESS,
                 modifier = Modifier.padding(all = MaterialTheme.space.large)
             ) { targetState ->
-                if (targetState) {
-                    AnimatedContent(
-                        targetState = isLoadingResponse || availableSessions == null
-                    ) { state ->
-                        if (state) {
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                LoadingLayout()
-                            }
-                        } else {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    when (targetState) {
+                        AnimatedComponentTargetState.SUCCESS ->
                             SessionSelectionPanel(
                                 availableSessions = availableSessions ?: emptyList(),
                                 onSessionSelected = onSessionSelected
                             )
-                        }
+                        AnimatedComponentTargetState.LOADING -> LoadingLayout()
+                        AnimatedComponentTargetState.ERROR ->
+                            ErrorLayout(
+                                onRetryClick = onRetryClick,
+                                text = errorMessage?.asString(),
+                                modifier = Modifier.verticalScroll(state = rememberScrollState())
+                            )
                     }
-                } else {
-                    ErrorLayout(
-                        onRetryClick = onRetryClick,
-                        text = errorMessage?.asString(),
-                        modifier = Modifier.verticalScroll(state = rememberScrollState())
-                    )
                 }
             }
         }
@@ -231,7 +229,11 @@ fun MediumOrExpandedSessionSelectionScreen(
         }
 
         AnimatedContent(
-            targetState = errorMessage == null,
+            targetState =
+            if (errorMessage != null) AnimatedComponentTargetState.ERROR
+            else if (isLoadingResponse || availableSessions == null)
+                AnimatedComponentTargetState.LOADING
+            else AnimatedComponentTargetState.SUCCESS,
             modifier = Modifier
                 .padding(all = MaterialTheme.space.large)
                 .weight(1f)
@@ -241,27 +243,23 @@ fun MediumOrExpandedSessionSelectionScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (targetState) {
-                    AnimatedContent(
-                        targetState = isLoadingResponse || availableSessions == null
-                    ) { state ->
-                        if (state) {
-                            LoadingLayout()
-                        } else {
-                            SessionSelectionPanel(
-                                availableSessions = availableSessions ?: emptyList(),
-                                onSessionSelected = onSessionSelected
-                            )
-                        }
-                    }
-                } else {
-                    ErrorLayout(
-                        onRetryClick = onRetryClick,
-                        text = errorMessage?.asString(),
-                        modifier = Modifier.verticalScroll(state = rememberScrollState())
-                    )
+                when (targetState) {
+                    AnimatedComponentTargetState.SUCCESS ->
+                        SessionSelectionPanel(
+                            availableSessions = availableSessions ?: emptyList(),
+                            onSessionSelected = onSessionSelected
+                        )
+                    AnimatedComponentTargetState.LOADING -> LoadingLayout()
+                    AnimatedComponentTargetState.ERROR ->
+                        ErrorLayout(
+                            onRetryClick = onRetryClick,
+                            text = errorMessage?.asString(),
+                            modifier = Modifier.verticalScroll(state = rememberScrollState())
+                        )
                 }
             }
         }
     }
 }
+
+private enum class AnimatedComponentTargetState { ERROR, LOADING, SUCCESS }
