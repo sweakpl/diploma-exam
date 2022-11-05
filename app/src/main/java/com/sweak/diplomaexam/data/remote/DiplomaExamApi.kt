@@ -1,19 +1,15 @@
 package com.sweak.diplomaexam.data.remote
 
-import com.sweak.diplomaexam.data.remote.dto.AvailableSessionDto
-import com.sweak.diplomaexam.domain.model.login.LoginRequest
-import com.sweak.diplomaexam.domain.model.login.LoginResponse
+import com.sweak.diplomaexam.data.remote.dto.login.LoginRequestDto
+import com.sweak.diplomaexam.data.remote.dto.login.LoginResponseDto
+import com.sweak.diplomaexam.data.remote.dto.session_selection.AvailableSessionDto
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface DiplomaExamApi {
 
     @POST("login")
-    suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>
+    suspend fun login(@Body loginRequestDto: LoginRequestDto): Response<LoginResponseDto>
 
     @GET("examinationSession/getAvailableSessionStudents")
     suspend fun getAvailableSessions(

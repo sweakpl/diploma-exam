@@ -1,5 +1,7 @@
-package com.sweak.diplomaexam.data.remote.dto
+package com.sweak.diplomaexam.data.remote.dto.session_selection
 
+import com.sweak.diplomaexam.data.remote.dto.common.UserDto
+import com.sweak.diplomaexam.data.remote.dto.common.toUser
 import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.domain.model.session_selection.AvailableSession
 

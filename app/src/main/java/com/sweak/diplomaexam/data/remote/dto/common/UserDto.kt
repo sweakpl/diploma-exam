@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.data.remote.dto
+package com.sweak.diplomaexam.data.remote.dto.common
 
 import com.sweak.diplomaexam.domain.model.common.User
 import com.sweak.diplomaexam.domain.model.common.UserRole

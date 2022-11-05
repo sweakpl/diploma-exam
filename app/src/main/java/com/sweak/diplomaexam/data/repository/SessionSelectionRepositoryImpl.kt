@@ -3,7 +3,7 @@ package com.sweak.diplomaexam.data.repository
 import com.sweak.diplomaexam.data.common.ResponseCode
 import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
-import com.sweak.diplomaexam.data.remote.dto.toAvailableSession
+import com.sweak.diplomaexam.data.remote.dto.session_selection.toAvailableSession
 import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.session_selection.AvailableSession
