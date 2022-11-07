@@ -41,7 +41,13 @@ class AuthenticationRepositoryImpl @Inject constructor(
                             )
                         }
 
-                        if (UserRole.fromString(loginResponse.role) == selectedUserRole) {
+                        val responseUserRole = when(loginResponse.role) {
+                            "STUDENT" -> UserRole.USER_STUDENT
+                            "EXAMINER" -> UserRole.USER_EXAMINER
+                            else -> null
+                        }
+
+                        if (responseUserRole == selectedUserRole) {
                             if (selectedUserRole == UserRole.USER_STUDENT &&
                                 loginResponse.sessionId == null
                             ) {

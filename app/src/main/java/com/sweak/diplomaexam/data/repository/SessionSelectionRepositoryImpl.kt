@@ -3,7 +3,7 @@ package com.sweak.diplomaexam.data.repository
 import com.sweak.diplomaexam.data.common.ResponseCode
 import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
-import com.sweak.diplomaexam.data.remote.dto.session_selection.toAvailableSession
+import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
 import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.session_selection.AvailableSession
@@ -31,8 +31,13 @@ class SessionSelectionRepositoryImpl @Inject constructor(
                         val availableSessions = response.body()!!
 
                         Resource.Success(
-                            availableSessions.map {
-                                it.toAvailableSession()
+                            availableSessions.map { sessionStateDto ->
+                                AvailableSession(
+                                    sessionStateDto.id,
+                                    sessionStateDto.userDtos.find { userDto ->
+                                        userDto.role == "STUDENT"
+                                    }?.email ?: ""
+                                )
                             }.filter {
                                 it.studentEmail.isNotEmpty()
                             }
@@ -57,9 +62,12 @@ class SessionSelectionRepositoryImpl @Inject constructor(
 
     override suspend fun selectSession(selectedSession: AvailableSession): Resource<Unit> {
         try {
-            val response = diplomaExamApi.selectSession(
+            val response = diplomaExamApi.setSessionState(
                 "Bearer ${userSessionManager.getSessionToken()}",
-                selectedSession.sessionId
+                SetSessionStateRequestDto(
+                    selectedSession.sessionId,
+                    "LOBBY"
+                )
             )
 
             return when (response.code()) {
