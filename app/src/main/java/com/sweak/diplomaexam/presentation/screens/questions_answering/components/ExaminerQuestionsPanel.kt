@@ -82,6 +82,7 @@ fun ExaminerQuestionsPanel(
                 pagerState = pagerState,
                 questions = questions,
                 questionNumbersToGradesMap = questionNumbersToGradesMap,
+                isLoadingResponse = isLoadingResponse,
                 isWaitingForStudentReadiness = isWaitingForStudentReadiness,
                 onGradeSelected = { questionNumber, grade ->
                     onQuestionGradeSelected(questionNumber, grade)
@@ -190,6 +191,7 @@ fun CompactExaminerQuestionsPager(
     pagerState: PagerState,
     questions: List<ExamQuestion>,
     questionNumbersToGradesMap: Map<Int, Grade>,
+    isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
     onGradeSelected: (Int, Grade) -> Unit,
     modifier: Modifier = Modifier
@@ -309,6 +311,7 @@ fun CompactExaminerQuestionsPager(
                     gradeCardOrientation = GradeCardOrientation.HORIZONTAL,
                     text = stringResource(R.string.grade),
                     grade = questionNumbersToGradesMap[currentQuestion.number],
+                    canSelectGrade = !isLoadingResponse && !isWaitingForStudentReadiness,
                     onGradeSelected = { grade ->
                         onGradeSelected(currentQuestion.number, grade)
                     },
@@ -466,6 +469,7 @@ fun MediumOrExpandedExaminerQuestionsPager(
                                 gradeCardOrientation = GradeCardOrientation.HORIZONTAL,
                                 text = stringResource(R.string.grade),
                                 grade = questionNumbersToGradesMap[currentQuestion.number],
+                                canSelectGrade = !isLoadingResponse && !isWaitingForStudentReadiness,
                                 onGradeSelected = { grade ->
                                     onQuestionGradeSelected(currentQuestion.number, grade)
                                 },

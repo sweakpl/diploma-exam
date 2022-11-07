@@ -21,6 +21,7 @@ fun GradeCard(
     gradeCardOrientation: GradeCardOrientation,
     text: String,
     grade: Grade?,
+    canSelectGrade: Boolean,
     onGradeSelected: (Grade) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -45,6 +46,7 @@ fun GradeCard(
                         value = grade?.stringRepresentation ?: "",
                         onValueChange = {},
                         readOnly = true,
+                        enabled = canSelectGrade,
                         textStyle = MaterialTheme.typography.body1.copy(
                             color = MaterialTheme.colors.onSurface
                         ),
@@ -57,7 +59,8 @@ fun GradeCard(
                         singleLine = true,
                         trailingIcon = {
                             IconButton(
-                                onClick = { expanded = !expanded }
+                                onClick = { expanded = !expanded },
+                                enabled = canSelectGrade
                             ) {
                                 Icon(
                                     imageVector =
@@ -118,6 +121,7 @@ fun GradeCard(
                         value = grade?.stringRepresentation ?: "",
                         onValueChange = {},
                         readOnly = true,
+                        enabled = canSelectGrade,
                         textStyle = MaterialTheme.typography.body1.copy(
                             color = MaterialTheme.colors.onSurface
                         ),
@@ -130,7 +134,8 @@ fun GradeCard(
                         singleLine = true,
                         trailingIcon = {
                             IconButton(
-                                onClick = { expanded = !expanded }
+                                onClick = { expanded = !expanded },
+                                enabled = canSelectGrade
                             ) {
                                 Icon(
                                     imageVector =

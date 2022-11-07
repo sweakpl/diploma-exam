@@ -52,6 +52,7 @@ fun ExaminerAdditionalGradesPanel(
                         gradeCardOrientation = GradeCardOrientation.VERTICAL,
                         text = stringResource(R.string.thesis_presentation_grade),
                         grade = thesisGrade,
+                        canSelectGrade = !isLoadingResponse,
                         onGradeSelected = onThesisGradeSelected,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -62,6 +63,7 @@ fun ExaminerAdditionalGradesPanel(
                         gradeCardOrientation = GradeCardOrientation.VERTICAL,
                         text = stringResource(R.string.course_of_studies_grade),
                         grade = courseOfStudiesGrade,
+                        canSelectGrade = !isLoadingResponse,
                         onGradeSelected = onCourseOfStudiesGradeSelected,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -71,6 +73,7 @@ fun ExaminerAdditionalGradesPanel(
                             gradeCardOrientation = GradeCardOrientation.VERTICAL,
                             text = stringResource(R.string.thesis_presentation_grade),
                             grade = thesisGrade,
+                            canSelectGrade = !isLoadingResponse,
                             onGradeSelected = onThesisGradeSelected,
                             modifier = Modifier.weight(1f)
                         )
@@ -81,6 +84,7 @@ fun ExaminerAdditionalGradesPanel(
                             gradeCardOrientation = GradeCardOrientation.VERTICAL,
                             text = stringResource(R.string.course_of_studies_grade),
                             grade = courseOfStudiesGrade,
+                            canSelectGrade = !isLoadingResponse,
                             onGradeSelected = onCourseOfStudiesGradeSelected,
                             modifier = Modifier.weight(1f)
                         )
