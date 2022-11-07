@@ -1,7 +1,6 @@
 package com.sweak.diplomaexam.di
 
 import android.app.Application
-import com.sweak.diplomaexam.data.common.BASE_URL
 import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.local.UserSessionManagerImpl
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
@@ -15,13 +14,17 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideDiplomaExamApi(): DiplomaExamApi =
+    fun provideBaseUrl(): String = "https://diploma-examination-system.herokuapp.com/api/v1/"
+
+    @Provides
+    @Singleton
+    fun provideDiplomaExamApi(baseUrl: String): DiplomaExamApi =
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(DiplomaExamApi::class.java)
