@@ -9,7 +9,7 @@ import javax.inject.Inject
 class StartExamSession @Inject constructor(
     private val repository: LobbyRepository
 ) {
-    suspend operator fun invoke() = flow {
+    operator fun invoke() = flow {
         emit(Resource.Loading())
 
         delay(500)

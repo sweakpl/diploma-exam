@@ -5,15 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.use_case.lobby.GetLobbyState
 import com.sweak.diplomaexam.domain.use_case.lobby.StartExamSession
+import com.sweak.diplomaexam.presentation.screens.common.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,6 +28,8 @@ class LobbyViewModel @Inject constructor(
 
     private val sessionStartEventChannel = Channel<SessionStartEvent>()
     val sessionStartEvents = sessionStartEventChannel.receiveAsFlow()
+
+    private var lastUnsuccessfulOperation: Runnable? = null
 
     init {
         fetchLobbyState()
@@ -46,7 +50,28 @@ class LobbyViewModel @Inject constructor(
                         }
                     }
                 }
-                else -> { /* no-op */ }
+                is Resource.Loading -> {
+                    state = state.copy(user = null)
+                }
+                is Resource.Failure -> {
+                    lastUnsuccessfulOperation = Runnable {
+                        fetchLobbyState()
+                    }
+                    state = state.copy(
+                        errorMessage = when(it.error) {
+                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+                            is Error.HttpError -> {
+                                if (it.error.message != null)
+                                    UiText.DynamicString(it.error.message)
+                                else
+                                    UiText.StringResource(R.string.unknown_error)
+                            }
+                            is Error.UnauthorizedError ->
+                                UiText.StringResource(R.string.no_permission)
+                            else -> UiText.StringResource(R.string.unknown_error)
+                        }
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -54,17 +79,43 @@ class LobbyViewModel @Inject constructor(
     fun onEvent(event: LobbyScreenEvent) {
         when (event) {
             is LobbyScreenEvent.StartExam -> startSession()
+            is LobbyScreenEvent.RetryAfterError -> {
+                state = state.copy(errorMessage = null)
+
+                lastUnsuccessfulOperation?.run()
+                lastUnsuccessfulOperation = null
+            }
         }
     }
 
-    private fun startSession() = viewModelScope.launch {
-        state = state.copy(isSessionInStartingProcess = true)
-        startExamSession().collect {
+    private fun startSession() {
+        startExamSession().onEach {
             when (it) {
                 is Resource.Success -> fetchLobbyState()
-                else -> { /* no-op */}
+                is Resource.Loading -> {
+                    state = state.copy(isSessionInStartingProcess = true)
+                }
+                is Resource.Failure -> {
+                    lastUnsuccessfulOperation = Runnable {
+                        startSession()
+                    }
+                    state = state.copy(
+                        errorMessage = when(it.error) {
+                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+                            is Error.HttpError -> {
+                                if (it.error.message != null)
+                                    UiText.DynamicString(it.error.message)
+                                else
+                                    UiText.StringResource(R.string.unknown_error)
+                            }
+                            is Error.UnauthorizedError ->
+                                UiText.StringResource(R.string.no_permission)
+                            else -> UiText.StringResource(R.string.unknown_error)
+                        }
+                    )
+                }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     sealed class SessionStartEvent {

@@ -1,5 +1,6 @@
 package com.sweak.diplomaexam.presentation.screens.lobby
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,8 +16,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sweak.diplomaexam.domain.model.common.User
 import com.sweak.diplomaexam.presentation.Screen
+import com.sweak.diplomaexam.presentation.screens.common.UiText
 import com.sweak.diplomaexam.presentation.screens.common.WindowInfo
 import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
+import com.sweak.diplomaexam.presentation.screens.components.ErrorLayout
 import com.sweak.diplomaexam.presentation.screens.components.WelcomeLayout
 import com.sweak.diplomaexam.presentation.screens.lobby.components.LoggedInAsLayout
 import com.sweak.diplomaexam.presentation.screens.lobby.components.WaitingForParticipantLayout
@@ -52,14 +55,18 @@ fun LobbyScreen(
             user = lobbyScreenState.user,
             hasOtherUserJoined = lobbyScreenState.hasOtherUserJoinedTheLobby,
             isSessionInStartingProcess = lobbyScreenState.isSessionInStartingProcess,
-            startExamSession = { lobbyViewModel.onEvent(LobbyScreenEvent.StartExam) }
+            errorMessage = lobbyScreenState.errorMessage,
+            startExamSession = { lobbyViewModel.onEvent(LobbyScreenEvent.StartExam) },
+            onRetryClick = { lobbyViewModel.onEvent(LobbyScreenEvent.RetryAfterError) }
         )
     } else {
         MediumOrExpandedLobbyScreen(
             user = lobbyScreenState.user,
             hasOtherUserJoined = lobbyScreenState.hasOtherUserJoinedTheLobby,
             isSessionInStartingProcess = lobbyScreenState.isSessionInStartingProcess,
-            startExamSession = { lobbyViewModel.onEvent(LobbyScreenEvent.StartExam) }
+            errorMessage = lobbyScreenState.errorMessage,
+            startExamSession = { lobbyViewModel.onEvent(LobbyScreenEvent.StartExam) },
+            onRetryClick = { lobbyViewModel.onEvent(LobbyScreenEvent.RetryAfterError) }
         )
     }
 }
@@ -70,7 +77,9 @@ fun CompactLobbyScreen(
     user: User?,
     hasOtherUserJoined: Boolean,
     isSessionInStartingProcess: Boolean,
-    startExamSession: () -> Unit
+    errorMessage: UiText?,
+    startExamSession: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -100,11 +109,8 @@ fun CompactLobbyScreen(
                     )
             )
 
-            WaitingForParticipantLayout(
-                userRole = user?.role,
-                hasOtherUserJoined = hasOtherUserJoined,
-                isSessionInStartingProcess = isSessionInStartingProcess,
-                startExamSession = startExamSession,
+            AnimatedContent(
+                targetState = errorMessage == null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -113,18 +119,31 @@ fun CompactLobbyScreen(
                         end = MaterialTheme.space.large,
                         bottom = MaterialTheme.space.large
                     )
-            )
+            ) { targetState ->
+                Column(verticalArrangement = Arrangement.Top) {
+                    if (targetState) {
+                        WaitingForParticipantLayout(
+                            userRole = user?.role,
+                            hasOtherUserJoined = hasOtherUserJoined,
+                            isSessionInStartingProcess = isSessionInStartingProcess,
+                            startExamSession = startExamSession,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = MaterialTheme.space.large)
+                        )
 
-            LoggedInAsLayout(
-                userEmail = user?.email,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = MaterialTheme.space.large,
-                        end = MaterialTheme.space.large,
-                        bottom = MaterialTheme.space.large,
-                    )
-            )
+                        LoggedInAsLayout(
+                            userEmail = user?.email,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    } else {
+                        ErrorLayout(
+                            onRetryClick = onRetryClick,
+                            text = errorMessage?.asString()
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -135,7 +154,9 @@ fun MediumOrExpandedLobbyScreen(
     user: User?,
     hasOtherUserJoined: Boolean,
     isSessionInStartingProcess: Boolean,
-    startExamSession: () -> Unit
+    errorMessage: UiText?,
+    startExamSession: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -167,38 +188,42 @@ fun MediumOrExpandedLobbyScreen(
             )
         }
 
-        Column(
-            verticalArrangement = Arrangement.Center,
+        AnimatedContent(
+            targetState = errorMessage == null,
             modifier = Modifier
                 .fillMaxHeight()
+                .padding(
+                    top = MaterialTheme.space.medium,
+                    start = MaterialTheme.space.large,
+                    end = MaterialTheme.space.large,
+                    bottom = MaterialTheme.space.medium
+                )
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
-        ) {
-            WaitingForParticipantLayout(
-                userRole = user?.role,
-                hasOtherUserJoined = hasOtherUserJoined,
-                isSessionInStartingProcess = isSessionInStartingProcess,
-                startExamSession = startExamSession,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = MaterialTheme.space.medium,
-                        start = MaterialTheme.space.large,
-                        end = MaterialTheme.space.large,
-                        bottom = MaterialTheme.space.large
+        ) { targetState ->
+            Column(verticalArrangement = Arrangement.Center) {
+                if (targetState) {
+                    WaitingForParticipantLayout(
+                        userRole = user?.role,
+                        hasOtherUserJoined = hasOtherUserJoined,
+                        isSessionInStartingProcess = isSessionInStartingProcess,
+                        startExamSession = startExamSession,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = MaterialTheme.space.large)
                     )
-            )
 
-            LoggedInAsLayout(
-                userEmail = user?.email,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = MaterialTheme.space.large,
-                        end = MaterialTheme.space.large,
-                        bottom = MaterialTheme.space.medium,
+                    LoggedInAsLayout(
+                        userEmail = user?.email,
+                        modifier = Modifier.fillMaxWidth()
                     )
-            )
+                } else {
+                    ErrorLayout(
+                        onRetryClick = onRetryClick,
+                        text = errorMessage?.asString()
+                    )
+                }
+            }
         }
     }
 }
