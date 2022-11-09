@@ -3,8 +3,10 @@ package com.sweak.diplomaexam.di
 import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.data.repository.AuthenticationRepositoryImpl
+import com.sweak.diplomaexam.data.repository.LobbyRepositoryImpl
 import com.sweak.diplomaexam.data.repository.SessionSelectionRepositoryImpl
 import com.sweak.diplomaexam.domain.repository.AuthenticationRepository
+import com.sweak.diplomaexam.domain.repository.LobbyRepository
 import com.sweak.diplomaexam.domain.repository.SessionSelectionRepository
 import dagger.Module
 import dagger.Provides
@@ -31,4 +33,12 @@ object ViewModelModule {
         userSessionManager: UserSessionManager
     ): SessionSelectionRepository =
         SessionSelectionRepositoryImpl(api, userSessionManager)
+
+    @Provides
+    @ViewModelScoped
+    fun provideLobbyRepository(
+        api: DiplomaExamApi,
+        userSessionManager: UserSessionManager
+    ): LobbyRepository =
+        LobbyRepositoryImpl(api, userSessionManager)
 }

@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LobbyViewModel @Inject constructor(
-    getLobbyState: GetLobbyState,
+    private val getLobbyState: GetLobbyState,
     private val startExamSession: StartExamSession
 ) : ViewModel() {
 
@@ -28,6 +28,10 @@ class LobbyViewModel @Inject constructor(
     val sessionStartEvents = sessionStartEventChannel.receiveAsFlow()
 
     init {
+        fetchLobbyState()
+    }
+
+    private fun fetchLobbyState() {
         getLobbyState().onEach {
             when (it) {
                 is Resource.Success -> {
@@ -55,7 +59,12 @@ class LobbyViewModel @Inject constructor(
 
     private fun startSession() = viewModelScope.launch {
         state = state.copy(isSessionInStartingProcess = true)
-        startExamSession()
+        startExamSession().collect {
+            when (it) {
+                is Resource.Success -> fetchLobbyState()
+                else -> { /* no-op */}
+            }
+        }
     }
 
     sealed class SessionStartEvent {

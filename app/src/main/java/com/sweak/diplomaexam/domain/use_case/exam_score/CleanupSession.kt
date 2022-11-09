@@ -10,7 +10,6 @@ class CleanupSession @Inject constructor(private val userSessionManager: UserSes
     operator fun invoke() {
         userSessionManager.cleanUpSession()
 
-        DUMMY_HAS_SESSION_BEEN_STARTED = false
         DUMMY_HAVE_QUESTIONS_BEEN_DRAWN = false
         DUMMY_HAS_STUDENT_REQUESTED_REDRAW = false
         DUMMY_HAS_EXAMINER_ALLOWED_REDRAW = false

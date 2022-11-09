@@ -1,13 +1,22 @@
 package com.sweak.diplomaexam.domain.use_case.lobby
 
-import com.sweak.diplomaexam.domain.DUMMY_HAS_SESSION_BEEN_STARTED
+import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.repository.LobbyRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class StartExamSession @Inject constructor() {
+class StartExamSession @Inject constructor(
+    private val repository: LobbyRepository
+) {
+    suspend operator fun invoke() = flow {
+        emit(Resource.Loading())
 
-    suspend operator fun invoke() {
-        delay(1000)
-        DUMMY_HAS_SESSION_BEEN_STARTED = true
+        delay(500)
+
+        when (val confirmedStartedSession = repository.startExaminationSession()) {
+            is Resource.Success -> emit(Resource.Success(Unit))
+            else -> emit(Resource.Failure(confirmedStartedSession.error!!))
+        }
     }
 }

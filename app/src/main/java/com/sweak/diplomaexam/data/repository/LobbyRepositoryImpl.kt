@@ -1,0 +1,106 @@
+package com.sweak.diplomaexam.data.repository
+
+import com.sweak.diplomaexam.data.common.ResponseCode
+import com.sweak.diplomaexam.data.local.UserSessionManager
+import com.sweak.diplomaexam.data.remote.DiplomaExamApi
+import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
+import com.sweak.diplomaexam.domain.DUMMY_USER_ROLE
+import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Error
+import com.sweak.diplomaexam.domain.model.common.User
+import com.sweak.diplomaexam.domain.model.common.UserRole
+import com.sweak.diplomaexam.domain.model.lobby.LobbyState
+import com.sweak.diplomaexam.domain.repository.LobbyRepository
+import retrofit2.HttpException
+import java.io.IOException
+
+class LobbyRepositoryImpl(
+    private val diplomaExamApi: DiplomaExamApi,
+    private val userSessionManager: UserSessionManager
+) : LobbyRepository {
+
+    override suspend fun getLobbyState(): Resource<LobbyState> {
+        try {
+            val response = diplomaExamApi.getSessionState(
+                "Bearer ${userSessionManager.getSessionToken()}",
+                userSessionManager.getSessionId()
+            )
+
+            return when (response.code()) {
+                ResponseCode.OK.codeInt -> {
+                    if (response.body() == null) {
+                        Resource.Failure(Error.UnknownError)
+                    } else {
+                        val sessionState = response.body()!!
+
+                        val apiUserRoleString =
+                            if (DUMMY_USER_ROLE == UserRole.USER_EXAMINER) "EXAMINER"
+                            else "STUDENT"
+
+                        Resource.Success(
+                            LobbyState(
+                                User(
+                                    DUMMY_USER_ROLE,
+                                    sessionState.userDtos.find { userDto ->
+                                        userDto.role == apiUserRoleString
+                                    }?.email
+                                ),
+                                if (DUMMY_USER_ROLE == UserRole.USER_EXAMINER)
+                                    sessionState.hasStudentJoined
+                                else
+                                    sessionState.hasExaminerJoined,
+                                sessionState.status == "DRAWING_QUESTIONS"
+                            )
+                        )
+                    }
+                }
+                ResponseCode.UNAUTHORIZED.codeInt ->
+                    Resource.Failure(Error.UnauthorizedError(response.message()))
+                else -> Resource.Failure(Error.UnknownError)
+            }
+        }  catch (httpException: HttpException) {
+            return Resource.Failure(
+                Error.HttpError(
+                    httpException.code(),
+                    httpException.localizedMessage ?: httpException.message
+                )
+            )
+        } catch (ioException: IOException) {
+            return Resource.Failure(Error.IOError(ioException.message))
+        }
+    }
+
+    override suspend fun startExaminationSession(): Resource<Unit> {
+        try {
+            val response = diplomaExamApi.setSessionState(
+                "Bearer ${userSessionManager.getSessionToken()}",
+                SetSessionStateRequestDto(
+                    userSessionManager.getSessionId(),
+                    "DRAWING_QUESTIONS"
+                )
+            )
+
+            return when (response.code()) {
+                ResponseCode.OK.codeInt -> {
+                    if (response.body() == null) {
+                        Resource.Failure(Error.UnknownError)
+                    } else {
+                        Resource.Success(Unit)
+                    }
+                }
+                ResponseCode.UNAUTHORIZED.codeInt ->
+                    Resource.Failure(Error.UnauthorizedError(response.message()))
+                else -> Resource.Failure(Error.UnknownError)
+            }
+        } catch (httpException: HttpException) {
+            return Resource.Failure(
+                Error.HttpError(
+                    httpException.code(),
+                    httpException.localizedMessage ?: httpException.message
+                )
+            )
+        } catch (ioException: IOException) {
+            return Resource.Failure(Error.IOError(ioException.message))
+        }
+    }
+}

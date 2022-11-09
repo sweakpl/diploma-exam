@@ -9,7 +9,6 @@ lateinit var DUMMY_USER_ROLE: UserRole
 lateinit var DUMMY_USER_EMAIL: String
 lateinit var DUMMY_OTHER_USER_ROLE: UserRole
 lateinit var DUMMY_OTHER_USER_EMAIL: String
-var DUMMY_HAS_SESSION_BEEN_STARTED: Boolean = false
 var DUMMY_HAVE_QUESTIONS_BEEN_DRAWN: Boolean = false
 var DUMMY_HAS_STUDENT_REQUESTED_REDRAW: Boolean = false
 var DUMMY_HAS_EXAMINER_ALLOWED_REDRAW: Boolean = false

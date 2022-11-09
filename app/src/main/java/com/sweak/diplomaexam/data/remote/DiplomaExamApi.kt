@@ -22,4 +22,10 @@ interface DiplomaExamApi {
         @Header("Authorization") bearerWithToken: String,
         @Body setSessionStateRequestDto: SetSessionStateRequestDto
     ): Response<SessionStateDto>
+
+    @GET("examinationSession/{id}")
+    suspend fun getSessionState(
+        @Header("Authorization") bearerWithToken: String,
+        @Path("id") sessionId: Int
+    ): Response<SessionStateDto>
 }
