@@ -32,19 +32,20 @@ class LobbyRepositoryImpl(
                         Resource.Failure(Error.UnknownError)
                     } else {
                         val sessionState = response.body()!!
+                        val currentUser: User
 
-                        val apiUserRoleString =
-                            if (DUMMY_USER_ROLE == UserRole.USER_EXAMINER) "EXAMINER"
-                            else "STUDENT"
+                        try {
+                            currentUser = User(
+                                UserRole.valueOf(userSessionManager.getUserRole() ?: ""),
+                                userSessionManager.getUserEmail()
+                            )
+                        } catch (illegalArgumentException: IllegalArgumentException) {
+                            return Resource.Failure(Error.UnauthorizedError(null))
+                        }
 
                         Resource.Success(
                             LobbyState(
-                                User(
-                                    DUMMY_USER_ROLE,
-                                    sessionState.userDtos.find { userDto ->
-                                        userDto.role == apiUserRoleString
-                                    }?.email
-                                ),
+                                currentUser,
                                 if (DUMMY_USER_ROLE == UserRole.USER_EXAMINER)
                                     sessionState.hasStudentJoined
                                 else

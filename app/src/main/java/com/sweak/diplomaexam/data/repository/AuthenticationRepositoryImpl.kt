@@ -58,6 +58,8 @@ class AuthenticationRepositoryImpl @Inject constructor(
                                 saveSessionToken(loginResponse.token)
                                 saveSessionExpiryDate(loginResponse.expirationDate)
                                 saveSessionId(loginResponse.sessionId ?: -1)
+                                saveUserRole(responseUserRole.toString())
+                                saveUserEmail(loginResponse.email)
                             }
 
                             Resource.Success(loginResponse)

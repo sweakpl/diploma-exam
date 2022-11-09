@@ -40,6 +40,14 @@ class UserSessionManagerImpl(context: Context) : UserSessionManager {
     override fun saveSessionId(sessionId: Int) =
         sharedPreferences.edit().putInt(SESSION_ID_PREFERENCES_KEY, sessionId).apply()
 
+    override fun saveUserRole(userRoleString: String) {
+        sharedPreferences.edit().putString(USER_ROLE_PREFERENCES_KEY, userRoleString).apply()
+    }
+
+    override fun saveUserEmail(userEmail: String) {
+        sharedPreferences.edit().putString(USER_EMAIL_PREFERENCES_KEY, userEmail).apply()
+    }
+
     private fun getExpiryDateTimeInMillis(expiryDateString: String): Long? {
         val simpleDateFormat = SimpleDateFormat(
             "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ",
@@ -62,11 +70,19 @@ class UserSessionManagerImpl(context: Context) : UserSessionManager {
     override fun getSessionId(): Int =
         sharedPreferences.getInt(SESSION_ID_PREFERENCES_KEY, -1)
 
+    override fun getUserRole() =
+        sharedPreferences.getString(USER_ROLE_PREFERENCES_KEY, null)
+
+    override fun getUserEmail() =
+        sharedPreferences.getString(USER_EMAIL_PREFERENCES_KEY, null)
+
     override fun cleanUpSession() =
         sharedPreferences.edit()
             .putString(JWT_TOKEN_PREFERENCES_KEY, null)
             .putLong(JWT_TOKEN_EXPIRY_DATE_PREFERENCES_KEY, 0)
             .putInt(SESSION_ID_PREFERENCES_KEY, -1)
+            .putString(USER_ROLE_PREFERENCES_KEY, null)
+            .putString(USER_EMAIL_PREFERENCES_KEY, null)
             .apply()
 
     companion object {
@@ -74,5 +90,7 @@ class UserSessionManagerImpl(context: Context) : UserSessionManager {
         private const val JWT_TOKEN_PREFERENCES_KEY = "jwtTokenPreferencesKey"
         private const val JWT_TOKEN_EXPIRY_DATE_PREFERENCES_KEY = "jwtTokenExpiryDatePreferencesKey"
         private const val SESSION_ID_PREFERENCES_KEY = "sessionIdPreferencesKey"
+        private const val USER_ROLE_PREFERENCES_KEY = "userRolePreferencesKey"
+        private const val USER_EMAIL_PREFERENCES_KEY = "userEmailPreferencesKey"
     }
 }
