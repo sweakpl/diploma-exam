@@ -21,9 +21,11 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 @Composable
 fun ExaminerAdditionalGradesPanel(
     displayMode: ExaminerAdditionalGradesPanelDisplayMode,
+    thesisPresentationGrade: Grade?,
     thesisGrade: Grade?,
     courseOfStudiesGrade: Grade?,
     isLoadingResponse: Boolean,
+    onThesisPresentationGradeSelected: (Grade) -> Unit,
     onThesisGradeSelected: (Grade) -> Unit,
     onCourseOfStudiesGradeSelected: (Grade) -> Unit,
     modifier: Modifier = Modifier
@@ -51,12 +53,21 @@ fun ExaminerAdditionalGradesPanel(
                     GradeCard(
                         gradeCardOrientation = GradeCardOrientation.VERTICAL,
                         text = stringResource(R.string.thesis_presentation_grade),
+                        grade = thesisPresentationGrade,
+                        canSelectGrade = !isLoadingResponse,
+                        onGradeSelected = onThesisPresentationGradeSelected,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    GradeCard(
+                        gradeCardOrientation = GradeCardOrientation.VERTICAL,
+                        text = stringResource(R.string.thesis_grade),
                         grade = thesisGrade,
                         canSelectGrade = !isLoadingResponse,
                         onGradeSelected = onThesisGradeSelected,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = MaterialTheme.space.large)
+                            .padding(vertical = MaterialTheme.space.large)
                     )
 
                     GradeCard(
@@ -72,13 +83,24 @@ fun ExaminerAdditionalGradesPanel(
                         GradeCard(
                             gradeCardOrientation = GradeCardOrientation.VERTICAL,
                             text = stringResource(R.string.thesis_presentation_grade),
+                            grade = thesisPresentationGrade,
+                            canSelectGrade = !isLoadingResponse,
+                            onGradeSelected = onThesisPresentationGradeSelected,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        Spacer(modifier = Modifier.width(MaterialTheme.space.medium))
+
+                        GradeCard(
+                            gradeCardOrientation = GradeCardOrientation.VERTICAL,
+                            text = stringResource(R.string.thesis_grade),
                             grade = thesisGrade,
                             canSelectGrade = !isLoadingResponse,
                             onGradeSelected = onThesisGradeSelected,
                             modifier = Modifier.weight(1f)
                         )
 
-                        Spacer(modifier = Modifier.width(MaterialTheme.space.large))
+                        Spacer(modifier = Modifier.width(MaterialTheme.space.medium))
 
                         GradeCard(
                             gradeCardOrientation = GradeCardOrientation.VERTICAL,

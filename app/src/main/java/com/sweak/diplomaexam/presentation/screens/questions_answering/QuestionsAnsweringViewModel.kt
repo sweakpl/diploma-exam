@@ -47,6 +47,7 @@ class QuestionsAnsweringViewModel @Inject constructor(
                                 otherUser = it.data.otherUser,
                                 questions = it.data.questions,
                                 questionNumbersToGradesMap = it.data.questionNumbersToGradesMap,
+                                thesisPresentationGrade = it.data.thesisPresentationGrade,
                                 thesisGrade = it.data.thesisGrade,
                                 courseOfStudiesGrade = it.data.courseOfStudiesGrade,
                                 isLoadingResponse = !hasFinalizedRequest,
@@ -89,7 +90,10 @@ class QuestionsAnsweringViewModel @Inject constructor(
 
                     state = state.copy(submitQuestionGradesDialogVisible = true)
                 } else {
-                    state = if (state.thesisGrade == null || state.courseOfStudiesGrade == null) {
+                    state = if (state.thesisGrade == null ||
+                        state.courseOfStudiesGrade == null ||
+                        state.thesisPresentationGrade == null
+                    ) {
                         state.copy(cannotSubmitGradesDialogVisible = true)
                     } else {
                         state.copy(submitAdditionalGradesDialogVisible = true)
@@ -101,6 +105,8 @@ class QuestionsAnsweringViewModel @Inject constructor(
             is QuestionsAnsweringScreenEvent.HideSubmitQuestionGradesDialog ->
                 state = state.copy(submitQuestionGradesDialogVisible = false)
             is QuestionsAnsweringScreenEvent.SubmitQuestionGrades -> submitGradesForQuestions()
+            is QuestionsAnsweringScreenEvent.SelectThesisPresentationGrade ->
+                state = state.copy(thesisPresentationGrade = event.grade)
             is QuestionsAnsweringScreenEvent.SelectThesisGrade ->
                 state = state.copy(thesisGrade = event.grade)
             is QuestionsAnsweringScreenEvent.SelectCourseOfStudiesGrade ->
@@ -124,7 +130,11 @@ class QuestionsAnsweringViewModel @Inject constructor(
     private fun submitGradesForAdditional() =
         performRequest {
             viewModelScope.launch {
-                submitAdditionalGrades(state.thesisGrade, state.courseOfStudiesGrade)
+                submitAdditionalGrades(
+                    state.thesisPresentationGrade,
+                    state.thesisGrade,
+                    state.courseOfStudiesGrade
+                )
             }
         }
 

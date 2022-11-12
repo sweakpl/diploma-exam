@@ -19,6 +19,7 @@ class CleanupSession @Inject constructor(private val userSessionManager: UserSes
         DUMMY_ARE_QUESTION_GRADES_CONFIRMED = false
         DUMMY_ARE_ADDITIONAL_GRADES_CONFIRMED = false
         DUMMY_DIPLOMA_EXAM_GRADE = Grade.C
+        DUMMY_THESIS_PRESENTATION_GRADE = Grade.D
         DUMMY_THESIS_GRADE = Grade.E
         DUMMY_COURSE_OF_STUDIES_GRADE = Grade.D
     }
