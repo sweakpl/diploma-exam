@@ -62,6 +62,21 @@ class SessionSelectionRepositoryImpl @Inject constructor(
 
     override suspend fun selectSession(selectedSession: AvailableSession): Resource<Unit> {
         try {
+            val sessionStatus = getSessionStatus(selectedSession.sessionId)
+
+            if (sessionStatus is Resource.Failure) {
+                return Resource.Failure(sessionStatus.error!!)
+            }
+
+            if (sessionStatus.data != null &&
+                sessionStatus.data != "INACTIVE" &&
+                sessionStatus.data != "LOBBY"
+            ) {
+                userSessionManager.saveSessionId(selectedSession.sessionId)
+
+                return Resource.Success(Unit)
+            }
+
             val response = diplomaExamApi.setSessionState(
                 "Bearer ${userSessionManager.getSessionToken()}",
                 SetSessionStateRequestDto(
@@ -80,6 +95,37 @@ class SessionSelectionRepositoryImpl @Inject constructor(
                         userSessionManager.saveSessionId(confirmedSelectedSession.id)
 
                         Resource.Success(Unit)
+                    }
+                }
+                ResponseCode.UNAUTHORIZED.codeInt ->
+                    Resource.Failure(Error.UnauthorizedError(response.message()))
+                else -> Resource.Failure(Error.UnknownError)
+            }
+        } catch (httpException: HttpException) {
+            return Resource.Failure(
+                Error.HttpError(
+                    httpException.code(),
+                    httpException.localizedMessage ?: httpException.message
+                )
+            )
+        } catch (ioException: IOException) {
+            return Resource.Failure(Error.IOError(ioException.message))
+        }
+    }
+
+    private suspend fun getSessionStatus(sessionId: Int): Resource<String> {
+        try {
+            val response = diplomaExamApi.getSessionState(
+                "Bearer ${userSessionManager.getSessionToken()}",
+                sessionId
+            )
+
+            return when (response.code()) {
+                ResponseCode.OK.codeInt -> {
+                    if (response.body() == null) {
+                        Resource.Failure(Error.UnknownError)
+                    } else {
+                        Resource.Success(response.body()!!.status)
                     }
                 }
                 ResponseCode.UNAUTHORIZED.codeInt ->
