@@ -67,20 +67,7 @@ class QuestionsDrawViewModel @Inject constructor(
                     lastUnsuccessfulOperation = Runnable {
                         fetchQuestionsDrawState()
                     }
-                    state = state.copy(
-                        errorMessage = when(it.error) {
-                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
-                            is Error.HttpError -> {
-                                if (it.error.message != null)
-                                    UiText.DynamicString(it.error.message)
-                                else
-                                    UiText.StringResource(R.string.unknown_error)
-                            }
-                            is Error.UnauthorizedError ->
-                                UiText.StringResource(R.string.no_permission)
-                            else -> UiText.StringResource(R.string.unknown_error)
-                        }
-                    )
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
                 }
             }
         }.launchIn(viewModelScope)
@@ -119,27 +106,12 @@ class QuestionsDrawViewModel @Inject constructor(
         drawNewQuestions().onEach {
             when (it) {
                 is Resource.Success -> fetchQuestionsDrawState()
-                is Resource.Loading -> {
-                    state = state.copy(isLoadingResponse = true)
-                }
+                is Resource.Loading -> state = state.copy(isLoadingResponse = true)
                 is Resource.Failure -> {
                     lastUnsuccessfulOperation = Runnable {
                         drawQuestions()
                     }
-                    state = state.copy(
-                        errorMessage = when (it.error) {
-                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
-                            is Error.HttpError -> {
-                                if (it.error.message != null)
-                                    UiText.DynamicString(it.error.message)
-                                else
-                                    UiText.StringResource(R.string.unknown_error)
-                            }
-                            is Error.UnauthorizedError ->
-                                UiText.StringResource(R.string.no_permission)
-                            else -> UiText.StringResource(R.string.unknown_error)
-                        }
-                    )
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
                 }
             }
         }.launchIn(viewModelScope)
@@ -149,27 +121,12 @@ class QuestionsDrawViewModel @Inject constructor(
         requestExamQuestionsRedraw().onEach {
             when (it) {
                 is Resource.Success -> fetchQuestionsDrawState()
-                is Resource.Loading -> {
-                    state = state.copy(isLoadingResponse = true)
-                }
+                is Resource.Loading -> state = state.copy(isLoadingResponse = true)
                 is Resource.Failure -> {
                     lastUnsuccessfulOperation = Runnable {
                         requestQuestionsRedraw()
                     }
-                    state = state.copy(
-                        errorMessage = when (it.error) {
-                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
-                            is Error.HttpError -> {
-                                if (it.error.message != null)
-                                    UiText.DynamicString(it.error.message)
-                                else
-                                    UiText.StringResource(R.string.unknown_error)
-                            }
-                            is Error.UnauthorizedError ->
-                                UiText.StringResource(R.string.no_permission)
-                            else -> UiText.StringResource(R.string.unknown_error)
-                        }
-                    )
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
                 }
             }
         }.launchIn(viewModelScope)
@@ -179,27 +136,12 @@ class QuestionsDrawViewModel @Inject constructor(
         acceptDrawnQuestions().onEach {
             when (it) {
                 is Resource.Success -> fetchQuestionsDrawState()
-                is Resource.Loading -> {
-                    state = state.copy(isLoadingResponse = true)
-                }
+                is Resource.Loading -> state = state.copy(isLoadingResponse = true)
                 is Resource.Failure -> {
                     lastUnsuccessfulOperation = Runnable {
                         acceptQuestions()
                     }
-                    state = state.copy(
-                        errorMessage = when (it.error) {
-                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
-                            is Error.HttpError -> {
-                                if (it.error.message != null)
-                                    UiText.DynamicString(it.error.message)
-                                else
-                                    UiText.StringResource(R.string.unknown_error)
-                            }
-                            is Error.UnauthorizedError ->
-                                UiText.StringResource(R.string.no_permission)
-                            else -> UiText.StringResource(R.string.unknown_error)
-                        }
-                    )
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
                 }
             }
         }.launchIn(viewModelScope)
@@ -209,31 +151,30 @@ class QuestionsDrawViewModel @Inject constructor(
         allowQuestionsRedraw().onEach {
             when (it) {
                 is Resource.Success -> fetchQuestionsDrawState()
-                is Resource.Loading -> {
-                    state = state.copy(isLoadingResponse = true)
-                }
+                is Resource.Loading -> state = state.copy(isLoadingResponse = true)
                 is Resource.Failure -> {
                     lastUnsuccessfulOperation = Runnable {
                         allowRedraw()
                     }
-                    state = state.copy(
-                        errorMessage = when (it.error) {
-                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
-                            is Error.HttpError -> {
-                                if (it.error.message != null)
-                                    UiText.DynamicString(it.error.message)
-                                else
-                                    UiText.StringResource(R.string.unknown_error)
-                            }
-                            is Error.UnauthorizedError ->
-                                UiText.StringResource(R.string.no_permission)
-                            else -> UiText.StringResource(R.string.unknown_error)
-                        }
-                    )
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
                 }
             }
         }.launchIn(viewModelScope)
     }
+
+    private fun getErrorMessage(error: Error?): UiText =
+        when (error) {
+            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+            is Error.HttpError -> {
+                if (error.message != null)
+                    UiText.DynamicString(error.message)
+                else
+                    UiText.StringResource(R.string.unknown_error)
+            }
+            is Error.UnauthorizedError ->
+                UiText.StringResource(R.string.no_permission)
+            else -> UiText.StringResource(R.string.unknown_error)
+        }
 
     sealed class QuestionsConfirmedEvent {
         object Success : QuestionsConfirmedEvent()

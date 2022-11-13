@@ -50,27 +50,12 @@ class LobbyViewModel @Inject constructor(
                         }
                     }
                 }
-                is Resource.Loading -> {
-                    state = state.copy(user = null)
-                }
+                is Resource.Loading -> state = state.copy(user = null)
                 is Resource.Failure -> {
                     lastUnsuccessfulOperation = Runnable {
                         fetchLobbyState()
                     }
-                    state = state.copy(
-                        errorMessage = when(it.error) {
-                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
-                            is Error.HttpError -> {
-                                if (it.error.message != null)
-                                    UiText.DynamicString(it.error.message)
-                                else
-                                    UiText.StringResource(R.string.unknown_error)
-                            }
-                            is Error.UnauthorizedError ->
-                                UiText.StringResource(R.string.no_permission)
-                            else -> UiText.StringResource(R.string.unknown_error)
-                        }
-                    )
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
                 }
             }
         }.launchIn(viewModelScope)
@@ -92,31 +77,30 @@ class LobbyViewModel @Inject constructor(
         startExamSession().onEach {
             when (it) {
                 is Resource.Success -> fetchLobbyState()
-                is Resource.Loading -> {
-                    state = state.copy(isSessionInStartingProcess = true)
-                }
+                is Resource.Loading -> state = state.copy(isSessionInStartingProcess = true)
                 is Resource.Failure -> {
                     lastUnsuccessfulOperation = Runnable {
                         startSession()
                     }
-                    state = state.copy(
-                        errorMessage = when(it.error) {
-                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
-                            is Error.HttpError -> {
-                                if (it.error.message != null)
-                                    UiText.DynamicString(it.error.message)
-                                else
-                                    UiText.StringResource(R.string.unknown_error)
-                            }
-                            is Error.UnauthorizedError ->
-                                UiText.StringResource(R.string.no_permission)
-                            else -> UiText.StringResource(R.string.unknown_error)
-                        }
-                    )
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
                 }
             }
         }.launchIn(viewModelScope)
     }
+
+    private fun getErrorMessage(error: Error?): UiText =
+        when (error) {
+            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+            is Error.HttpError -> {
+                if (error.message != null)
+                    UiText.DynamicString(error.message)
+                else
+                    UiText.StringResource(R.string.unknown_error)
+            }
+            is Error.UnauthorizedError ->
+                UiText.StringResource(R.string.no_permission)
+            else -> UiText.StringResource(R.string.unknown_error)
+        }
 
     sealed class SessionStartEvent {
         object Success : SessionStartEvent()

@@ -74,27 +74,12 @@ class SessionSelectionViewModel @Inject constructor(
                         )
                     }
                 }
-                is Resource.Loading -> {
-                    state = state.copy(isLoadingResponse = true)
-                }
+                is Resource.Loading -> state = state.copy(isLoadingResponse = true)
                 is Resource.Failure -> {
                     lastUnsuccessfulOperation = Runnable {
                         fetchAvailableSessions()
                     }
-                    state = state.copy(
-                        errorMessage = when(it.error) {
-                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
-                            is Error.HttpError -> {
-                                if (it.error.message != null)
-                                    UiText.DynamicString(it.error.message)
-                                else
-                                    UiText.StringResource(R.string.unknown_error)
-                            }
-                            is Error.UnauthorizedError ->
-                                UiText.StringResource(R.string.no_permission)
-                            else -> UiText.StringResource(R.string.unknown_error)
-                        }
-                    )
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
                 }
             }
         }.launchIn(viewModelScope)
@@ -106,31 +91,30 @@ class SessionSelectionViewModel @Inject constructor(
                 is Resource.Success -> {
                     sessionConfirmedEventsChannel.send(SessionConfirmedEvent.Success)
                 }
-                is Resource.Loading -> {
-                    state = state.copy(isLoadingResponse = true)
-                }
+                is Resource.Loading -> state = state.copy(isLoadingResponse = true)
                 is Resource.Failure -> {
                     lastUnsuccessfulOperation = Runnable {
                         confirmSessionSelection(selectedSession)
                     }
-                    state = state.copy(
-                        errorMessage = when(it.error) {
-                            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
-                            is Error.HttpError -> {
-                                if (it.error.message != null)
-                                    UiText.DynamicString(it.error.message)
-                                else
-                                    UiText.StringResource(R.string.unknown_error)
-                            }
-                            is Error.UnauthorizedError ->
-                                UiText.StringResource(R.string.no_permission)
-                            else -> UiText.StringResource(R.string.unknown_error)
-                        }
-                    )
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
                 }
             }
         }.launchIn(viewModelScope)
     }
+
+    private fun getErrorMessage(error: Error?): UiText =
+        when (error) {
+            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+            is Error.HttpError -> {
+                if (error.message != null)
+                    UiText.DynamicString(error.message)
+                else
+                    UiText.StringResource(R.string.unknown_error)
+            }
+            is Error.UnauthorizedError ->
+                UiText.StringResource(R.string.no_permission)
+            else -> UiText.StringResource(R.string.unknown_error)
+        }
 
     sealed class SessionConfirmedEvent {
         object Success : SessionConfirmedEvent()
