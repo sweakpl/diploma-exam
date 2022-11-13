@@ -20,12 +20,10 @@ import com.sweak.diplomaexam.domain.model.common.ExamQuestion
 import com.sweak.diplomaexam.domain.model.common.User
 import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.presentation.Screen
+import com.sweak.diplomaexam.presentation.screens.common.UiText
 import com.sweak.diplomaexam.presentation.screens.common.WindowInfo
 import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
-import com.sweak.diplomaexam.presentation.screens.components.Dialog
-import com.sweak.diplomaexam.presentation.screens.components.Header
-import com.sweak.diplomaexam.presentation.screens.components.HeaderDisplayMode
-import com.sweak.diplomaexam.presentation.screens.components.LoadingLayout
+import com.sweak.diplomaexam.presentation.screens.components.*
 import com.sweak.diplomaexam.presentation.screens.questions_draw.components.DrawnQuestionsList
 import com.sweak.diplomaexam.presentation.screens.questions_draw.components.DrawnQuestionsOperations
 import com.sweak.diplomaexam.presentation.screens.questions_draw.components.QuestionsDrawPrompt
@@ -62,10 +60,14 @@ fun QuestionsDrawScreen(
             otherUser = questionsDrawState.otherUser,
             questions = questionsDrawState.questions,
             isLoadingResponse = questionsDrawState.isLoadingResponse,
+            errorMessage = questionsDrawState.errorMessage,
             hasStudentRequestedRedraw = questionsDrawState.hasStudentRequestedRedraw,
             waitingForDecisionFrom = questionsDrawState.waitingForDecisionFrom,
             onDrawQuestionsClick = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.DrawQuestions)
+            },
+            onRedrawQuestionsClick = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.RequestQuestionsRedraw)
             },
             onAcceptDrawnQuestions = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryAcceptQuestions)
@@ -75,6 +77,9 @@ fun QuestionsDrawScreen(
             },
             onDisallowQuestionsRedraw = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryDisallowRedraw)
+            },
+            onRetryClick = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.RetryAfterError)
             }
         )
     } else {
@@ -83,10 +88,14 @@ fun QuestionsDrawScreen(
             otherUser = questionsDrawState.otherUser,
             questions = questionsDrawState.questions,
             isLoadingResponse = questionsDrawState.isLoadingResponse,
+            errorMessage = questionsDrawState.errorMessage,
             hasStudentRequestedRedraw = questionsDrawState.hasStudentRequestedRedraw,
             waitingForDecisionFrom = questionsDrawState.waitingForDecisionFrom,
             onDrawQuestionsClick = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.DrawQuestions)
+            },
+            onRedrawQuestionsClick = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.RequestQuestionsRedraw)
             },
             onAcceptDrawnQuestions = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryAcceptQuestions)
@@ -96,6 +105,9 @@ fun QuestionsDrawScreen(
             },
             onDisallowQuestionsRedraw = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryDisallowRedraw)
+            },
+            onRetryClick = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.RetryAfterError)
             }
         )
     }
@@ -140,12 +152,15 @@ fun CompactQuestionsDrawScreen(
     otherUser: User?,
     questions: List<ExamQuestion>?,
     isLoadingResponse: Boolean,
+    errorMessage: UiText?,
     hasStudentRequestedRedraw: Boolean,
     waitingForDecisionFrom: UserRole,
     onDrawQuestionsClick: () -> Unit,
+    onRedrawQuestionsClick: () -> Unit,
     onAcceptDrawnQuestions: () -> Unit,
     onAllowQuestionsRedraw: () -> Unit,
-    onDisallowQuestionsRedraw: () -> Unit
+    onDisallowQuestionsRedraw: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -183,74 +198,88 @@ fun CompactQuestionsDrawScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-            AnimatedContent(targetState = currentUser != null) { targetState ->
-                if (targetState) {
-                    AnimatedContent(targetState = questions == null) { state ->
-                        if (state) {
-                            if (currentUser?.role == UserRole.USER_EXAMINER) {
-                                LoadingLayout(
-                                    text = stringResource(R.string.student_is_drawing),
-                                    modifier = Modifier.padding(
-                                        start = MaterialTheme.space.large,
-                                        end = MaterialTheme.space.large,
-                                        bottom = MaterialTheme.space.large,
-                                        top = MaterialTheme.space.medium,
-                                    )
-                                )
-                            } else if (currentUser?.role == UserRole.USER_STUDENT) {
-                                QuestionsDrawPrompt(
-                                    onDrawClick = onDrawQuestionsClick,
-                                    areQuestionsInDrawingProcess = isLoadingResponse,
-                                    modifier = Modifier.padding(
+            AnimatedContent(
+                targetState =
+                if (errorMessage != null) AnimatedComponentTargetState.ERROR
+                else if (currentUser == null) AnimatedComponentTargetState.LOADING
+                else if (questions == null) AnimatedComponentTargetState.QUESTIONS_NOT_DRAWN
+                else AnimatedComponentTargetState.QUESTIONS_DRAWN
+            ) { targetState ->
+                when (targetState) {
+                    AnimatedComponentTargetState.QUESTIONS_DRAWN ->
+                        Column {
+                            DrawnQuestionsList(
+                                questions = questions ?: emptyList(),
+                                modifier = Modifier
+                                    .padding(
                                         start = MaterialTheme.space.large,
                                         end = MaterialTheme.space.large,
                                         bottom = MaterialTheme.space.large,
                                         top = MaterialTheme.space.medium
                                     )
-                                )
-                            }
-                        } else {
-                            Column {
-                                DrawnQuestionsList(
-                                    questions = questions ?: emptyList(),
-                                    modifier = Modifier
-                                        .padding(
-                                            start = MaterialTheme.space.large,
-                                            end = MaterialTheme.space.large,
-                                            bottom = MaterialTheme.space.large,
-                                            top = MaterialTheme.space.medium
-                                        )
-                                        .weight(1f)
-                                )
+                                    .weight(1f)
+                            )
 
-                                DrawnQuestionsOperations(
-                                    userRole = currentUser?.role ?: UserRole.USER_STUDENT,
-                                    isLoadingResponse = isLoadingResponse,
-                                    hasStudentRequestedRedraw = hasStudentRequestedRedraw,
-                                    waitingForDecisionFrom = waitingForDecisionFrom,
-                                    onAcceptQuestions = onAcceptDrawnQuestions,
-                                    onRedrawQuestions = onDrawQuestionsClick,
-                                    onAllowQuestionsRedraw = onAllowQuestionsRedraw,
-                                    onDisallowQuestionsRedraw = onDisallowQuestionsRedraw,
-                                    modifier = Modifier
-                                        .padding(
-                                            start = MaterialTheme.space.large,
-                                            end = MaterialTheme.space.large,
-                                            bottom = MaterialTheme.space.large
-                                        )
-                                )
-                            }
+                            DrawnQuestionsOperations(
+                                userRole = currentUser?.role ?: UserRole.USER_STUDENT,
+                                isLoadingResponse = isLoadingResponse,
+                                hasStudentRequestedRedraw = hasStudentRequestedRedraw,
+                                waitingForDecisionFrom = waitingForDecisionFrom,
+                                onAcceptQuestions = onAcceptDrawnQuestions,
+                                onRedrawQuestions = onRedrawQuestionsClick,
+                                onAllowQuestionsRedraw = onAllowQuestionsRedraw,
+                                onDisallowQuestionsRedraw = onDisallowQuestionsRedraw,
+                                modifier = Modifier
+                                    .padding(
+                                        start = MaterialTheme.space.large,
+                                        end = MaterialTheme.space.large,
+                                        bottom = MaterialTheme.space.large
+                                    )
+                            )
                         }
-                    }
-                } else {
-                    LoadingLayout(
-                        modifier = Modifier.padding(
-                            start = MaterialTheme.space.large,
-                            end = MaterialTheme.space.large,
-                            bottom = MaterialTheme.space.large,
-                            top = MaterialTheme.space.medium,
+                    AnimatedComponentTargetState.QUESTIONS_NOT_DRAWN ->
+                        if (currentUser?.role == UserRole.USER_EXAMINER) {
+                            LoadingLayout(
+                                text = stringResource(R.string.student_is_drawing),
+                                modifier = Modifier.padding(
+                                    start = MaterialTheme.space.large,
+                                    end = MaterialTheme.space.large,
+                                    bottom = MaterialTheme.space.large,
+                                    top = MaterialTheme.space.medium,
+                                )
+                            )
+                        } else if (currentUser?.role == UserRole.USER_STUDENT) {
+                            QuestionsDrawPrompt(
+                                onDrawClick = onDrawQuestionsClick,
+                                areQuestionsInDrawingProcess = isLoadingResponse,
+                                modifier = Modifier.padding(
+                                    start = MaterialTheme.space.large,
+                                    end = MaterialTheme.space.large,
+                                    bottom = MaterialTheme.space.large,
+                                    top = MaterialTheme.space.medium
+                                )
+                            )
+                        }
+                    AnimatedComponentTargetState.LOADING ->
+                        LoadingLayout(
+                            modifier = Modifier.padding(
+                                start = MaterialTheme.space.large,
+                                end = MaterialTheme.space.large,
+                                bottom = MaterialTheme.space.large,
+                                top = MaterialTheme.space.medium,
+                            )
                         )
-                    )
+                    AnimatedComponentTargetState.ERROR ->
+                        ErrorLayout(
+                            onRetryClick = onRetryClick,
+                            text = errorMessage?.asString(),
+                            modifier = Modifier.padding(
+                                start = MaterialTheme.space.large,
+                                end = MaterialTheme.space.large,
+                                bottom = MaterialTheme.space.large,
+                                top = MaterialTheme.space.medium,
+                            )
+                        )
                 }
             }
         }
@@ -264,12 +293,15 @@ fun MediumOrExpandedQuestionsDrawScreen(
     otherUser: User?,
     questions: List<ExamQuestion>?,
     isLoadingResponse: Boolean,
+    errorMessage: UiText?,
     hasStudentRequestedRedraw: Boolean,
     waitingForDecisionFrom: UserRole,
     onDrawQuestionsClick: () -> Unit,
+    onRedrawQuestionsClick: () -> Unit,
     onAcceptDrawnQuestions: () -> Unit,
     onAllowQuestionsRedraw: () -> Unit,
-    onDisallowQuestionsRedraw: () -> Unit
+    onDisallowQuestionsRedraw: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -307,81 +339,101 @@ fun MediumOrExpandedQuestionsDrawScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-            AnimatedContent(targetState = currentUser != null) { targetState ->
-                if (targetState) {
-                    AnimatedContent(targetState = questions == null) { state ->
-                        if (state) {
-                            if (currentUser?.role == UserRole.USER_EXAMINER) {
-                                LoadingLayout(
-                                    text = stringResource(R.string.student_is_drawing),
-                                    modifier = Modifier.padding(
+            AnimatedContent(
+                targetState =
+                if (errorMessage != null) AnimatedComponentTargetState.ERROR
+                else if (currentUser == null) AnimatedComponentTargetState.LOADING
+                else if (questions == null) AnimatedComponentTargetState.QUESTIONS_NOT_DRAWN
+                else AnimatedComponentTargetState.QUESTIONS_DRAWN
+            ) { targetState ->
+                when (targetState) {
+                    AnimatedComponentTargetState.QUESTIONS_DRAWN ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            DrawnQuestionsList(
+                                questions = questions ?: emptyList(),
+                                modifier = Modifier
+                                    .padding(
                                         start = MaterialTheme.space.large,
                                         end = MaterialTheme.space.large,
                                         bottom = MaterialTheme.space.medium,
                                         top = MaterialTheme.space.small
                                     )
-                                )
-                            } else if (currentUser?.role == UserRole.USER_STUDENT) {
-                                QuestionsDrawPrompt(
-                                    onDrawClick = onDrawQuestionsClick,
-                                    areQuestionsInDrawingProcess = isLoadingResponse,
-                                    modifier = Modifier.padding(
-                                        start = MaterialTheme.space.extraLarge * 2,
-                                        end = MaterialTheme.space.extraLarge * 2,
+                                    .weight(1f)
+                            )
+
+                            DrawnQuestionsOperations(
+                                userRole = currentUser?.role ?: UserRole.USER_STUDENT,
+                                isLoadingResponse = isLoadingResponse,
+                                hasStudentRequestedRedraw = hasStudentRequestedRedraw,
+                                waitingForDecisionFrom = waitingForDecisionFrom,
+                                onAcceptQuestions = onAcceptDrawnQuestions,
+                                onRedrawQuestions = onRedrawQuestionsClick,
+                                onAllowQuestionsRedraw = onAllowQuestionsRedraw,
+                                onDisallowQuestionsRedraw = onDisallowQuestionsRedraw,
+                                modifier = Modifier
+                                    .padding(
+                                        start = MaterialTheme.space.large,
+                                        end = MaterialTheme.space.large,
                                         bottom = MaterialTheme.space.medium,
                                         top = MaterialTheme.space.small
                                     )
-                                )
-                            }
-                        } else {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                DrawnQuestionsList(
-                                    questions = questions ?: emptyList(),
-                                    modifier = Modifier
-                                        .padding(
-                                            start = MaterialTheme.space.large,
-                                            end = MaterialTheme.space.large,
-                                            bottom = MaterialTheme.space.medium,
-                                            top = MaterialTheme.space.small
-                                        )
-                                        .weight(1f)
-                                )
-
-                                DrawnQuestionsOperations(
-                                    userRole = currentUser?.role ?: UserRole.USER_STUDENT,
-                                    isLoadingResponse = isLoadingResponse,
-                                    hasStudentRequestedRedraw = hasStudentRequestedRedraw,
-                                    waitingForDecisionFrom = waitingForDecisionFrom,
-                                    onAcceptQuestions = onAcceptDrawnQuestions,
-                                    onRedrawQuestions = onDrawQuestionsClick,
-                                    onAllowQuestionsRedraw = onAllowQuestionsRedraw,
-                                    onDisallowQuestionsRedraw = onDisallowQuestionsRedraw,
-                                    modifier = Modifier
-                                        .padding(
-                                            start = MaterialTheme.space.large,
-                                            end = MaterialTheme.space.large,
-                                            bottom = MaterialTheme.space.medium,
-                                            top = MaterialTheme.space.small
-                                        )
-                                        .weight(1f)
-                                )
-                            }
+                                    .weight(1f)
+                            )
                         }
-                    }
-                } else {
-                    LoadingLayout(
-                        modifier = Modifier.padding(
-                            start = MaterialTheme.space.large,
-                            end = MaterialTheme.space.large,
-                            bottom = MaterialTheme.space.medium,
-                            top = MaterialTheme.space.small
+                    AnimatedComponentTargetState.QUESTIONS_NOT_DRAWN ->
+                        if (currentUser?.role == UserRole.USER_EXAMINER) {
+                            LoadingLayout(
+                                text = stringResource(R.string.student_is_drawing),
+                                modifier = Modifier.padding(
+                                    start = MaterialTheme.space.large,
+                                    end = MaterialTheme.space.large,
+                                    bottom = MaterialTheme.space.medium,
+                                    top = MaterialTheme.space.small
+                                )
+                            )
+                        } else if (currentUser?.role == UserRole.USER_STUDENT) {
+                            QuestionsDrawPrompt(
+                                onDrawClick = onDrawQuestionsClick,
+                                areQuestionsInDrawingProcess = isLoadingResponse,
+                                modifier = Modifier.padding(
+                                    start = MaterialTheme.space.extraLarge * 2,
+                                    end = MaterialTheme.space.extraLarge * 2,
+                                    bottom = MaterialTheme.space.medium,
+                                    top = MaterialTheme.space.small
+                                )
+                            )
+                        }
+                    AnimatedComponentTargetState.LOADING ->
+                        LoadingLayout(
+                            modifier = Modifier.padding(
+                                start = MaterialTheme.space.large,
+                                end = MaterialTheme.space.large,
+                                bottom = MaterialTheme.space.medium,
+                                top = MaterialTheme.space.small
+                            )
                         )
-                    )
+                    AnimatedComponentTargetState.ERROR ->
+                        ErrorLayout(
+                            onRetryClick = onRetryClick,
+                            text = errorMessage?.asString(),
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .padding(
+                                    start = MaterialTheme.space.large,
+                                    end = MaterialTheme.space.large,
+                                    bottom = MaterialTheme.space.medium,
+                                    top = MaterialTheme.space.small
+                                )
+                        )
                 }
             }
         }
     }
+}
+
+private enum class AnimatedComponentTargetState {
+    ERROR, LOADING, QUESTIONS_NOT_DRAWN, QUESTIONS_DRAWN
 }

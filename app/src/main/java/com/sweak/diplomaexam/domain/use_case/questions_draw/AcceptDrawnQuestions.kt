@@ -1,13 +1,22 @@
 package com.sweak.diplomaexam.domain.use_case.questions_draw
 
-import com.sweak.diplomaexam.domain.DUMMY_ARE_QUESTIONS_CONFIRMED
+import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.repository.QuestionsDrawRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class AcceptDrawnQuestions @Inject constructor() {
+class AcceptDrawnQuestions @Inject constructor(
+    private val repository: QuestionsDrawRepository
+) {
+    operator fun invoke() = flow {
+        emit(Resource.Loading())
 
-    suspend operator fun invoke() {
-        delay(1000)
-        DUMMY_ARE_QUESTIONS_CONFIRMED = true
+        delay(500)
+
+        when (val acceptQuestionsResponse = repository.acceptDrawnQuestions()) {
+            is Resource.Success -> emit(Resource.Success(acceptQuestionsResponse.data))
+            else -> emit(Resource.Failure(acceptQuestionsResponse.error!!))
+        }
     }
 }

@@ -4,9 +4,11 @@ import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.data.repository.AuthenticationRepositoryImpl
 import com.sweak.diplomaexam.data.repository.LobbyRepositoryImpl
+import com.sweak.diplomaexam.data.repository.QuestionsDrawRepositoryImpl
 import com.sweak.diplomaexam.data.repository.SessionSelectionRepositoryImpl
 import com.sweak.diplomaexam.domain.repository.AuthenticationRepository
 import com.sweak.diplomaexam.domain.repository.LobbyRepository
+import com.sweak.diplomaexam.domain.repository.QuestionsDrawRepository
 import com.sweak.diplomaexam.domain.repository.SessionSelectionRepository
 import dagger.Module
 import dagger.Provides
@@ -41,4 +43,12 @@ object ViewModelModule {
         userSessionManager: UserSessionManager
     ): LobbyRepository =
         LobbyRepositoryImpl(api, userSessionManager)
+
+    @Provides
+    @ViewModelScoped
+    fun provideQuestionsDrawRepository(
+        api: DiplomaExamApi,
+        userSessionManager: UserSessionManager
+    ): QuestionsDrawRepository =
+        QuestionsDrawRepositoryImpl(api, userSessionManager)
 }

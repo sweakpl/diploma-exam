@@ -5,5 +5,8 @@ data class SessionStateDto(
     val status: String,
     val userDtos: List<UserDto>,
     val hasExaminerJoined: Boolean,
-    val hasStudentJoined: Boolean
+    val hasStudentJoined: Boolean,
+    val haveQuestionsBeenDrawn: Boolean,
+    val haveQuestionsBeenRedrawn: Boolean,
+    val haveStudentRequestedRedraw: Boolean
 )

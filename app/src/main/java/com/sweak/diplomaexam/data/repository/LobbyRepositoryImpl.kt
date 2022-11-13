@@ -50,7 +50,8 @@ class LobbyRepositoryImpl(
                                     sessionState.hasStudentJoined
                                 else
                                     sessionState.hasExaminerJoined,
-                                sessionState.status == "DRAWING_QUESTIONS"
+                                sessionState.status != "LOBBY" &&
+                                        sessionState.status != "INACTIVE"
                             )
                         )
                     }

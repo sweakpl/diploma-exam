@@ -2,6 +2,7 @@ package com.sweak.diplomaexam.data.remote
 
 import com.sweak.diplomaexam.data.remote.dto.login.LoginRequestDto
 import com.sweak.diplomaexam.data.remote.dto.login.LoginResponseDto
+import com.sweak.diplomaexam.data.remote.dto.session.ExamQuestionDto
 import com.sweak.diplomaexam.data.remote.dto.session.SessionStateDto
 import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
 import retrofit2.Response
@@ -28,4 +29,22 @@ interface DiplomaExamApi {
         @Header("Authorization") bearerWithToken: String,
         @Path("id") sessionId: Int
     ): Response<SessionStateDto>
+
+    @GET("examinationQuestion/getQuestions/session/{sessionId}/")
+    suspend fun getExamQuestions(
+        @Header("Authorization") bearerWithToken: String,
+        @Path("sessionId") sessionId: Int
+    ): Response<List<ExamQuestionDto>>
+
+    @POST("examinationQuestion/requestRedraw/{sessionId}")
+    suspend fun requestQuestionsRedraw(
+        @Header("Authorization") bearerWithToken: String,
+        @Path("sessionId") sessionId: Int
+    ): Response<Unit>
+
+    @POST("examinationQuestion/redrawQuestions/session/{sessionId}/")
+    suspend fun redrawExamQuestions(
+        @Header("Authorization") bearerWithToken: String,
+        @Path("sessionId") sessionId: Int
+    ): Response<Unit>
 }
