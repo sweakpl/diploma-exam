@@ -14,7 +14,7 @@ class DrawNewQuestions @Inject constructor(
 
         delay(500)
 
-        when (val drawNewQuestionsResponse = repository.getExamQuestions()) {
+        when (val drawNewQuestionsResponse = repository.getQuestions()) {
             is Resource.Success -> emit(Resource.Success(Unit))
             else -> emit(Resource.Failure(drawNewQuestionsResponse.error!!))
         }

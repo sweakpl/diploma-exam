@@ -38,20 +38,16 @@ fun LoginScreen(
 
     LaunchedEffect(key1 = context) {
         loginViewModel.authenticateEvents.collect { event ->
-            when (event) {
-                is LoginViewModel.AuthenticationEvent.Success -> {
-                    if (event.authenticatedUserRole == UserRole.USER_STUDENT) {
-                        navController.navigate(Screen.LobbyScreen.route) {
-                            popUpTo(Screen.LoginScreen.route) {
-                                inclusive = true
-                            }
-                        }
-                    } else if (event.authenticatedUserRole == UserRole.USER_EXAMINER) {
-                        navController.navigate(Screen.SessionSelectionScreen.route) {
-                            popUpTo(Screen.LoginScreen.route) {
-                                inclusive = true
-                            }
-                        }
+            if (event.authenticatedUserRole == UserRole.USER_STUDENT) {
+                navController.navigate(Screen.LobbyScreen.route) {
+                    popUpTo(Screen.LoginScreen.route) {
+                        inclusive = true
+                    }
+                }
+            } else if (event.authenticatedUserRole == UserRole.USER_EXAMINER) {
+                navController.navigate(Screen.SessionSelectionScreen.route) {
+                    popUpTo(Screen.LoginScreen.route) {
+                        inclusive = true
                     }
                 }
             }

@@ -41,7 +41,7 @@ class LobbyViewModel @Inject constructor(
                 is Resource.Success -> {
                     if (it.data != null) {
                         if (it.data.hasTheSessionBeenStarted) {
-                            sessionStartEventChannel.send(SessionStartEvent.Success)
+                            sessionStartEventChannel.send(SessionStartEvent)
                         } else {
                             state = state.copy(
                                 user = it.data.currentUser,
@@ -102,7 +102,5 @@ class LobbyViewModel @Inject constructor(
             else -> UiText.StringResource(R.string.unknown_error)
         }
 
-    sealed class SessionStartEvent {
-        object Success : SessionStartEvent()
-    }
+    object SessionStartEvent
 }

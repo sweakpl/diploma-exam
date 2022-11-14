@@ -34,14 +34,10 @@ fun LobbyScreen(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = context) {
-        lobbyViewModel.sessionStartEvents.collect { event ->
-            when (event) {
-                is LobbyViewModel.SessionStartEvent.Success -> {
-                    navController.navigate(Screen.QuestionsDrawScreen.route) {
-                        popUpTo(Screen.LobbyScreen.route) {
-                            inclusive = true
-                        }
-                    }
+        lobbyViewModel.sessionStartEvents.collect {
+            navController.navigate(Screen.QuestionsDrawScreen.route) {
+                popUpTo(Screen.LobbyScreen.route) {
+                    inclusive = true
                 }
             }
         }

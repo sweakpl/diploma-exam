@@ -40,7 +40,7 @@ class QuestionsAnsweringViewModel @Inject constructor(
                 is Resource.Success -> {
                     if (it.data != null) {
                         if (it.data.isGradingCompleted) {
-                            gradingCompletedEventsChannel.send(GradingCompletedEvent.Success)
+                            gradingCompletedEventsChannel.send(GradingCompletedEvent)
                         } else {
                             state = state.copy(
                                 currentUser = it.data.currentUser,
@@ -145,7 +145,5 @@ class QuestionsAnsweringViewModel @Inject constructor(
         hasFinalizedRequest = true
     }
 
-    sealed class GradingCompletedEvent {
-        object Success : GradingCompletedEvent()
-    }
+    object GradingCompletedEvent
 }

@@ -54,8 +54,8 @@ class ExamScoreViewModel @Inject constructor(
 
     private fun finishExam() = viewModelScope.launch {
         cleanupSession()
-        examFinishedEventsChannel.send(ExamFinishedEvent())
+        examFinishedEventsChannel.send(ExamFinishedEvent)
     }
 
-    class ExamFinishedEvent
+    object ExamFinishedEvent
 }

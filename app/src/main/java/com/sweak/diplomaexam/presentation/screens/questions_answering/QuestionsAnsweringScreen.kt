@@ -41,14 +41,10 @@ fun QuestionsAnsweringScreen(
     val context: Context = LocalContext.current
 
     LaunchedEffect(key1 = context) {
-        questionsAnsweringViewModel.gradingCompletedEvents.collect { event ->
-            when (event) {
-                is QuestionsAnsweringViewModel.GradingCompletedEvent.Success -> {
-                    navController.navigate(Screen.ExamScoreScreen.route) {
-                        popUpTo(Screen.QuestionsAnsweringScreen.route) {
-                            inclusive = true
-                        }
-                    }
+        questionsAnsweringViewModel.gradingCompletedEvents.collect {
+            navController.navigate(Screen.ExamScoreScreen.route) {
+                popUpTo(Screen.QuestionsAnsweringScreen.route) {
+                    inclusive = true
                 }
             }
         }

@@ -74,7 +74,7 @@ class QuestionsDrawRepositoryImpl(
                             examQuestions = null
                             waitingForDecisionFrom = UserRole.USER_STUDENT
                         } else {
-                            examQuestions = when (val examQuestionsResource = getExamQuestions()) {
+                            examQuestions = when (val examQuestionsResource = getQuestions()) {
                                 is Resource.Failure ->
                                     return Resource.Failure(error = examQuestionsResource.error!!)
                                 is Resource.Success ->
@@ -121,9 +121,9 @@ class QuestionsDrawRepositoryImpl(
         }
     }
 
-    override suspend fun getExamQuestions(): Resource<List<ExamQuestion>> {
+    override suspend fun getQuestions(): Resource<List<ExamQuestion>> {
         try {
-            val response = diplomaExamApi.getExamQuestions(
+            val response = diplomaExamApi.getQuestions(
                 "Bearer ${userSessionManager.getSessionToken()}",
                 userSessionManager.getSessionId()
             )
@@ -190,7 +190,7 @@ class QuestionsDrawRepositoryImpl(
 
     override suspend fun redrawQuestions(): Resource<Unit> {
         try {
-            val response = diplomaExamApi.redrawExamQuestions(
+            val response = diplomaExamApi.redrawQuestions(
                 "Bearer ${userSessionManager.getSessionToken()}",
                 userSessionManager.getSessionId()
             )

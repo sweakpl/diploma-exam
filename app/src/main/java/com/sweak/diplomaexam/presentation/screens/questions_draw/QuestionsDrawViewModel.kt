@@ -22,7 +22,7 @@ class QuestionsDrawViewModel @Inject constructor(
     private val getQuestionsDrawState: GetQuestionsDrawState,
     private val drawNewQuestions: DrawNewQuestions,
     private val acceptDrawnQuestions: AcceptDrawnQuestions,
-    private val requestExamQuestionsRedraw: RequestExamQuestionsRedraw,
+    private val requestQuestionsRedraw: RequestQuestionsRedraw,
     private val allowQuestionsRedraw: AllowQuestionsRedraw
 ) : ViewModel() {
 
@@ -43,7 +43,7 @@ class QuestionsDrawViewModel @Inject constructor(
                 is Resource.Success -> {
                     if (it.data != null) {
                         if (it.data.areQuestionsConfirmed) {
-                            questionsConfirmedEventsChannel.send(QuestionsConfirmedEvent.Success)
+                            questionsConfirmedEventsChannel.send(QuestionsConfirmedEvent)
                         } else {
                             state = state.copy(
                                 currentUser = it.data.currentUser,
@@ -76,7 +76,7 @@ class QuestionsDrawViewModel @Inject constructor(
     fun onEvent(event: QuestionsDrawScreenEvent) {
         when (event) {
             is QuestionsDrawScreenEvent.DrawQuestions -> drawQuestions()
-            is QuestionsDrawScreenEvent.RequestQuestionsRedraw -> requestQuestionsRedraw()
+            is QuestionsDrawScreenEvent.RequestQuestionsRedraw -> requestRedraw()
             is QuestionsDrawScreenEvent.TryRequestQuestionsRedraw ->
                 state = state.copy(redrawQuestionsDialogVisible = true)
             is QuestionsDrawScreenEvent.AcceptQuestions -> acceptQuestions()
@@ -121,8 +121,8 @@ class QuestionsDrawViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun requestQuestionsRedraw() {
-        requestExamQuestionsRedraw().onEach {
+    private fun requestRedraw() {
+        requestQuestionsRedraw().onEach {
             when (it) {
                 is Resource.Success -> fetchQuestionsDrawState()
                 is Resource.Loading -> state = state.copy(isLoadingResponse = true)
@@ -180,7 +180,5 @@ class QuestionsDrawViewModel @Inject constructor(
             else -> UiText.StringResource(R.string.unknown_error)
         }
 
-    sealed class QuestionsConfirmedEvent {
-        object Success : QuestionsConfirmedEvent()
-    }
+    object QuestionsConfirmedEvent
 }

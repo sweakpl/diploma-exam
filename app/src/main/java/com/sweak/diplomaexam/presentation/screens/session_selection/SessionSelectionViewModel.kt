@@ -89,7 +89,7 @@ class SessionSelectionViewModel @Inject constructor(
         selectExaminationSession(selectedSession).onEach {
             when (it) {
                 is Resource.Success -> {
-                    sessionConfirmedEventsChannel.send(SessionConfirmedEvent.Success)
+                    sessionConfirmedEventsChannel.send(SessionConfirmedEvent)
                 }
                 is Resource.Loading -> state = state.copy(isLoadingResponse = true)
                 is Resource.Failure -> {
@@ -116,7 +116,5 @@ class SessionSelectionViewModel @Inject constructor(
             else -> UiText.StringResource(R.string.unknown_error)
         }
 
-    sealed class SessionConfirmedEvent {
-        object Success : SessionConfirmedEvent()
-    }
+    object SessionConfirmedEvent
 }

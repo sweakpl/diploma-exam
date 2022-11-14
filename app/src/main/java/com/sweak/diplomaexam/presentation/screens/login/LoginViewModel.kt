@@ -84,7 +84,7 @@ class LoginViewModel @Inject constructor(
                         DUMMY_OTHER_USER_ROLE = UserRole.USER_STUDENT
                     }
 
-                    authenticateEventChannel.send(AuthenticationEvent.Success(state.userRole!!))
+                    authenticateEventChannel.send(AuthenticationEvent(state.userRole!!))
                 }
                 is Resource.Failure -> state = state.copy(
                     errorMessage = when (it.error) {
@@ -110,7 +110,5 @@ class LoginViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    sealed class AuthenticationEvent {
-        data class Success(val authenticatedUserRole: UserRole) : AuthenticationEvent()
-    }
+    data class AuthenticationEvent(val authenticatedUserRole: UserRole)
 }

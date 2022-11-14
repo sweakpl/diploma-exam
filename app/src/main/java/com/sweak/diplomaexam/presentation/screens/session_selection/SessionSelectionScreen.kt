@@ -38,14 +38,10 @@ fun SessionSelectionScreen(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = context) {
-        sessionSelectionViewModel.sessionConfirmedEvents.collect { event ->
-            when (event) {
-                is SessionSelectionViewModel.SessionConfirmedEvent.Success -> {
-                    navController.navigate(Screen.LobbyScreen.route) {
-                        popUpTo(Screen.SessionSelectionScreen.route) {
-                            inclusive = true
-                        }
-                    }
+        sessionSelectionViewModel.sessionConfirmedEvents.collect {
+            navController.navigate(Screen.LobbyScreen.route) {
+                popUpTo(Screen.SessionSelectionScreen.route) {
+                    inclusive = true
                 }
             }
         }

@@ -31,7 +31,7 @@ interface DiplomaExamApi {
     ): Response<SessionStateDto>
 
     @GET("examinationQuestion/getQuestions/session/{sessionId}/")
-    suspend fun getExamQuestions(
+    suspend fun getQuestions(
         @Header("Authorization") bearerWithToken: String,
         @Path("sessionId") sessionId: Int
     ): Response<List<ExamQuestionDto>>
@@ -43,7 +43,7 @@ interface DiplomaExamApi {
     ): Response<Unit>
 
     @POST("examinationQuestion/redrawQuestions/session/{sessionId}/")
-    suspend fun redrawExamQuestions(
+    suspend fun redrawQuestions(
         @Header("Authorization") bearerWithToken: String,
         @Path("sessionId") sessionId: Int
     ): Response<Unit>

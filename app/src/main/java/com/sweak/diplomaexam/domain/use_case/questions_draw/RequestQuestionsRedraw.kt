@@ -6,7 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class RequestExamQuestionsRedraw @Inject constructor(
+class RequestQuestionsRedraw @Inject constructor(
     private val repository: QuestionsDrawRepository
 ) {
     operator fun invoke() = flow {

@@ -38,14 +38,10 @@ fun QuestionsDrawScreen(
     val context: Context = LocalContext.current
 
     LaunchedEffect(key1 = context) {
-        questionsDrawViewModel.questionsConfirmedEvents.collect { event ->
-            when (event) {
-                is QuestionsDrawViewModel.QuestionsConfirmedEvent.Success -> {
-                    navController.navigate(Screen.QuestionsAnsweringScreen.route) {
-                        popUpTo(Screen.QuestionsDrawScreen.route) {
-                            inclusive = true
-                        }
-                    }
+        questionsDrawViewModel.questionsConfirmedEvents.collect {
+            navController.navigate(Screen.QuestionsAnsweringScreen.route) {
+                popUpTo(Screen.QuestionsDrawScreen.route) {
+                    inclusive = true
                 }
             }
         }
