@@ -76,4 +76,6 @@
     <string name="retry">Retry</string>
     <string name="no_permission">No permission to do that action.</string>
     <string name="thesis_grade">Thesis grade:</string>
+    <string name="redraw_interrogative">Redraw?</string>
+    <string name="do_you_want_to_redraw">Do you want to draw the questions again? This will require the permission from the examiner.</string>
 </resources>

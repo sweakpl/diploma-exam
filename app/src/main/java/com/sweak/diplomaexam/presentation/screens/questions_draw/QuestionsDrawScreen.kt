@@ -67,7 +67,7 @@ fun QuestionsDrawScreen(
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.DrawQuestions)
             },
             onRedrawQuestionsClick = {
-                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.RequestQuestionsRedraw)
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryRequestQuestionsRedraw)
             },
             onAcceptDrawnQuestions = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryAcceptQuestions)
@@ -95,7 +95,7 @@ fun QuestionsDrawScreen(
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.DrawQuestions)
             },
             onRedrawQuestionsClick = {
-                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.RequestQuestionsRedraw)
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryRequestQuestionsRedraw)
             },
             onAcceptDrawnQuestions = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.TryAcceptQuestions)
@@ -122,6 +122,22 @@ fun QuestionsDrawScreen(
             onPositiveClick = {
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.HideAcceptQuestionsDialog)
                 questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.AcceptQuestions)
+            },
+            positiveButtonText = stringResource(R.string.yes),
+            negativeButtonText = stringResource(R.string.no)
+        )
+    }
+
+    if (questionsDrawState.redrawQuestionsDialogVisible) {
+        Dialog(
+            title = stringResource(R.string.redraw_interrogative),
+            message = stringResource(R.string.do_you_want_to_redraw),
+            onDismissRequest = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.HideRequestRedrawDialog)
+            },
+            onPositiveClick = {
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.HideRequestRedrawDialog)
+                questionsDrawViewModel.onEvent(QuestionsDrawScreenEvent.RequestQuestionsRedraw)
             },
             positiveButtonText = stringResource(R.string.yes),
             negativeButtonText = stringResource(R.string.no)

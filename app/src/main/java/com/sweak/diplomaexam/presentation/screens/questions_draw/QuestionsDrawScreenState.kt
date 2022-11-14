@@ -14,5 +14,6 @@ data class QuestionsDrawScreenState(
     val hasStudentRequestedRedraw: Boolean = true,
     val waitingForDecisionFrom: UserRole = UserRole.USER_STUDENT,
     val acceptQuestionsDialogVisible: Boolean = false,
+    val redrawQuestionsDialogVisible: Boolean = false,
     val disallowRedrawDialogVisible: Boolean = false
 )
