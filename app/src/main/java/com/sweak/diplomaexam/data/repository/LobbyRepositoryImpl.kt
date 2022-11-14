@@ -2,6 +2,9 @@ package com.sweak.diplomaexam.data.repository
 
 import com.sweak.diplomaexam.data.common.ResponseCode
 import com.sweak.diplomaexam.data.local.UserSessionManager
+import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_DRAWING_QUESTIONS
+import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_INACTIVE
+import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_LOBBY
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
 import com.sweak.diplomaexam.domain.DUMMY_USER_ROLE
@@ -50,8 +53,8 @@ class LobbyRepositoryImpl(
                                     sessionState.hasStudentJoined
                                 else
                                     sessionState.hasExaminerJoined,
-                                sessionState.status != "LOBBY" &&
-                                        sessionState.status != "INACTIVE"
+                                sessionState.status != API_SESSION_STATUS_LOBBY &&
+                                        sessionState.status != API_SESSION_STATUS_INACTIVE
                             )
                         )
                     }
@@ -78,7 +81,7 @@ class LobbyRepositoryImpl(
                 "Bearer ${userSessionManager.getSessionToken()}",
                 SetSessionStateRequestDto(
                     userSessionManager.getSessionId(),
-                    "DRAWING_QUESTIONS"
+                    API_SESSION_STATUS_DRAWING_QUESTIONS
                 )
             )
 

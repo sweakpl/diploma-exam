@@ -2,6 +2,8 @@ package com.sweak.diplomaexam.data.repository
 
 import com.sweak.diplomaexam.data.common.ResponseCode
 import com.sweak.diplomaexam.data.local.UserSessionManager
+import com.sweak.diplomaexam.data.remote.API_ROLE_EXAMINER
+import com.sweak.diplomaexam.data.remote.API_ROLE_STUDENT
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
@@ -42,8 +44,8 @@ class AuthenticationRepositoryImpl @Inject constructor(
                         }
 
                         val responseUserRole = when(loginResponse.role) {
-                            "STUDENT" -> UserRole.USER_STUDENT
-                            "EXAMINER" -> UserRole.USER_EXAMINER
+                            API_ROLE_STUDENT -> UserRole.USER_STUDENT
+                            API_ROLE_EXAMINER -> UserRole.USER_EXAMINER
                             else -> null
                         }
 

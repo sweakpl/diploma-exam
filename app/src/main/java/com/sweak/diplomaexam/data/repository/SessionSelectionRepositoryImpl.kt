@@ -2,6 +2,9 @@ package com.sweak.diplomaexam.data.repository
 
 import com.sweak.diplomaexam.data.common.ResponseCode
 import com.sweak.diplomaexam.data.local.UserSessionManager
+import com.sweak.diplomaexam.data.remote.API_ROLE_STUDENT
+import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_INACTIVE
+import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_LOBBY
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
 import com.sweak.diplomaexam.domain.common.Resource
@@ -35,7 +38,7 @@ class SessionSelectionRepositoryImpl @Inject constructor(
                                 AvailableSession(
                                     sessionStateDto.id,
                                     sessionStateDto.userDtos.find { userDto ->
-                                        userDto.role == "STUDENT"
+                                        userDto.role == API_ROLE_STUDENT
                                     }?.email ?: ""
                                 )
                             }.filter {
@@ -69,8 +72,8 @@ class SessionSelectionRepositoryImpl @Inject constructor(
             }
 
             if (sessionStatus.data != null &&
-                sessionStatus.data != "INACTIVE" &&
-                sessionStatus.data != "LOBBY"
+                sessionStatus.data != API_SESSION_STATUS_INACTIVE &&
+                sessionStatus.data != API_SESSION_STATUS_LOBBY
             ) {
                 userSessionManager.saveSessionId(selectedSession.sessionId)
 
@@ -79,10 +82,7 @@ class SessionSelectionRepositoryImpl @Inject constructor(
 
             val response = diplomaExamApi.setSessionState(
                 "Bearer ${userSessionManager.getSessionToken()}",
-                SetSessionStateRequestDto(
-                    selectedSession.sessionId,
-                    "LOBBY"
-                )
+                SetSessionStateRequestDto(selectedSession.sessionId, API_SESSION_STATUS_LOBBY)
             )
 
             return when (response.code()) {

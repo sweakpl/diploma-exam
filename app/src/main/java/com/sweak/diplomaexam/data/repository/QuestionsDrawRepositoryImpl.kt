@@ -2,6 +2,9 @@ package com.sweak.diplomaexam.data.repository
 
 import com.sweak.diplomaexam.data.common.ResponseCode
 import com.sweak.diplomaexam.data.local.UserSessionManager
+import com.sweak.diplomaexam.data.remote.API_ROLE_EXAMINER
+import com.sweak.diplomaexam.data.remote.API_ROLE_STUDENT
+import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_ANSWERING_QUESTIONS
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
 import com.sweak.diplomaexam.domain.common.Resource
@@ -33,7 +36,8 @@ class QuestionsDrawRepositoryImpl(
                     } else {
                         val sessionState = response.body()!!
 
-                        val areQuestionsConfirmed = sessionState.status == "ANSWERING_QUESTIONS"
+                        val areQuestionsConfirmed =
+                            sessionState.status == API_SESSION_STATUS_ANSWERING_QUESTIONS
 
                         if (areQuestionsConfirmed) {
                             return Resource.Success(
@@ -52,12 +56,12 @@ class QuestionsDrawRepositoryImpl(
 
                         val otherUser: User? = sessionState.userDtos.find {
                             it.role ==
-                                    if (currentUser.role == UserRole.USER_EXAMINER) "STUDENT"
-                                    else "EXAMINER"
+                                    if (currentUser.role == UserRole.USER_EXAMINER) API_ROLE_STUDENT
+                                    else API_ROLE_EXAMINER
                         }?.run {
                             User(
                                 role =
-                                if (this.role == "STUDENT") UserRole.USER_STUDENT
+                                if (this.role == API_ROLE_STUDENT) UserRole.USER_STUDENT
                                 else UserRole.USER_EXAMINER,
                                 email = this.email
                             )
@@ -215,7 +219,7 @@ class QuestionsDrawRepositoryImpl(
                 "Bearer ${userSessionManager.getSessionToken()}",
                 SetSessionStateRequestDto(
                     userSessionManager.getSessionId(),
-                    "ANSWERING_QUESTIONS"
+                    API_SESSION_STATUS_ANSWERING_QUESTIONS
                 )
             )
 
