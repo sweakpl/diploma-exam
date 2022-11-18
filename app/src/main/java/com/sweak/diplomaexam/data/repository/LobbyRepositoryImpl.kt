@@ -7,7 +7,6 @@ import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_INACTIVE
 import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_LOBBY
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
-import com.sweak.diplomaexam.domain.DUMMY_USER_ROLE
 import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.common.User
@@ -49,7 +48,7 @@ class LobbyRepositoryImpl(
                         Resource.Success(
                             LobbyState(
                                 currentUser,
-                                if (DUMMY_USER_ROLE == UserRole.USER_EXAMINER)
+                                if (currentUser.role == UserRole.USER_EXAMINER)
                                     sessionState.hasStudentJoined
                                 else
                                     sessionState.hasExaminerJoined,

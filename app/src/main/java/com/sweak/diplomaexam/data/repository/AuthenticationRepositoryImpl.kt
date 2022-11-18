@@ -16,7 +16,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
-    private val api: DiplomaExamApi,
+    private val diplomaExamApi: DiplomaExamApi,
     private val userSessionManager: UserSessionManager
 ): AuthenticationRepository {
 
@@ -26,7 +26,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
         selectedUserRole: UserRole
     ): Resource<LoginResponse> {
         try {
-            val responseDto = api.login(LoginRequestDto(email, password))
+            val responseDto = diplomaExamApi.login(LoginRequestDto(email, password))
 
             return when (responseDto.code()) {
                 ResponseCode.OK.codeInt -> {

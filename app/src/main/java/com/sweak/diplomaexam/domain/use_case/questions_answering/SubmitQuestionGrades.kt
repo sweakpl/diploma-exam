@@ -1,24 +1,23 @@
 package com.sweak.diplomaexam.domain.use_case.questions_answering
 
-import com.sweak.diplomaexam.domain.DUMMY_ARE_QUESTION_GRADES_CONFIRMED
-import com.sweak.diplomaexam.domain.DUMMY_DIPLOMA_EXAM_GRADE
+import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Grade
+import com.sweak.diplomaexam.domain.repository.QuestionsAnsweringRepository
 import kotlinx.coroutines.delay
-import java.math.RoundingMode
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SubmitQuestionGrades @Inject constructor() {
+class SubmitQuestionGrades @Inject constructor(
+    private val repository: QuestionsAnsweringRepository
+) {
+    operator fun invoke(grades: List<Grade>) = flow {
+        emit(Resource.Loading())
 
-    suspend operator fun invoke(grades: List<Grade>) {
-        delay(1000)
-        DUMMY_ARE_QUESTION_GRADES_CONFIRMED = true
+        delay(500)
 
-        if (grades.isNotEmpty()) {
-            DUMMY_DIPLOMA_EXAM_GRADE =
-                Grade.values()[
-                        (grades.sumOf { it.ordinal } / (grades.size * 1f))
-                            .toBigDecimal().setScale(0, RoundingMode.HALF_EVEN).toInt()
-                ]
+        when (val submitGradesResponse = repository.submitQuestionGrades(grades)) {
+            is Resource.Success -> emit(Resource.Success(Unit))
+            else -> emit(Resource.Failure(submitGradesResponse.error!!))
         }
     }
 }

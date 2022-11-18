@@ -1,6 +1,5 @@
 package com.sweak.diplomaexam.domain.use_case.questions_draw
 
-import com.sweak.diplomaexam.domain.DUMMY_DRAWN_QUESTIONS
 import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.repository.QuestionsDrawRepository
 import kotlinx.coroutines.delay
@@ -24,10 +23,6 @@ class GetQuestionsDrawState @Inject constructor(
                         if (questionsDrawState.data.currentUser.role ==
                             questionsDrawState.data.waitingForDecisionFrom
                         ) {
-                            if (questionsDrawState.data.questions != null) {
-                                DUMMY_DRAWN_QUESTIONS = questionsDrawState.data.questions
-                            }
-
                             break
                         }
                     }

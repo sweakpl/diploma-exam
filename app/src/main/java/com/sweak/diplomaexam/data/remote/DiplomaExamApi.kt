@@ -2,9 +2,7 @@ package com.sweak.diplomaexam.data.remote
 
 import com.sweak.diplomaexam.data.remote.dto.login.LoginRequestDto
 import com.sweak.diplomaexam.data.remote.dto.login.LoginResponseDto
-import com.sweak.diplomaexam.data.remote.dto.session.ExamQuestionDto
-import com.sweak.diplomaexam.data.remote.dto.session.SessionStateDto
-import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
+import com.sweak.diplomaexam.data.remote.dto.session.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -46,5 +44,23 @@ interface DiplomaExamApi {
     suspend fun redrawQuestions(
         @Header("Authorization") bearerWithToken: String,
         @Path("sessionId") sessionId: Int
+    ): Response<Unit>
+
+    @POST("/api/v1/examinationGrade/confirmReadinessToAnswerQuestions/{sessionId}")
+    suspend fun confirmReadinessToAnswer(
+        @Header("Authorization") bearerWithToken: String,
+        @Path("sessionId") sessionId: Int
+    ): Response<Unit>
+
+    @POST("/api/v1/examinationGrade/sendQuestionsGrade")
+    suspend fun submitQuestionGrades(
+        @Header("Authorization") bearerWithToken: String,
+        @Body submitQuestionGradesRequestDto: SubmitQuestionGradesRequestDto
+    ): Response<Unit>
+
+    @POST("/api/v1/examinationGrade/sendExamGrade")
+    suspend fun submitAdditionalGrades(
+        @Header("Authorization") bearerWithToken: String,
+        @Body submitAdditionalGradesRequestDto: SubmitAdditionalGradesRequestDto
     ): Response<Unit>
 }

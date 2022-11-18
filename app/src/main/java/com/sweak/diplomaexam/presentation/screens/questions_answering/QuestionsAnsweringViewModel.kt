@@ -5,23 +5,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.domain.use_case.questions_answering.ConfirmReadinessToAnswer
 import com.sweak.diplomaexam.domain.use_case.questions_answering.GetQuestionsAnsweringState
 import com.sweak.diplomaexam.domain.use_case.questions_answering.SubmitAdditionalGrades
 import com.sweak.diplomaexam.domain.use_case.questions_answering.SubmitQuestionGrades
+import com.sweak.diplomaexam.presentation.screens.common.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class QuestionsAnsweringViewModel @Inject constructor(
-    getQuestionsAnsweringState: GetQuestionsAnsweringState,
+    private val getQuestionsAnsweringState: GetQuestionsAnsweringState,
     private val confirmReadinessToAnswer: ConfirmReadinessToAnswer,
     private val submitQuestionGrades: SubmitQuestionGrades,
     private val submitAdditionalGrades: SubmitAdditionalGrades
@@ -32,9 +34,13 @@ class QuestionsAnsweringViewModel @Inject constructor(
     private val gradingCompletedEventsChannel = Channel<GradingCompletedEvent>()
     val gradingCompletedEvents = gradingCompletedEventsChannel.receiveAsFlow()
 
-    private var hasFinalizedRequest: Boolean = true
+    private var lastUnsuccessfulOperation: Runnable? = null
 
     init {
+        fetchQuestionsAnsweringState()
+    }
+
+    private fun fetchQuestionsAnsweringState() {
         getQuestionsAnsweringState().onEach {
             when (it) {
                 is Resource.Success -> {
@@ -46,18 +52,26 @@ class QuestionsAnsweringViewModel @Inject constructor(
                                 currentUser = it.data.currentUser,
                                 otherUser = it.data.otherUser,
                                 questions = it.data.questions,
-                                questionNumbersToGradesMap = it.data.questionNumbersToGradesMap,
-                                thesisPresentationGrade = it.data.thesisPresentationGrade,
-                                thesisGrade = it.data.thesisGrade,
-                                courseOfStudiesGrade = it.data.courseOfStudiesGrade,
-                                isLoadingResponse = !hasFinalizedRequest,
+                                isLoadingResponse = false,
                                 isWaitingForStudentReadiness = it.data.isWaitingForStudentReadiness,
                                 isWaitingForFinalEvaluation = it.data.isWaitingForFinalEvaluation
                             )
                         }
                     }
                 }
-                else -> { /* no-op */ }
+                is Resource.Loading -> {
+                    state = if (state.currentUser == null) {
+                        state.copy(currentUser = null)
+                    } else {
+                        state.copy(isLoadingResponse = true)
+                    }
+                }
+                is Resource.Failure -> {
+                    lastUnsuccessfulOperation = Runnable {
+                        fetchQuestionsAnsweringState()
+                    }
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -114,36 +128,77 @@ class QuestionsAnsweringViewModel @Inject constructor(
             is QuestionsAnsweringScreenEvent.SubmitAdditionalGrades -> submitGradesForAdditional()
             is QuestionsAnsweringScreenEvent.HideSubmitAdditionalGradesDialog ->
                 state = state.copy(submitAdditionalGradesDialogVisible = false)
+            is QuestionsAnsweringScreenEvent.RetryAfterError -> {
+                state = state.copy(errorMessage = null)
+
+                lastUnsuccessfulOperation?.run()
+                lastUnsuccessfulOperation = null
+            }
         }
     }
 
-    private fun confirmReadiness() =
-        performRequest { viewModelScope.launch { confirmReadinessToAnswer() } }
-
-    private fun submitGradesForQuestions() =
-        performRequest {
-            viewModelScope.launch {
-                submitQuestionGrades(state.questionNumbersToGradesMap.values.toList())
+    private fun confirmReadiness() {
+        confirmReadinessToAnswer().onEach {
+            when (it) {
+                is Resource.Success -> fetchQuestionsAnsweringState()
+                is Resource.Loading -> state = state.copy(isLoadingResponse = true)
+                is Resource.Failure -> {
+                    lastUnsuccessfulOperation = Runnable {
+                        confirmReadiness()
+                    }
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
+                }
             }
-        }
-
-    private fun submitGradesForAdditional() =
-        performRequest {
-            viewModelScope.launch {
-                submitAdditionalGrades(
-                    state.thesisPresentationGrade,
-                    state.thesisGrade,
-                    state.courseOfStudiesGrade
-                )
-            }
-        }
-
-    private fun performRequest(request: () -> Unit) {
-        hasFinalizedRequest = false
-        state = state.copy(isLoadingResponse = true)
-        request()
-        hasFinalizedRequest = true
+        }.launchIn(viewModelScope)
     }
+
+    private fun submitGradesForQuestions() {
+        submitQuestionGrades(state.questionNumbersToGradesMap.values.toList()).onEach {
+            when (it) {
+                is Resource.Success -> fetchQuestionsAnsweringState()
+                is Resource.Loading -> state = state.copy(isLoadingResponse = true)
+                is Resource.Failure -> {
+                    lastUnsuccessfulOperation = Runnable {
+                        submitGradesForQuestions()
+                    }
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun submitGradesForAdditional() {
+        submitAdditionalGrades(
+            state.thesisPresentationGrade,
+            state.thesisGrade,
+            state.courseOfStudiesGrade
+        ).onEach {
+            when (it) {
+                is Resource.Success -> fetchQuestionsAnsweringState()
+                is Resource.Loading -> state = state.copy(isLoadingResponse = true)
+                is Resource.Failure -> {
+                    lastUnsuccessfulOperation = Runnable {
+                        submitGradesForAdditional()
+                    }
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getErrorMessage(error: Error?): UiText =
+        when (error) {
+            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+            is Error.HttpError -> {
+                if (error.message != null)
+                    UiText.DynamicString(error.message)
+                else
+                    UiText.StringResource(R.string.unknown_error)
+            }
+            is Error.UnauthorizedError ->
+                UiText.StringResource(R.string.no_permission)
+            else -> UiText.StringResource(R.string.unknown_error)
+        }
 
     object GradingCompletedEvent
 }

@@ -22,12 +22,10 @@ import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.domain.model.common.User
 import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.presentation.Screen
+import com.sweak.diplomaexam.presentation.screens.common.UiText
 import com.sweak.diplomaexam.presentation.screens.common.WindowInfo
 import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
-import com.sweak.diplomaexam.presentation.screens.components.Dialog
-import com.sweak.diplomaexam.presentation.screens.components.Header
-import com.sweak.diplomaexam.presentation.screens.components.HeaderDisplayMode
-import com.sweak.diplomaexam.presentation.screens.components.LoadingLayout
+import com.sweak.diplomaexam.presentation.screens.components.*
 import com.sweak.diplomaexam.presentation.screens.questions_answering.components.*
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
@@ -63,6 +61,7 @@ fun QuestionsAnsweringScreen(
             thesisGrade = questionsAnsweringState.thesisGrade,
             courseOfStudiesGrade = questionsAnsweringState.courseOfStudiesGrade,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
+            errorMessage = questionsAnsweringState.errorMessage,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
             isWaitingForFinalEvaluation = questionsAnsweringState.isWaitingForFinalEvaluation,
             onConfirmReadiness = {
@@ -92,6 +91,9 @@ fun QuestionsAnsweringScreen(
             },
             onProceedClick = {
                 questionsAnsweringViewModel.onEvent(QuestionsAnsweringScreenEvent.ProceedClick)
+            },
+            onRetryClick = {
+                questionsAnsweringViewModel.onEvent(QuestionsAnsweringScreenEvent.RetryAfterError)
             }
         )
     } else {
@@ -104,6 +106,7 @@ fun QuestionsAnsweringScreen(
             thesisGrade = questionsAnsweringState.thesisGrade,
             courseOfStudiesGrade = questionsAnsweringState.courseOfStudiesGrade,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
+            errorMessage = questionsAnsweringState.errorMessage,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
             isWaitingForFinalEvaluation = questionsAnsweringState.isWaitingForFinalEvaluation,
             onConfirmReadiness = {
@@ -133,6 +136,9 @@ fun QuestionsAnsweringScreen(
             },
             onProceedClick = {
                 questionsAnsweringViewModel.onEvent(QuestionsAnsweringScreenEvent.ProceedClick)
+            },
+            onRetryClick = {
+                questionsAnsweringViewModel.onEvent(QuestionsAnsweringScreenEvent.RetryAfterError)
             }
         )
     }
@@ -244,6 +250,7 @@ fun CompactQuestionsAnsweringScreen(
     thesisGrade: Grade?,
     courseOfStudiesGrade: Grade?,
     isLoadingResponse: Boolean,
+    errorMessage: UiText?,
     isWaitingForStudentReadiness: Boolean,
     isWaitingForFinalEvaluation: Boolean,
     onConfirmReadiness: () -> Unit,
@@ -251,7 +258,8 @@ fun CompactQuestionsAnsweringScreen(
     onThesisPresentationGradeSelected: (Grade) -> Unit,
     onThesisGradeSelected: (Grade) -> Unit,
     onCourseOfStudiesGradeSelected: (Grade) -> Unit,
-    onProceedClick: () -> Unit
+    onProceedClick: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -289,63 +297,75 @@ fun CompactQuestionsAnsweringScreen(
         )
 
         AnimatedContent(
-            targetState = currentUser != null,
+            targetState =
+            if (errorMessage != null) AnimatedComponentTargetState.ERROR
+            else if (currentUser == null) AnimatedComponentTargetState.LOADING
+            else if (!isWaitingForFinalEvaluation) AnimatedComponentTargetState.ANSWERING_QUESTIONS
+            else AnimatedComponentTargetState.SUMMARIZING_EXAM,
             modifier = Modifier.padding(all = MaterialTheme.space.large)
         ) { targetState ->
-            if (targetState) {
-                AnimatedContent(targetState = isWaitingForFinalEvaluation) { state ->
-                    if (!state) {
-                        if (currentUser!!.role == UserRole.USER_STUDENT) {
-                            StudentQuestionsPanel(
-                                questions = questions,
-                                displayMode = StudentQuestionsPanelDisplayMode.COMPACT,
-                                isLoadingResponse = isLoadingResponse,
-                                isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                                onConfirmReadiness = onConfirmReadiness
-                            )
-                        } else {
-                            ExaminerQuestionsPanel(
-                                questions = questions,
-                                questionNumbersToGradesMap = questionNumbersToGradesMap,
-                                displayMode = ExaminerQuestionsPanelDisplayMode.COMPACT,
-                                isLoadingResponse = isLoadingResponse,
-                                isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                                onQuestionGradeSelected = onQuestionGradeSelected
+            when (targetState) {
+                AnimatedComponentTargetState.ANSWERING_QUESTIONS ->
+                    if (currentUser!!.role == UserRole.USER_STUDENT) {
+                        StudentQuestionsPanel(
+                            questions = questions,
+                            displayMode = StudentQuestionsPanelDisplayMode.COMPACT,
+                            isLoadingResponse = isLoadingResponse,
+                            isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                            onConfirmReadiness = onConfirmReadiness
+                        )
+                    } else {
+                        ExaminerQuestionsPanel(
+                            questions = questions,
+                            questionNumbersToGradesMap = questionNumbersToGradesMap,
+                            displayMode = ExaminerQuestionsPanelDisplayMode.COMPACT,
+                            isLoadingResponse = isLoadingResponse,
+                            isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                            onQuestionGradeSelected = onQuestionGradeSelected
+                        )
+                    }
+                AnimatedComponentTargetState.SUMMARIZING_EXAM ->
+                    if (currentUser!!.role == UserRole.USER_STUDENT) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            LoadingLayout(
+                                text = stringResource(R.string.examination_board_summarizing_exam)
                             )
                         }
                     } else {
-                        if (currentUser!!.role == UserRole.USER_STUDENT) {
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                LoadingLayout(
-                                    text = stringResource(R.string.examination_board_summarizing_exam)
-                                )
-                            }
-                        } else {
-                            ExaminerAdditionalGradesPanel(
-                                displayMode = ExaminerAdditionalGradesPanelDisplayMode.COMPACT,
-                                thesisPresentationGrade = thesisPresentationGrade,
-                                thesisGrade = thesisGrade,
-                                courseOfStudiesGrade = courseOfStudiesGrade,
-                                isLoadingResponse = isLoadingResponse,
-                                onThesisPresentationGradeSelected = onThesisPresentationGradeSelected,
-                                onThesisGradeSelected = onThesisGradeSelected,
-                                onCourseOfStudiesGradeSelected = onCourseOfStudiesGradeSelected
-                            )
-                        }
+                        ExaminerAdditionalGradesPanel(
+                            displayMode = ExaminerAdditionalGradesPanelDisplayMode.COMPACT,
+                            thesisPresentationGrade = thesisPresentationGrade,
+                            thesisGrade = thesisGrade,
+                            courseOfStudiesGrade = courseOfStudiesGrade,
+                            isLoadingResponse = isLoadingResponse,
+                            onThesisPresentationGradeSelected = onThesisPresentationGradeSelected,
+                            onThesisGradeSelected = onThesisGradeSelected,
+                            onCourseOfStudiesGradeSelected = onCourseOfStudiesGradeSelected
+                        )
                     }
-                }
-            } else {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    LoadingLayout()
-                }
+                AnimatedComponentTargetState.LOADING ->
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        LoadingLayout()
+                    }
+                AnimatedComponentTargetState.ERROR ->
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        ErrorLayout(
+                            onRetryClick = onRetryClick,
+                            text = errorMessage?.asString()
+                        )
+                    }
             }
         }
     }
@@ -363,6 +383,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     thesisGrade: Grade?,
     courseOfStudiesGrade: Grade?,
     isLoadingResponse: Boolean,
+    errorMessage: UiText?,
     isWaitingForStudentReadiness: Boolean,
     isWaitingForFinalEvaluation: Boolean,
     onConfirmReadiness: () -> Unit,
@@ -370,7 +391,8 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     onThesisPresentationGradeSelected: (Grade) -> Unit,
     onThesisGradeSelected: (Grade) -> Unit,
     onCourseOfStudiesGradeSelected: (Grade) -> Unit,
-    onProceedClick: () -> Unit
+    onProceedClick: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
     val usersInSession = mutableListOf<User>()
     currentUser?.let { usersInSession.add(it) }
@@ -403,6 +425,80 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
                     top = MaterialTheme.space.large,
                 )
         )
+
+        AnimatedContent(
+            targetState =
+            if (errorMessage != null) AnimatedComponentTargetState.ERROR
+            else if (currentUser == null) AnimatedComponentTargetState.LOADING
+            else if (!isWaitingForFinalEvaluation) AnimatedComponentTargetState.ANSWERING_QUESTIONS
+            else AnimatedComponentTargetState.SUMMARIZING_EXAM,
+            modifier = Modifier.padding(all = MaterialTheme.space.large)
+        ) { targetState ->
+            when (targetState) {
+                AnimatedComponentTargetState.ANSWERING_QUESTIONS ->
+                    if (currentUser!!.role == UserRole.USER_STUDENT) {
+                        StudentQuestionsPanel(
+                            questions = questions,
+                            displayMode = StudentQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
+                            isLoadingResponse = isLoadingResponse,
+                            isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                            onConfirmReadiness = onConfirmReadiness
+                        )
+                    } else {
+                        ExaminerQuestionsPanel(
+                            questions = questions,
+                            questionNumbersToGradesMap = questionNumbersToGradesMap,
+                            displayMode = ExaminerQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
+                            isLoadingResponse = isLoadingResponse,
+                            isWaitingForStudentReadiness = isWaitingForStudentReadiness,
+                            onQuestionGradeSelected = onQuestionGradeSelected
+                        )
+                    }
+                AnimatedComponentTargetState.SUMMARIZING_EXAM ->
+                    if (currentUser!!.role == UserRole.USER_STUDENT) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            LoadingLayout(
+                                text = stringResource(R.string.examination_board_summarizing_exam)
+                            )
+                        }
+                    } else {
+                        ExaminerAdditionalGradesPanel(
+                            displayMode = ExaminerAdditionalGradesPanelDisplayMode.MEDIUM_OR_EXPANDED,
+                            thesisPresentationGrade = thesisPresentationGrade,
+                            thesisGrade = thesisGrade,
+                            courseOfStudiesGrade = courseOfStudiesGrade,
+                            isLoadingResponse = isLoadingResponse,
+                            onThesisPresentationGradeSelected = onThesisPresentationGradeSelected,
+                            onThesisGradeSelected = onThesisGradeSelected,
+                            onCourseOfStudiesGradeSelected = onCourseOfStudiesGradeSelected
+                        )
+                    }
+                AnimatedComponentTargetState.LOADING ->
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        LoadingLayout()
+                    }
+                AnimatedComponentTargetState.ERROR ->
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        ErrorLayout(
+                            onRetryClick = onRetryClick,
+                            text = errorMessage?.asString(),
+                            modifier = Modifier.fillMaxWidth(0.5f)
+                        )
+                    }
+            }
+        }
 
         AnimatedContent(
             targetState = currentUser != null,
@@ -468,4 +564,8 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
             }
         }
     }
+}
+
+private enum class AnimatedComponentTargetState {
+    ERROR, LOADING, ANSWERING_QUESTIONS, SUMMARIZING_EXAM
 }

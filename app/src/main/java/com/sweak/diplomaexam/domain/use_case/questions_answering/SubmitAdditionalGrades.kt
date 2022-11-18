@@ -1,27 +1,41 @@
 package com.sweak.diplomaexam.domain.use_case.questions_answering
 
-import com.sweak.diplomaexam.domain.DUMMY_ARE_ADDITIONAL_GRADES_CONFIRMED
-import com.sweak.diplomaexam.domain.DUMMY_COURSE_OF_STUDIES_GRADE
-import com.sweak.diplomaexam.domain.DUMMY_THESIS_GRADE
-import com.sweak.diplomaexam.domain.DUMMY_THESIS_PRESENTATION_GRADE
+import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.common.Grade
+import com.sweak.diplomaexam.domain.repository.QuestionsAnsweringRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SubmitAdditionalGrades @Inject constructor() {
-
-    suspend operator fun invoke(
+class SubmitAdditionalGrades @Inject constructor(
+    private val repository: QuestionsAnsweringRepository
+) {
+    operator fun invoke(
         thesisPresentationGrade: Grade?,
         thesisGrade: Grade?,
-        courseOfStudies: Grade?
-    ) {
-        delay(1000)
-        DUMMY_ARE_ADDITIONAL_GRADES_CONFIRMED = true
+        courseOfStudiesGrade: Grade?
+    ) = flow {
+        emit(Resource.Loading())
 
-        if (thesisPresentationGrade != null && thesisGrade != null && courseOfStudies != null) {
-            DUMMY_THESIS_PRESENTATION_GRADE = thesisPresentationGrade
-            DUMMY_THESIS_GRADE = thesisGrade
-            DUMMY_COURSE_OF_STUDIES_GRADE = courseOfStudies
+        delay(500)
+
+        if (thesisPresentationGrade != null &&
+            thesisGrade != null &&
+            courseOfStudiesGrade != null
+        ) {
+            when (val submitGradesResponse =
+                repository.submitAdditionalGrades(
+                    thesisGrade = thesisGrade,
+                    thesisPresentationGrade = thesisPresentationGrade,
+                    courseOfStudiesGrade = courseOfStudiesGrade
+                )
+            ) {
+                is Resource.Success -> emit(Resource.Success(Unit))
+                else -> emit(Resource.Failure(submitGradesResponse.error!!))
+            }
+        } else {
+            emit(Resource.Failure(Error.UnknownError))
         }
     }
 }

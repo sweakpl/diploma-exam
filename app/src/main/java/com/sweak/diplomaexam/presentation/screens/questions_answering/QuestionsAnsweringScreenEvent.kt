@@ -16,4 +16,5 @@ sealed class QuestionsAnsweringScreenEvent {
     data class SelectCourseOfStudiesGrade(val grade: Grade) : QuestionsAnsweringScreenEvent()
     object SubmitAdditionalGrades : QuestionsAnsweringScreenEvent()
     object HideSubmitAdditionalGradesDialog : QuestionsAnsweringScreenEvent()
+    object RetryAfterError : QuestionsAnsweringScreenEvent()
 }

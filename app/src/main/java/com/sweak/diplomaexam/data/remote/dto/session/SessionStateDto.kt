@@ -8,5 +8,7 @@ data class SessionStateDto(
     val hasStudentJoined: Boolean,
     val haveQuestionsBeenDrawn: Boolean,
     val haveQuestionsBeenRedrawn: Boolean,
-    val haveStudentRequestedRedraw: Boolean
+    val haveStudentRequestedRedraw: Boolean,
+    val areQuestionsBeingGraded: Boolean,
+    val isExamBeingSummarized: Boolean
 )

@@ -6,10 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.domain.DUMMY_OTHER_USER_EMAIL
-import com.sweak.diplomaexam.domain.DUMMY_OTHER_USER_ROLE
-import com.sweak.diplomaexam.domain.DUMMY_USER_EMAIL
-import com.sweak.diplomaexam.domain.DUMMY_USER_ROLE
 import com.sweak.diplomaexam.domain.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.common.UserRole
@@ -73,16 +69,6 @@ class LoginViewModel @Inject constructor(
                 is Resource.Loading -> state = state.copy(isAuthorizing = true)
                 is Resource.Success -> {
                     state = state.copy(isAuthorizing = false)
-
-                    DUMMY_USER_ROLE = state.userRole ?: UserRole.USER_STUDENT
-                    DUMMY_USER_EMAIL = state.email
-
-                    if (DUMMY_USER_ROLE == UserRole.USER_STUDENT) {
-                        DUMMY_OTHER_USER_ROLE = UserRole.USER_EXAMINER
-                        DUMMY_OTHER_USER_EMAIL = "barbara.nowak@pk.edu.pl"
-                    } else {
-                        DUMMY_OTHER_USER_ROLE = UserRole.USER_STUDENT
-                    }
 
                     authenticateEventChannel.send(AuthenticationEvent(state.userRole!!))
                 }

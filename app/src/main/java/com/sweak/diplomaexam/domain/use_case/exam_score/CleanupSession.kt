@@ -10,10 +10,6 @@ class CleanupSession @Inject constructor(private val userSessionManager: UserSes
     operator fun invoke() {
         userSessionManager.cleanUpSession()
 
-        DUMMY_DRAWN_QUESTIONS = emptyList()
-        DUMMY_IS_STUDENT_READY_TO_ANSWER = false
-        DUMMY_ARE_QUESTION_GRADES_CONFIRMED = false
-        DUMMY_ARE_ADDITIONAL_GRADES_CONFIRMED = false
         DUMMY_DIPLOMA_EXAM_GRADE = Grade.C
         DUMMY_THESIS_PRESENTATION_GRADE = Grade.D
         DUMMY_THESIS_GRADE = Grade.E

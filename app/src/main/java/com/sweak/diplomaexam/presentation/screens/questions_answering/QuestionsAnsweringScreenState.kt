@@ -3,6 +3,7 @@ package com.sweak.diplomaexam.presentation.screens.questions_answering
 import com.sweak.diplomaexam.domain.model.common.ExamQuestion
 import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.domain.model.common.User
+import com.sweak.diplomaexam.presentation.screens.common.UiText
 
 data class QuestionsAnsweringScreenState(
     val currentUser: User? = null,
@@ -13,6 +14,7 @@ data class QuestionsAnsweringScreenState(
     val thesisGrade: Grade? = null,
     val courseOfStudiesGrade: Grade? = null,
     val isLoadingResponse: Boolean = false,
+    val errorMessage: UiText? = null,
     val isWaitingForStudentReadiness: Boolean = false,
     val isWaitingForFinalEvaluation: Boolean = false,
     val studentPreparationDialogVisible: Boolean = true,
