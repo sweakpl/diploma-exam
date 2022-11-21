@@ -63,4 +63,10 @@ interface DiplomaExamApi {
         @Header("Authorization") bearerWithToken: String,
         @Body submitAdditionalGradesRequestDto: SubmitAdditionalGradesRequestDto
     ): Response<Unit>
+
+    @GET("/api/v1/examinationGrade/session/{sessionId}")
+    suspend fun getExamScore(
+        @Header("Authorization") bearerWithToken: String,
+        @Path("sessionId") sessionId: Int
+    ): Response<ExamScoreDto>
 }

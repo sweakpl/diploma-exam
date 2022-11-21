@@ -1,18 +1,12 @@
 package com.sweak.diplomaexam.domain.use_case.exam_score
 
-import com.sweak.diplomaexam.data.local.UserSessionManager
-import com.sweak.diplomaexam.domain.*
-import com.sweak.diplomaexam.domain.model.common.Grade
+import com.sweak.diplomaexam.domain.repository.ExamScoreRepository
 import javax.inject.Inject
 
-class CleanupSession @Inject constructor(private val userSessionManager: UserSessionManager) {
-
+class CleanupSession @Inject constructor(
+    private val repository: ExamScoreRepository
+) {
     operator fun invoke() {
-        userSessionManager.cleanUpSession()
-
-        DUMMY_DIPLOMA_EXAM_GRADE = Grade.C
-        DUMMY_THESIS_PRESENTATION_GRADE = Grade.D
-        DUMMY_THESIS_GRADE = Grade.E
-        DUMMY_COURSE_OF_STUDIES_GRADE = Grade.D
+        repository.finishExam()
     }
 }

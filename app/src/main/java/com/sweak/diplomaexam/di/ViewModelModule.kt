@@ -48,9 +48,17 @@ object ViewModelModule {
 
     @Provides
     @ViewModelScoped
-    fun provideQuestionsAnsweringState(
+    fun provideQuestionsAnsweringRepository(
         api: DiplomaExamApi,
         userSessionManager: UserSessionManager
     ): QuestionsAnsweringRepository =
         QuestionsAnsweringRepositoryImpl(api, userSessionManager)
+
+    @Provides
+    @ViewModelScoped
+    fun provideExamScoreRepository(
+        api: DiplomaExamApi,
+        userSessionManager: UserSessionManager
+    ): ExamScoreRepository =
+        ExamScoreRepositoryImpl(api, userSessionManager)
 }

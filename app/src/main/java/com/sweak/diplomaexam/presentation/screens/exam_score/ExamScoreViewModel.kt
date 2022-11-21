@@ -5,9 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.use_case.exam_score.CleanupSession
-import com.sweak.diplomaexam.domain.use_case.exam_score.GetFinalGrades
+import com.sweak.diplomaexam.domain.use_case.exam_score.GetExamScoreState
+import com.sweak.diplomaexam.presentation.screens.common.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
@@ -18,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExamScoreViewModel @Inject constructor(
-    getFinalGrades: GetFinalGrades,
+    private val getExamScoreState: GetExamScoreState,
     private val cleanupSession: CleanupSession
 ): ViewModel() {
 
@@ -27,8 +30,14 @@ class ExamScoreViewModel @Inject constructor(
     private val examFinishedEventsChannel = Channel<ExamFinishedEvent>()
     val examFinishedEvents = examFinishedEventsChannel.receiveAsFlow()
 
+    private var lastUnsuccessfulOperation: Runnable? = null
+
     init {
-        getFinalGrades().onEach {
+        fetchExamScoreState()
+    }
+
+    private fun fetchExamScoreState() {
+        getExamScoreState().onEach {
             when (it) {
                 is Resource.Success -> {
                     if (it.data != null) {
@@ -41,7 +50,15 @@ class ExamScoreViewModel @Inject constructor(
                         )
                     }
                 }
-                else -> { /* no-op */ }
+                is Resource.Loading -> {
+                    state = state.copy(isLoadingResponse = true)
+                }
+                is Resource.Failure -> {
+                    lastUnsuccessfulOperation = Runnable {
+                        fetchExamScoreState()
+                    }
+                    state = state.copy(errorMessage = getErrorMessage(it.error))
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -56,6 +73,20 @@ class ExamScoreViewModel @Inject constructor(
         cleanupSession()
         examFinishedEventsChannel.send(ExamFinishedEvent)
     }
+
+    private fun getErrorMessage(error: Error?): UiText =
+        when (error) {
+            is Error.IOError -> UiText.StringResource(R.string.cant_reach_server)
+            is Error.HttpError -> {
+                if (error.message != null)
+                    UiText.DynamicString(error.message)
+                else
+                    UiText.StringResource(R.string.unknown_error)
+            }
+            is Error.UnauthorizedError ->
+                UiText.StringResource(R.string.no_permission)
+            else -> UiText.StringResource(R.string.unknown_error)
+        }
 
     object ExamFinishedEvent
 }
