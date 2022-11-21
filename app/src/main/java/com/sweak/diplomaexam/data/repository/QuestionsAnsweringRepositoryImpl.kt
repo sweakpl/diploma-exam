@@ -175,9 +175,9 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                 "Bearer ${userSessionManager.getSessionToken()}",
                 SubmitQuestionGradesRequestDto(
                     sessionId = userSessionManager.getSessionId(),
-                    firstQuestionGrade = gradesList[0].ordinal,
-                    secondQuestionGrade = gradesList[1].ordinal,
-                    thirdQuestionGrade = gradesList[2].ordinal
+                    firstQuestionGrade = gradesList[0].floatRepresentation,
+                    secondQuestionGrade = gradesList[1].floatRepresentation,
+                    thirdQuestionGrade = gradesList[2].floatRepresentation
                 )
             )
 
@@ -209,9 +209,9 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                 "Bearer ${userSessionManager.getSessionToken()}",
                 SubmitAdditionalGradesRequestDto(
                     sessionId = userSessionManager.getSessionId(),
-                    diplomaGrade = thesisGrade.ordinal,
-                    presentationGrade = thesisPresentationGrade.ordinal,
-                    studyGrade = courseOfStudiesGrade.ordinal
+                    diplomaGrade = thesisGrade.floatRepresentation,
+                    presentationGrade = thesisPresentationGrade.floatRepresentation,
+                    studyGrade = courseOfStudiesGrade.floatRepresentation
                 )
             )
 
