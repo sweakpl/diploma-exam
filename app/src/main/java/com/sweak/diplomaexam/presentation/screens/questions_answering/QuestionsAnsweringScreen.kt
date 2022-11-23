@@ -24,8 +24,8 @@ import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.screens.common.UiText
 import com.sweak.diplomaexam.presentation.screens.common.WindowInfo
+import com.sweak.diplomaexam.presentation.screens.common.components.*
 import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
-import com.sweak.diplomaexam.presentation.screens.components.*
 import com.sweak.diplomaexam.presentation.screens.questions_answering.components.*
 import com.sweak.diplomaexam.presentation.ui.theme.space
 

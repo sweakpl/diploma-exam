@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.presentation.screens.components
+package com.sweak.diplomaexam.presentation.screens.common.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

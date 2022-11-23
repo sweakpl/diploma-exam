@@ -22,8 +22,8 @@ import com.google.accompanist.pager.*
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.model.common.ExamQuestion
 import com.sweak.diplomaexam.domain.model.common.Grade
-import com.sweak.diplomaexam.presentation.screens.components.LoadingLayout
-import com.sweak.diplomaexam.presentation.screens.components.LoadingLayoutSize
+import com.sweak.diplomaexam.presentation.screens.common.components.LoadingLayout
+import com.sweak.diplomaexam.presentation.screens.common.components.LoadingLayoutSize
 import com.sweak.diplomaexam.presentation.ui.theme.space
 import kotlinx.coroutines.launch
 

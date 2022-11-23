@@ -21,8 +21,8 @@ import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.screens.common.WindowInfo
 import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
-import com.sweak.diplomaexam.presentation.screens.components.Dialog
-import com.sweak.diplomaexam.presentation.screens.components.WelcomeLayout
+import com.sweak.diplomaexam.presentation.screens.common.components.Dialog
+import com.sweak.diplomaexam.presentation.screens.common.components.WelcomeLayout
 import com.sweak.diplomaexam.presentation.screens.login.components.LoginForm
 import com.sweak.diplomaexam.presentation.screens.login.components.UserRoleChoiceButtons
 import com.sweak.diplomaexam.presentation.ui.theme.space

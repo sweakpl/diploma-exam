@@ -15,9 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.model.common.UserRole
-import com.sweak.diplomaexam.presentation.screens.components.LoadingLayout
-import com.sweak.diplomaexam.presentation.screens.components.LoadingLayoutSize
-import com.sweak.diplomaexam.presentation.screens.components.ThickWhiteButton
+import com.sweak.diplomaexam.presentation.screens.common.components.LoadingLayout
+import com.sweak.diplomaexam.presentation.screens.common.components.LoadingLayoutSize
+import com.sweak.diplomaexam.presentation.screens.common.components.ThickWhiteButton
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @ExperimentalAnimationApi

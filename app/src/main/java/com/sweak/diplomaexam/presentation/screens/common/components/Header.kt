@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.presentation.screens.components
+package com.sweak.diplomaexam.presentation.screens.common.components
 
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloat

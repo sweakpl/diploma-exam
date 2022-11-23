@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.data.remote
+package com.sweak.diplomaexam.data.remote.common
 
 const val API_ROLE_STUDENT = "STUDENT"
 const val API_ROLE_EXAMINER = "EXAMINER"

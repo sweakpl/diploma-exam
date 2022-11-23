@@ -22,8 +22,8 @@ import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.screens.common.UiText
 import com.sweak.diplomaexam.presentation.screens.common.WindowInfo
 import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
-import com.sweak.diplomaexam.presentation.screens.components.ErrorLayout
-import com.sweak.diplomaexam.presentation.screens.components.LoadingLayout
+import com.sweak.diplomaexam.presentation.screens.common.components.ErrorLayout
+import com.sweak.diplomaexam.presentation.screens.common.components.LoadingLayout
 import com.sweak.diplomaexam.presentation.screens.exam_score.components.FinalGradeInformation
 import com.sweak.diplomaexam.presentation.screens.exam_score.components.FinishExamPrompt
 import com.sweak.diplomaexam.presentation.ui.theme.space

@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.domain.use_case.questions_answering
 
-import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.domain.repository.QuestionsAnsweringRepository
 import kotlinx.coroutines.delay

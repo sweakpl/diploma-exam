@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.sweak.diplomaexam.R
 import com.sweak.diplomaexam.domain.model.common.Grade
-import com.sweak.diplomaexam.presentation.screens.components.LoadingLayout
+import com.sweak.diplomaexam.presentation.screens.common.components.LoadingLayout
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @ExperimentalAnimationApi

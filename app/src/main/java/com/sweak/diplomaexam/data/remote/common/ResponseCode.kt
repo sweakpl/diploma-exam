@@ -1,4 +1,4 @@
-package com.sweak.diplomaexam.data.common
+package com.sweak.diplomaexam.data.remote.common
 
 enum class ResponseCode(val codeInt: Int) {
     OK(200),

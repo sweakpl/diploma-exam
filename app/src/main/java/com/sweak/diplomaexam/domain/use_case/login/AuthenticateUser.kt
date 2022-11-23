@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.domain.use_case.login
 
-import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.domain.repository.AuthenticationRepository
 import kotlinx.coroutines.delay

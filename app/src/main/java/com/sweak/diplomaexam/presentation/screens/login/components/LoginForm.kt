@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sweak.diplomaexam.R
-import com.sweak.diplomaexam.presentation.screens.components.ThickWhiteButton
+import com.sweak.diplomaexam.presentation.screens.common.components.ThickWhiteButton
 import com.sweak.diplomaexam.presentation.ui.theme.space
 import com.sweak.diplomaexam.presentation.screens.common.UiText
 

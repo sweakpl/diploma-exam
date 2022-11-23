@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.domain.use_case.exam_score
 
-import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.repository.ExamScoreRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow

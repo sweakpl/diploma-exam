@@ -19,8 +19,8 @@ import com.sweak.diplomaexam.presentation.Screen
 import com.sweak.diplomaexam.presentation.screens.common.UiText
 import com.sweak.diplomaexam.presentation.screens.common.WindowInfo
 import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
-import com.sweak.diplomaexam.presentation.screens.components.ErrorLayout
-import com.sweak.diplomaexam.presentation.screens.components.WelcomeLayout
+import com.sweak.diplomaexam.presentation.screens.common.components.ErrorLayout
+import com.sweak.diplomaexam.presentation.screens.common.components.WelcomeLayout
 import com.sweak.diplomaexam.presentation.screens.lobby.components.LoggedInAsLayout
 import com.sweak.diplomaexam.presentation.screens.lobby.components.WaitingForParticipantLayout
 import com.sweak.diplomaexam.presentation.ui.theme.space

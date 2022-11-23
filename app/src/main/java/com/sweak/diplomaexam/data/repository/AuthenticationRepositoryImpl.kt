@@ -1,11 +1,11 @@
 package com.sweak.diplomaexam.data.repository
 
-import com.sweak.diplomaexam.data.common.ResponseCode
+import com.sweak.diplomaexam.data.remote.common.ResponseCode
 import com.sweak.diplomaexam.data.local.UserSessionManager
-import com.sweak.diplomaexam.data.remote.API_ROLE_EXAMINER
-import com.sweak.diplomaexam.data.remote.API_ROLE_STUDENT
+import com.sweak.diplomaexam.data.remote.common.API_ROLE_EXAMINER
+import com.sweak.diplomaexam.data.remote.common.API_ROLE_STUDENT
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
-import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.common.UserRole
 import com.sweak.diplomaexam.data.remote.dto.login.LoginRequestDto
@@ -26,14 +26,14 @@ class AuthenticationRepositoryImpl @Inject constructor(
         selectedUserRole: UserRole
     ): Resource<LoginResponse> {
         try {
-            val responseDto = diplomaExamApi.login(LoginRequestDto(email, password))
+            val response = diplomaExamApi.login(LoginRequestDto(email, password))
 
-            return when (responseDto.code()) {
+            return when (response.code()) {
                 ResponseCode.OK.codeInt -> {
-                    if (responseDto.body() == null) {
+                    if (response.body() == null) {
                         Resource.Failure(Error.UnknownError)
                     } else {
-                        val loginResponse = responseDto.body()!!.run {
+                        val loginResponse = response.body()!!.run {
                             LoginResponse(
                                 email = this.email,
                                 role = this.role,
@@ -71,7 +71,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
                     }
                 }
                 ResponseCode.UNAUTHORIZED.codeInt ->
-                    Resource.Failure(Error.UnauthorizedError(responseDto.message()))
+                    Resource.Failure(Error.UnauthorizedError(response.message()))
                 else -> Resource.Failure(Error.UnknownError)
             }
         } catch (httpException: HttpException) {

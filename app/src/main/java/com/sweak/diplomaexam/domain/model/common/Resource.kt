@@ -1,6 +1,4 @@
-package com.sweak.diplomaexam.domain.common
-
-import com.sweak.diplomaexam.domain.model.common.Error
+package com.sweak.diplomaexam.domain.model.common
 
 sealed class Resource<T>(val data: T? = null, val error: Error? = null) {
     class Success<T>(data: T) : Resource<T>(data)

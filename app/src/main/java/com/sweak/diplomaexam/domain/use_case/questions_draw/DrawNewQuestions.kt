@@ -1,6 +1,6 @@
 package com.sweak.diplomaexam.domain.use_case.questions_draw
 
-import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.repository.QuestionsDrawRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow

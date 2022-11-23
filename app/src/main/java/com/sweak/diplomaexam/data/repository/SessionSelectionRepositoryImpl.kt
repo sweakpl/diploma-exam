@@ -1,13 +1,13 @@
 package com.sweak.diplomaexam.data.repository
 
-import com.sweak.diplomaexam.data.common.ResponseCode
+import com.sweak.diplomaexam.data.remote.common.ResponseCode
 import com.sweak.diplomaexam.data.local.UserSessionManager
-import com.sweak.diplomaexam.data.remote.API_ROLE_STUDENT
-import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_INACTIVE
-import com.sweak.diplomaexam.data.remote.API_SESSION_STATUS_LOBBY
+import com.sweak.diplomaexam.data.remote.common.API_ROLE_STUDENT
+import com.sweak.diplomaexam.data.remote.common.API_SESSION_STATUS_INACTIVE
+import com.sweak.diplomaexam.data.remote.common.API_SESSION_STATUS_LOBBY
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
 import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
-import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.session_selection.AvailableSession
 import com.sweak.diplomaexam.domain.repository.SessionSelectionRepository

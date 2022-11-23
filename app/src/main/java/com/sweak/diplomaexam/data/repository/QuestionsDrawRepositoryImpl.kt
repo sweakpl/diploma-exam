@@ -1,10 +1,10 @@
 package com.sweak.diplomaexam.data.repository
 
-import com.sweak.diplomaexam.data.common.ResponseCode
 import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.remote.*
+import com.sweak.diplomaexam.data.remote.common.*
 import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
-import com.sweak.diplomaexam.domain.common.Resource
+import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.common.ExamQuestion
 import com.sweak.diplomaexam.domain.model.common.User
