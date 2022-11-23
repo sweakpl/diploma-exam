@@ -33,8 +33,12 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                     } else {
                         val sessionState = response.body()!!
 
-                        val areAllGradesReady =
-                            sessionState.status == API_SESSION_STATUS_SUMMARY
+                        val areAllGradesReady = sessionState.status.run {
+                            this != API_SESSION_STATUS_INACTIVE &&
+                                    this != API_SESSION_STATUS_LOBBY &&
+                                    this != API_SESSION_STATUS_DRAWING_QUESTIONS &&
+                                    this != API_SESSION_STATUS_ANSWERING_QUESTIONS
+                        }
 
                         if (areAllGradesReady) {
                             return Resource.Success(

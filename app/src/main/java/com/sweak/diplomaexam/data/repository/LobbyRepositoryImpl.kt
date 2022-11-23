@@ -47,13 +47,16 @@ class LobbyRepositoryImpl(
 
                         Resource.Success(
                             LobbyState(
-                                currentUser,
+                                currentUser = currentUser,
+                                hasOtherUserJoinedTheLobby =
                                 if (currentUser.role == UserRole.USER_EXAMINER)
                                     sessionState.hasStudentJoined
                                 else
                                     sessionState.hasExaminerJoined,
-                                sessionState.status != API_SESSION_STATUS_LOBBY &&
-                                        sessionState.status != API_SESSION_STATUS_INACTIVE
+                                hasTheSessionBeenStarted = sessionState.status.run {
+                                    this != API_SESSION_STATUS_LOBBY &&
+                                            this != API_SESSION_STATUS_INACTIVE
+                                }
                             )
                         )
                     }
