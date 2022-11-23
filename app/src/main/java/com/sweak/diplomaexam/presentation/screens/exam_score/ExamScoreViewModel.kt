@@ -66,6 +66,12 @@ class ExamScoreViewModel @Inject constructor(
     fun onEvent(event: ExamScoreScreenEvent) {
         when (event) {
             is ExamScoreScreenEvent.FinishExam -> finishExam()
+            is ExamScoreScreenEvent.RetryAfterError -> {
+                state = state.copy(errorMessage = null)
+
+                lastUnsuccessfulOperation?.run()
+                lastUnsuccessfulOperation = null
+            }
         }
     }
 
