@@ -10,7 +10,7 @@ interface QuestionsAnsweringRepository {
     suspend fun getQuestionsAnsweringState(): Resource<QuestionsAnsweringState>
     suspend fun getQuestions(): Resource<List<ExamQuestion>>
     suspend fun confirmReadinessToAnswer(): Resource<Unit>
-    suspend fun submitQuestionGrades(gradesList: List<Grade>): Resource<Unit>
+    suspend fun submitQuestionGrades(questionsToGradesMap: Map<ExamQuestion, Grade>): Resource<Unit>
     suspend fun submitAdditionalGrades(
         thesisGrade: Grade,
         thesisPresentationGrade: Grade,

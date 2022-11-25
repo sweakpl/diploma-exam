@@ -3,6 +3,7 @@ package com.sweak.diplomaexam.data.repository
 import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.remote.*
 import com.sweak.diplomaexam.data.remote.common.*
+import com.sweak.diplomaexam.data.remote.dto.session.GradedQuestionDto
 import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
 import com.sweak.diplomaexam.data.remote.dto.session.SubmitAdditionalGradesRequestDto
 import com.sweak.diplomaexam.data.remote.dto.session.SubmitQuestionGradesRequestDto
@@ -172,16 +173,27 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
     }
 
     override suspend fun submitQuestionGrades(
-        gradesList: List<Grade>
+        questionsToGradesMap: Map<ExamQuestion, Grade>
     ): Resource<Unit> {
         try {
+            val gradedQuestions = questionsToGradesMap.map {
+                GradedQuestionDto(
+                    it.key.id,
+                    it.value.floatRepresentation
+                )
+            }
+
+            if (gradedQuestions.size != 3) {
+                return Resource.Failure(Error.UnknownError)
+            }
+
             val response = diplomaExamApi.submitQuestionGrades(
                 "Bearer ${userSessionManager.getSessionToken()}",
                 SubmitQuestionGradesRequestDto(
                     sessionId = userSessionManager.getSessionId(),
-                    firstQuestionGrade = gradesList[0].floatRepresentation,
-                    secondQuestionGrade = gradesList[1].floatRepresentation,
-                    thirdQuestionGrade = gradesList[2].floatRepresentation
+                    question1 = gradedQuestions[0],
+                    question2 = gradedQuestions[1],
+                    question3 = gradedQuestions[2]
                 )
             )
 

@@ -9,7 +9,7 @@ data class QuestionsAnsweringScreenState(
     val currentUser: User? = null,
     val otherUser: User? = null,
     val questions: List<ExamQuestion> = emptyList(),
-    val questionNumbersToGradesMap: Map<Int, Grade> = emptyMap(),
+    val questionsToGradesMap: Map<ExamQuestion, Grade> = emptyMap(),
     val thesisPresentationGrade: Grade? = null,
     val thesisGrade: Grade? = null,
     val courseOfStudiesGrade: Grade? = null,

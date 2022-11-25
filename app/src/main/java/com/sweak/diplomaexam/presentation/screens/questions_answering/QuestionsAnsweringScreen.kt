@@ -56,7 +56,7 @@ fun QuestionsAnsweringScreen(
             currentUser = questionsAnsweringState.currentUser,
             otherUser = questionsAnsweringState.otherUser,
             questions = questionsAnsweringState.questions,
-            questionNumbersToGradesMap = questionsAnsweringState.questionNumbersToGradesMap,
+            questionsToGradesMap = questionsAnsweringState.questionsToGradesMap,
             thesisPresentationGrade = questionsAnsweringState.thesisPresentationGrade,
             thesisGrade = questionsAnsweringState.thesisGrade,
             courseOfStudiesGrade = questionsAnsweringState.courseOfStudiesGrade,
@@ -69,9 +69,9 @@ fun QuestionsAnsweringScreen(
                     QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
                 )
             },
-            onQuestionGradeSelected = { questionNumber, grade ->
+            onQuestionGradeSelected = { question, grade ->
                 questionsAnsweringViewModel.onEvent(
-                    QuestionsAnsweringScreenEvent.SelectQuestionGrade(questionNumber, grade)
+                    QuestionsAnsweringScreenEvent.SelectQuestionGrade(question, grade)
                 )
             },
             onThesisPresentationGradeSelected = { grade ->
@@ -101,7 +101,7 @@ fun QuestionsAnsweringScreen(
             currentUser = questionsAnsweringState.currentUser,
             otherUser = questionsAnsweringState.otherUser,
             questions = questionsAnsweringState.questions,
-            questionNumbersToGradesMap = questionsAnsweringState.questionNumbersToGradesMap,
+            questionsToGradesMap = questionsAnsweringState.questionsToGradesMap,
             thesisPresentationGrade = questionsAnsweringState.thesisPresentationGrade,
             thesisGrade = questionsAnsweringState.thesisGrade,
             courseOfStudiesGrade = questionsAnsweringState.courseOfStudiesGrade,
@@ -114,9 +114,9 @@ fun QuestionsAnsweringScreen(
                     QuestionsAnsweringScreenEvent.ConfirmReadinessToAnswer
                 )
             },
-            onQuestionGradeSelected = { questionNumber, grade ->
+            onQuestionGradeSelected = { question, grade ->
                 questionsAnsweringViewModel.onEvent(
-                    QuestionsAnsweringScreenEvent.SelectQuestionGrade(questionNumber, grade)
+                    QuestionsAnsweringScreenEvent.SelectQuestionGrade(question, grade)
                 )
             },
             onThesisPresentationGradeSelected = { grade ->
@@ -245,7 +245,7 @@ fun CompactQuestionsAnsweringScreen(
     currentUser: User?,
     otherUser: User?,
     questions: List<ExamQuestion>,
-    questionNumbersToGradesMap: Map<Int, Grade>,
+    questionsToGradesMap: Map<ExamQuestion, Grade>,
     thesisPresentationGrade: Grade?,
     thesisGrade: Grade?,
     courseOfStudiesGrade: Grade?,
@@ -254,7 +254,7 @@ fun CompactQuestionsAnsweringScreen(
     isWaitingForStudentReadiness: Boolean,
     isWaitingForFinalEvaluation: Boolean,
     onConfirmReadiness: () -> Unit,
-    onQuestionGradeSelected: (Int, Grade) -> Unit,
+    onQuestionGradeSelected: (ExamQuestion, Grade) -> Unit,
     onThesisPresentationGradeSelected: (Grade) -> Unit,
     onThesisGradeSelected: (Grade) -> Unit,
     onCourseOfStudiesGradeSelected: (Grade) -> Unit,
@@ -317,7 +317,7 @@ fun CompactQuestionsAnsweringScreen(
                     } else {
                         ExaminerQuestionsPanel(
                             questions = questions,
-                            questionNumbersToGradesMap = questionNumbersToGradesMap,
+                            questionsToGradesMap = questionsToGradesMap,
                             displayMode = ExaminerQuestionsPanelDisplayMode.COMPACT,
                             isLoadingResponse = isLoadingResponse,
                             isWaitingForStudentReadiness = isWaitingForStudentReadiness,
@@ -378,7 +378,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     currentUser: User?,
     otherUser: User?,
     questions: List<ExamQuestion>,
-    questionNumbersToGradesMap: Map<Int, Grade>,
+    questionsToGradesMap: Map<ExamQuestion, Grade>,
     thesisPresentationGrade: Grade?,
     thesisGrade: Grade?,
     courseOfStudiesGrade: Grade?,
@@ -387,7 +387,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     isWaitingForStudentReadiness: Boolean,
     isWaitingForFinalEvaluation: Boolean,
     onConfirmReadiness: () -> Unit,
-    onQuestionGradeSelected: (Int, Grade) -> Unit,
+    onQuestionGradeSelected: (ExamQuestion, Grade) -> Unit,
     onThesisPresentationGradeSelected: (Grade) -> Unit,
     onThesisGradeSelected: (Grade) -> Unit,
     onCourseOfStudiesGradeSelected: (Grade) -> Unit,
@@ -447,7 +447,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
                     } else {
                         ExaminerQuestionsPanel(
                             questions = questions,
-                            questionNumbersToGradesMap = questionNumbersToGradesMap,
+                            questionsToGradesMap = questionsToGradesMap,
                             displayMode = ExaminerQuestionsPanelDisplayMode.MEDIUM_OR_EXPANDED,
                             isLoadingResponse = isLoadingResponse,
                             isWaitingForStudentReadiness = isWaitingForStudentReadiness,

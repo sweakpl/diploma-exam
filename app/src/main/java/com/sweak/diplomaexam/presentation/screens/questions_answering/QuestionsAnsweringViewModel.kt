@@ -83,19 +83,19 @@ class QuestionsAnsweringViewModel @Inject constructor(
                 state = state.copy(studentPreparationDialogVisible = false)
             is QuestionsAnsweringScreenEvent.SelectQuestionGrade -> {
                 val newQuestionNumbersToGradesMap =
-                    state.questionNumbersToGradesMap.toMutableMap().apply {
-                        this[event.questionNumber] = event.grade
+                    state.questionsToGradesMap.toMutableMap().apply {
+                        this[event.question] = event.grade
                     }
 
                 state = state.copy(
-                    questionNumbersToGradesMap = newQuestionNumbersToGradesMap
+                    questionsToGradesMap = newQuestionNumbersToGradesMap
                 )
             }
             is QuestionsAnsweringScreenEvent.ProceedClick -> {
                 if (!state.isWaitingForFinalEvaluation) {
                     state.questions.forEach {
-                        if (!state.questionNumbersToGradesMap.containsKey(it.number) ||
-                            state.questionNumbersToGradesMap[it.number] !is Grade
+                        if (!state.questionsToGradesMap.containsKey(it) ||
+                            state.questionsToGradesMap[it] !is Grade
                         ) {
                             state = state.copy(cannotSubmitGradesDialogVisible = true)
                             return
@@ -153,7 +153,7 @@ class QuestionsAnsweringViewModel @Inject constructor(
     }
 
     private fun submitGradesForQuestions() {
-        submitQuestionGrades(state.questionNumbersToGradesMap.values.toList()).onEach {
+        submitQuestionGrades(state.questionsToGradesMap).onEach {
             when (it) {
                 is Resource.Success -> fetchQuestionsAnsweringState()
                 is Resource.Loading -> state = state.copy(isLoadingResponse = true)

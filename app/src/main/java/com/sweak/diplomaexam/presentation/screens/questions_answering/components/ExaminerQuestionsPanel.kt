@@ -32,11 +32,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun ExaminerQuestionsPanel(
     questions: List<ExamQuestion>,
-    questionNumbersToGradesMap: Map<Int, Grade>,
+    questionsToGradesMap: Map<ExamQuestion, Grade>,
     displayMode: ExaminerQuestionsPanelDisplayMode,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
-    onQuestionGradeSelected: (Int, Grade) -> Unit,
+    onQuestionGradeSelected: (ExamQuestion, Grade) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val composableScope = rememberCoroutineScope()
@@ -81,11 +81,11 @@ fun ExaminerQuestionsPanel(
             CompactExaminerQuestionsPager(
                 pagerState = pagerState,
                 questions = questions,
-                questionNumbersToGradesMap = questionNumbersToGradesMap,
+                questionsToGradesMap = questionsToGradesMap,
                 isLoadingResponse = isLoadingResponse,
                 isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                onGradeSelected = { questionNumber, grade ->
-                    onQuestionGradeSelected(questionNumber, grade)
+                onGradeSelected = { question, grade ->
+                    onQuestionGradeSelected(question, grade)
                 },
                 modifier = Modifier.weight(1f)
             )
@@ -141,11 +141,11 @@ fun ExaminerQuestionsPanel(
             MediumOrExpandedExaminerQuestionsPager(
                 pagerState = pagerState,
                 questions = questions,
-                questionNumbersToGradesMap = questionNumbersToGradesMap,
+                questionsToGradesMap = questionsToGradesMap,
                 isLoadingResponse = isLoadingResponse,
                 isWaitingForStudentReadiness = isWaitingForStudentReadiness,
-                onQuestionGradeSelected = { questionNumber, grade ->
-                    onQuestionGradeSelected(questionNumber, grade)
+                onQuestionGradeSelected = { question, grade ->
+                    onQuestionGradeSelected(question, grade)
                 },
                 modifier = Modifier.weight(1f)
             )
@@ -190,10 +190,10 @@ enum class ExaminerQuestionsPanelDisplayMode {
 fun CompactExaminerQuestionsPager(
     pagerState: PagerState,
     questions: List<ExamQuestion>,
-    questionNumbersToGradesMap: Map<Int, Grade>,
+    questionsToGradesMap: Map<ExamQuestion, Grade>,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
-    onGradeSelected: (Int, Grade) -> Unit,
+    onGradeSelected: (ExamQuestion, Grade) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val composableScope = rememberCoroutineScope()
@@ -310,10 +310,10 @@ fun CompactExaminerQuestionsPager(
                 GradeCard(
                     gradeCardOrientation = GradeCardOrientation.HORIZONTAL,
                     text = stringResource(R.string.grade),
-                    grade = questionNumbersToGradesMap[currentQuestion.number],
+                    grade = questionsToGradesMap[currentQuestion],
                     canSelectGrade = !isLoadingResponse && !isWaitingForStudentReadiness,
                     onGradeSelected = { grade ->
-                        onGradeSelected(currentQuestion.number, grade)
+                        onGradeSelected(currentQuestion, grade)
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -329,10 +329,10 @@ fun CompactExaminerQuestionsPager(
 fun MediumOrExpandedExaminerQuestionsPager(
     pagerState: PagerState,
     questions: List<ExamQuestion>,
-    questionNumbersToGradesMap: Map<Int, Grade>,
+    questionsToGradesMap: Map<ExamQuestion, Grade>,
     isLoadingResponse: Boolean,
     isWaitingForStudentReadiness: Boolean,
-    onQuestionGradeSelected: (Int, Grade) -> Unit,
+    onQuestionGradeSelected: (ExamQuestion, Grade) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val composableScope = rememberCoroutineScope()
@@ -468,10 +468,10 @@ fun MediumOrExpandedExaminerQuestionsPager(
                             GradeCard(
                                 gradeCardOrientation = GradeCardOrientation.HORIZONTAL,
                                 text = stringResource(R.string.grade),
-                                grade = questionNumbersToGradesMap[currentQuestion.number],
+                                grade = questionsToGradesMap[currentQuestion],
                                 canSelectGrade = !isLoadingResponse && !isWaitingForStudentReadiness,
                                 onGradeSelected = { grade ->
-                                    onQuestionGradeSelected(currentQuestion.number, grade)
+                                    onQuestionGradeSelected(currentQuestion, grade)
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             )

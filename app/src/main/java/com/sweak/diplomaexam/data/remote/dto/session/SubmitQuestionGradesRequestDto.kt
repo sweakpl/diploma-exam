@@ -2,7 +2,7 @@ package com.sweak.diplomaexam.data.remote.dto.session
 
 data class SubmitQuestionGradesRequestDto(
     val sessionId: Int,
-    val firstQuestionGrade: Float,
-    val secondQuestionGrade: Float,
-    val thirdQuestionGrade: Float
+    val question1: GradedQuestionDto,
+    val question2: GradedQuestionDto,
+    val question3: GradedQuestionDto
 )
