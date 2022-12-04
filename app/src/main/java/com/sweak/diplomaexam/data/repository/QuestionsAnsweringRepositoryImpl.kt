@@ -91,6 +91,8 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                 }
                 ResponseCode.UNAUTHORIZED.codeInt ->
                     Resource.Failure(Error.UnauthorizedError(response.message()))
+                ResponseCode.INTERNAL_SERVER_ERROR.codeInt ->
+                    Resource.Failure(Error.InternalServerError(response.message()))
                 else -> Resource.Failure(Error.UnknownError)
             }
         } catch (httpException: HttpException) {
@@ -133,6 +135,8 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                 }
                 ResponseCode.UNAUTHORIZED.codeInt ->
                     Resource.Failure(Error.UnauthorizedError(response.message()))
+                ResponseCode.INTERNAL_SERVER_ERROR.codeInt ->
+                    Resource.Failure(Error.InternalServerError(response.message()))
                 else -> Resource.Failure(Error.UnknownError)
             }
         } catch (httpException: HttpException) {
@@ -158,6 +162,8 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                 ResponseCode.OK.codeInt -> Resource.Success(Unit)
                 ResponseCode.UNAUTHORIZED.codeInt ->
                     Resource.Failure(Error.UnauthorizedError(response.message()))
+                ResponseCode.INTERNAL_SERVER_ERROR.codeInt ->
+                    Resource.Failure(Error.InternalServerError(response.message()))
                 else -> Resource.Failure(Error.UnknownError)
             }
         } catch (httpException: HttpException) {
@@ -201,6 +207,8 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                 ResponseCode.OK.codeInt -> Resource.Success(Unit)
                 ResponseCode.UNAUTHORIZED.codeInt ->
                     Resource.Failure(Error.UnauthorizedError(response.message()))
+                ResponseCode.INTERNAL_SERVER_ERROR.codeInt ->
+                    Resource.Failure(Error.InternalServerError(response.message()))
                 else -> Resource.Failure(Error.UnknownError)
             }
         } catch (httpException: HttpException) {
@@ -253,11 +261,15 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                             Resource.Failure(
                                 Error.UnauthorizedError(setSessionToSummaryResponse.message())
                             )
+                        ResponseCode.INTERNAL_SERVER_ERROR.codeInt ->
+                            Resource.Failure(Error.InternalServerError(response.message()))
                         else -> Resource.Failure(Error.UnknownError)
                     }
                 }
                 ResponseCode.UNAUTHORIZED.codeInt ->
                     return Resource.Failure(Error.UnauthorizedError(response.message()))
+                ResponseCode.INTERNAL_SERVER_ERROR.codeInt ->
+                    return Resource.Failure(Error.InternalServerError(response.message()))
                 else -> return Resource.Failure(Error.UnknownError)
             }
         } catch (httpException: HttpException) {

@@ -43,6 +43,8 @@ class ExamScoreRepositoryImpl @Inject constructor(
                 }
                 ResponseCode.UNAUTHORIZED.codeInt ->
                     Resource.Failure(Error.UnauthorizedError(response.message()))
+                ResponseCode.INTERNAL_SERVER_ERROR.codeInt ->
+                    Resource.Failure(Error.InternalServerError(response.message()))
                 else -> Resource.Failure(Error.UnknownError)
             }
         } catch (httpException: HttpException) {

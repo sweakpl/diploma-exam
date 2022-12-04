@@ -78,4 +78,5 @@
     <string name="thesis_grade">Thesis grade:</string>
     <string name="redraw_interrogative">Redraw?</string>
     <string name="do_you_want_to_redraw">Do you want to draw the questions again? This will require the permission from the examiner.</string>
+    <string name="internal_server_error_occurred">Internal server error occurred</string>
 </resources>

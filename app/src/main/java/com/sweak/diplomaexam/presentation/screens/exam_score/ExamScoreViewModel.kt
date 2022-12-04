@@ -91,6 +91,8 @@ class ExamScoreViewModel @Inject constructor(
             }
             is Error.UnauthorizedError ->
                 UiText.StringResource(R.string.no_permission)
+            is Error.InternalServerError ->
+                UiText.StringResource(R.string.internal_server_error_occurred)
             else -> UiText.StringResource(R.string.unknown_error)
         }
 

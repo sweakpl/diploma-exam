@@ -88,6 +88,8 @@ class LoginViewModel @Inject constructor(
                                 UiText.StringResource(R.string.email_belongs_to_examiner)
                             else
                                 UiText.StringResource(R.string.email_belongs_to_student)
+                        is Error.InternalServerError ->
+                            UiText.StringResource(R.string.internal_server_error_occurred)
                         else -> UiText.StringResource(R.string.unknown_error)
                     },
                     isAuthorizing = false
