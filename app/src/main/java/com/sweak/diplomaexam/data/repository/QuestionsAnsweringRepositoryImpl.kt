@@ -185,7 +185,7 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
             val gradedQuestions = questionsToGradesMap.map {
                 GradedQuestionDto(
                     it.key.id,
-                    it.value.floatRepresentation
+                    it.value.floatRepresentation.toString()
                 )
             }
 
@@ -233,9 +233,9 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                 "Bearer ${userSessionManager.getSessionToken()}",
                 SubmitAdditionalGradesRequestDto(
                     sessionId = userSessionManager.getSessionId(),
-                    diplomaGrade = thesisGrade.floatRepresentation,
-                    presentationGrade = thesisPresentationGrade.floatRepresentation,
-                    studyGrade = courseOfStudiesGrade.floatRepresentation
+                    diplomaGrade = thesisGrade.floatRepresentation.toString(),
+                    presentationGrade = thesisPresentationGrade.floatRepresentation.toString(),
+                    studyGrade = courseOfStudiesGrade.floatRepresentation.toString()
                 )
             )
 

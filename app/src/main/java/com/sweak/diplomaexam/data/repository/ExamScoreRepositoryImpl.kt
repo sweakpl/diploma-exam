@@ -11,6 +11,7 @@ import com.sweak.diplomaexam.domain.repository.ExamScoreRepository
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.math.floor
 
 class ExamScoreRepositoryImpl @Inject constructor(
     private val diplomaExamApi: DiplomaExamApi,
@@ -33,10 +34,15 @@ class ExamScoreRepositoryImpl @Inject constructor(
 
                         Resource.Success(
                             ExamScoreState(
-                                Grade.fromFloat(examScoreState.finalGrade),
-                                Grade.fromFloat(examScoreState.presentationGrade),
-                                Grade.fromFloat(examScoreState.diplomaGrade),
-                                Grade.fromFloat(examScoreState.studyGrade)
+                                Grade.fromFloat(
+                                    // Temporarily rounding the grade here instead of on the server
+                                    examScoreState.finalGrade.toFloat().run {
+                                        0.5 * floor(this / 0.5)
+                                    }.toFloat()
+                                ),
+                                Grade.fromFloat(examScoreState.presentationGrade.toFloat()),
+                                Grade.fromFloat(examScoreState.diplomaGrade.toFloat()),
+                                Grade.fromFloat(examScoreState.studyGrade.toFloat())
                             )
                         )
                     }
