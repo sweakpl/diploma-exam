@@ -42,7 +42,12 @@ class ExamScoreRepositoryImpl @Inject constructor(
                                 ),
                                 Grade.fromFloat(examScoreState.presentationGrade.toFloat()),
                                 Grade.fromFloat(examScoreState.diplomaGrade.toFloat()),
-                                Grade.fromFloat(examScoreState.studyGrade.toFloat())
+                                Grade.fromFloat(
+                                    // Temporarily rounding the grade here instead of on the server
+                                    examScoreState.finalGrade.toFloat().run {
+                                        0.5 * floor(this / 0.5)
+                                    }.toFloat()
+                                )
                             )
                         )
                     }

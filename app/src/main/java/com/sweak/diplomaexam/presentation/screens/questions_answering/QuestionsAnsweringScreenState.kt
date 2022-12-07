@@ -12,7 +12,7 @@ data class QuestionsAnsweringScreenState(
     val questionsToGradesMap: Map<ExamQuestion, Grade> = emptyMap(),
     val thesisPresentationGrade: Grade? = null,
     val thesisGrade: Grade? = null,
-    val courseOfStudiesGrade: Grade? = null,
+    val courseOfStudiesPreciseGradeString: String? = null,
     val isLoadingResponse: Boolean = false,
     val errorMessage: UiText? = null,
     val isWaitingForStudentReadiness: Boolean = false,
@@ -20,5 +20,6 @@ data class QuestionsAnsweringScreenState(
     val studentPreparationDialogVisible: Boolean = true,
     val cannotSubmitGradesDialogVisible: Boolean = false,
     val submitQuestionGradesDialogVisible: Boolean = false,
-    val submitAdditionalGradesDialogVisible: Boolean = false
+    val submitAdditionalGradesDialogVisible: Boolean = false,
+    val wrongCourseOfStudiesGradeDialogVisible: Boolean = false
 )

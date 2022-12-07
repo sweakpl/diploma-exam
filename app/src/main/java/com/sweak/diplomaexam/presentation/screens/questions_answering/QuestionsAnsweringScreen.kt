@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +30,7 @@ import com.sweak.diplomaexam.presentation.screens.common.rememberWindowInfo
 import com.sweak.diplomaexam.presentation.screens.questions_answering.components.*
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
@@ -59,7 +61,8 @@ fun QuestionsAnsweringScreen(
             questionsToGradesMap = questionsAnsweringState.questionsToGradesMap,
             thesisPresentationGrade = questionsAnsweringState.thesisPresentationGrade,
             thesisGrade = questionsAnsweringState.thesisGrade,
-            courseOfStudiesGrade = questionsAnsweringState.courseOfStudiesGrade,
+            courseOfStudiesPreciseGradeString =
+            questionsAnsweringState.courseOfStudiesPreciseGradeString,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
             errorMessage = questionsAnsweringState.errorMessage,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
@@ -84,9 +87,9 @@ fun QuestionsAnsweringScreen(
                     QuestionsAnsweringScreenEvent.SelectThesisGrade(grade)
                 )
             },
-            onCourseOfStudiesGradeSelected = { grade ->
+            onCourseOfStudiesGradeStringChanged = { gradeString ->
                 questionsAnsweringViewModel.onEvent(
-                    QuestionsAnsweringScreenEvent.SelectCourseOfStudiesGrade(grade)
+                    QuestionsAnsweringScreenEvent.CourseOfStudiesGradeStringChanged(gradeString)
                 )
             },
             onProceedClick = {
@@ -104,7 +107,8 @@ fun QuestionsAnsweringScreen(
             questionsToGradesMap = questionsAnsweringState.questionsToGradesMap,
             thesisPresentationGrade = questionsAnsweringState.thesisPresentationGrade,
             thesisGrade = questionsAnsweringState.thesisGrade,
-            courseOfStudiesGrade = questionsAnsweringState.courseOfStudiesGrade,
+            courseOfStudiesPreciseGradeString =
+            questionsAnsweringState.courseOfStudiesPreciseGradeString,
             isLoadingResponse = questionsAnsweringState.isLoadingResponse,
             errorMessage = questionsAnsweringState.errorMessage,
             isWaitingForStudentReadiness = questionsAnsweringState.isWaitingForStudentReadiness,
@@ -129,9 +133,9 @@ fun QuestionsAnsweringScreen(
                     QuestionsAnsweringScreenEvent.SelectThesisGrade(grade)
                 )
             },
-            onCourseOfStudiesGradeSelected = { grade ->
+            onCourseOfStudiesGradeStringChanged = { gradeString ->
                 questionsAnsweringViewModel.onEvent(
-                    QuestionsAnsweringScreenEvent.SelectCourseOfStudiesGrade(grade)
+                    QuestionsAnsweringScreenEvent.CourseOfStudiesGradeStringChanged(gradeString)
                 )
             },
             onProceedClick = {
@@ -236,8 +240,28 @@ fun QuestionsAnsweringScreen(
             negativeButtonText = stringResource(R.string.no)
         )
     }
+
+    if (questionsAnsweringState.wrongCourseOfStudiesGradeDialogVisible) {
+        Dialog(
+            title = stringResource(R.string.cannot_continue),
+            message = stringResource(R.string.wrong_course_of_studies_grade),
+            onDismissRequest = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideWrongCourseOfStudiesGradeDialogVisible
+                )
+            },
+            onlyPositiveButton = true,
+            onPositiveClick = {
+                questionsAnsweringViewModel.onEvent(
+                    QuestionsAnsweringScreenEvent.HideWrongCourseOfStudiesGradeDialogVisible
+                )
+            },
+            positiveButtonText = stringResource(R.string.ok)
+        )
+    }
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @Composable
@@ -248,7 +272,7 @@ fun CompactQuestionsAnsweringScreen(
     questionsToGradesMap: Map<ExamQuestion, Grade>,
     thesisPresentationGrade: Grade?,
     thesisGrade: Grade?,
-    courseOfStudiesGrade: Grade?,
+    courseOfStudiesPreciseGradeString: String?,
     isLoadingResponse: Boolean,
     errorMessage: UiText?,
     isWaitingForStudentReadiness: Boolean,
@@ -257,7 +281,7 @@ fun CompactQuestionsAnsweringScreen(
     onQuestionGradeSelected: (ExamQuestion, Grade) -> Unit,
     onThesisPresentationGradeSelected: (Grade) -> Unit,
     onThesisGradeSelected: (Grade) -> Unit,
-    onCourseOfStudiesGradeSelected: (Grade) -> Unit,
+    onCourseOfStudiesGradeStringChanged: (String) -> Unit,
     onProceedClick: () -> Unit,
     onRetryClick: () -> Unit
 ) {
@@ -340,11 +364,11 @@ fun CompactQuestionsAnsweringScreen(
                             displayMode = ExaminerAdditionalGradesPanelDisplayMode.COMPACT,
                             thesisPresentationGrade = thesisPresentationGrade,
                             thesisGrade = thesisGrade,
-                            courseOfStudiesGrade = courseOfStudiesGrade,
+                            courseOfStudiesGradeString = courseOfStudiesPreciseGradeString,
                             isLoadingResponse = isLoadingResponse,
                             onThesisPresentationGradeSelected = onThesisPresentationGradeSelected,
                             onThesisGradeSelected = onThesisGradeSelected,
-                            onCourseOfStudiesGradeSelected = onCourseOfStudiesGradeSelected
+                            onCourseOfStudiesGradeStringChanged = onCourseOfStudiesGradeStringChanged
                         )
                     }
                 AnimatedComponentTargetState.LOADING ->
@@ -371,6 +395,7 @@ fun CompactQuestionsAnsweringScreen(
     }
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @Composable
@@ -381,7 +406,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     questionsToGradesMap: Map<ExamQuestion, Grade>,
     thesisPresentationGrade: Grade?,
     thesisGrade: Grade?,
-    courseOfStudiesGrade: Grade?,
+    courseOfStudiesPreciseGradeString: String?,
     isLoadingResponse: Boolean,
     errorMessage: UiText?,
     isWaitingForStudentReadiness: Boolean,
@@ -390,7 +415,7 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
     onQuestionGradeSelected: (ExamQuestion, Grade) -> Unit,
     onThesisPresentationGradeSelected: (Grade) -> Unit,
     onThesisGradeSelected: (Grade) -> Unit,
-    onCourseOfStudiesGradeSelected: (Grade) -> Unit,
+    onCourseOfStudiesGradeStringChanged: (String) -> Unit,
     onProceedClick: () -> Unit,
     onRetryClick: () -> Unit
 ) {
@@ -470,11 +495,11 @@ fun MediumOrExpandedQuestionsAnsweringScreen(
                             displayMode = ExaminerAdditionalGradesPanelDisplayMode.MEDIUM_OR_EXPANDED,
                             thesisPresentationGrade = thesisPresentationGrade,
                             thesisGrade = thesisGrade,
-                            courseOfStudiesGrade = courseOfStudiesGrade,
+                            courseOfStudiesGradeString = courseOfStudiesPreciseGradeString,
                             isLoadingResponse = isLoadingResponse,
                             onThesisPresentationGradeSelected = onThesisPresentationGradeSelected,
                             onThesisGradeSelected = onThesisGradeSelected,
-                            onCourseOfStudiesGradeSelected = onCourseOfStudiesGradeSelected
+                            onCourseOfStudiesGradeStringChanged = onCourseOfStudiesGradeStringChanged
                         )
                     }
                 AnimatedComponentTargetState.LOADING ->

@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -17,17 +18,18 @@ import com.sweak.diplomaexam.domain.model.common.Grade
 import com.sweak.diplomaexam.presentation.screens.common.components.LoadingLayout
 import com.sweak.diplomaexam.presentation.ui.theme.space
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @Composable
 fun ExaminerAdditionalGradesPanel(
     displayMode: ExaminerAdditionalGradesPanelDisplayMode,
     thesisPresentationGrade: Grade?,
     thesisGrade: Grade?,
-    courseOfStudiesGrade: Grade?,
+    courseOfStudiesGradeString: String?,
     isLoadingResponse: Boolean,
     onThesisPresentationGradeSelected: (Grade) -> Unit,
     onThesisGradeSelected: (Grade) -> Unit,
-    onCourseOfStudiesGradeSelected: (Grade) -> Unit,
+    onCourseOfStudiesGradeStringChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     AnimatedContent(targetState = isLoadingResponse) { targetState ->
@@ -70,12 +72,10 @@ fun ExaminerAdditionalGradesPanel(
                             .padding(vertical = MaterialTheme.space.large)
                     )
 
-                    GradeCard(
-                        gradeCardOrientation = GradeCardOrientation.VERTICAL,
-                        text = stringResource(R.string.course_of_studies_grade),
-                        grade = courseOfStudiesGrade,
+                    CourseOfStudiesGradeCard(
+                        gradeString = courseOfStudiesGradeString,
+                        onGradeStringChanged = onCourseOfStudiesGradeStringChanged,
                         canSelectGrade = !isLoadingResponse,
-                        onGradeSelected = onCourseOfStudiesGradeSelected,
                         modifier = Modifier.fillMaxWidth()
                     )
                 } else if (displayMode == ExaminerAdditionalGradesPanelDisplayMode.MEDIUM_OR_EXPANDED) {
@@ -102,12 +102,10 @@ fun ExaminerAdditionalGradesPanel(
 
                         Spacer(modifier = Modifier.width(MaterialTheme.space.medium))
 
-                        GradeCard(
-                            gradeCardOrientation = GradeCardOrientation.VERTICAL,
-                            text = stringResource(R.string.course_of_studies_grade),
-                            grade = courseOfStudiesGrade,
+                        CourseOfStudiesGradeCard(
+                            gradeString = courseOfStudiesGradeString,
+                            onGradeStringChanged = onCourseOfStudiesGradeStringChanged,
                             canSelectGrade = !isLoadingResponse,
-                            onGradeSelected = onCourseOfStudiesGradeSelected,
                             modifier = Modifier.weight(1f)
                         )
                     }

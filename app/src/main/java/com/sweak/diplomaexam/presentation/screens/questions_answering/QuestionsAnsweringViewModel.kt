@@ -104,13 +104,25 @@ class QuestionsAnsweringViewModel @Inject constructor(
 
                     state = state.copy(submitQuestionGradesDialogVisible = true)
                 } else {
+                    val courseOfStudiesPreciseGradeString = state.courseOfStudiesPreciseGradeString
+
                     state = if (state.thesisGrade == null ||
-                        state.courseOfStudiesGrade == null ||
-                        state.thesisPresentationGrade == null
+                        state.thesisPresentationGrade == null||
+                        courseOfStudiesPreciseGradeString.isNullOrBlank()
                     ) {
                         state.copy(cannotSubmitGradesDialogVisible = true)
                     } else {
-                        state.copy(submitAdditionalGradesDialogVisible = true)
+                        val courseOfStudiesPreciseGradeFloat =
+                            courseOfStudiesPreciseGradeString.toFloatOrNull()
+
+                        if (courseOfStudiesPreciseGradeFloat != null &&
+                            courseOfStudiesPreciseGradeFloat in 2.0f..5.0f &&
+                            courseOfStudiesPreciseGradeString.length <= 5
+                        ) {
+                            state.copy(submitAdditionalGradesDialogVisible = true)
+                        } else {
+                            state.copy(wrongCourseOfStudiesGradeDialogVisible = true)
+                        }
                     }
                 }
             }
@@ -123,11 +135,15 @@ class QuestionsAnsweringViewModel @Inject constructor(
                 state = state.copy(thesisPresentationGrade = event.grade)
             is QuestionsAnsweringScreenEvent.SelectThesisGrade ->
                 state = state.copy(thesisGrade = event.grade)
-            is QuestionsAnsweringScreenEvent.SelectCourseOfStudiesGrade ->
-                state = state.copy(courseOfStudiesGrade = event.grade)
+            is QuestionsAnsweringScreenEvent.CourseOfStudiesGradeStringChanged ->
+                state = state.copy(
+                    courseOfStudiesPreciseGradeString = event.gradeString
+                )
             is QuestionsAnsweringScreenEvent.SubmitAdditionalGrades -> submitGradesForAdditional()
             is QuestionsAnsweringScreenEvent.HideSubmitAdditionalGradesDialog ->
                 state = state.copy(submitAdditionalGradesDialogVisible = false)
+            is QuestionsAnsweringScreenEvent.HideWrongCourseOfStudiesGradeDialogVisible ->
+                state = state.copy(wrongCourseOfStudiesGradeDialogVisible = false)
             is QuestionsAnsweringScreenEvent.RetryAfterError -> {
                 state = state.copy(errorMessage = null)
 
@@ -171,7 +187,7 @@ class QuestionsAnsweringViewModel @Inject constructor(
         submitAdditionalGrades(
             state.thesisPresentationGrade,
             state.thesisGrade,
-            state.courseOfStudiesGrade
+            state.courseOfStudiesPreciseGradeString
         ).onEach {
             when (it) {
                 is Resource.Success -> fetchQuestionsAnsweringState()

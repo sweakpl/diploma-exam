@@ -78,4 +78,5 @@
     <string name="do_you_want_to_redraw">Czy chcesz wylosować pytania jeszcze raz? Będzie to wymagało pozwolenia od egzaminatora.</string>
     <string name="redraw_interrogative">Losować ponownie?</string>
     <string name="internal_server_error_occurred">Wystąpił wewnętrzny błąd serwera</string>
+    <string name="wrong_course_of_studies_grade">Ocena toku studiów powinna zawierać się w przedziale od 2.0 do 5.0 z dokładnością do maksymalnie 3 miejsc po przecinku.</string>
 </resources>

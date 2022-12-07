@@ -14,7 +14,7 @@ class SubmitAdditionalGrades @Inject constructor(
     operator fun invoke(
         thesisPresentationGrade: Grade?,
         thesisGrade: Grade?,
-        courseOfStudiesGrade: Grade?
+        courseOfStudiesPreciseGradeString: String?
     ) = flow {
         emit(Resource.Loading())
 
@@ -22,13 +22,13 @@ class SubmitAdditionalGrades @Inject constructor(
 
         if (thesisPresentationGrade != null &&
             thesisGrade != null &&
-            courseOfStudiesGrade != null
+            courseOfStudiesPreciseGradeString != null
         ) {
             when (val submitGradesResponse =
                 repository.submitAdditionalGrades(
                     thesisGrade = thesisGrade,
                     thesisPresentationGrade = thesisPresentationGrade,
-                    courseOfStudiesGrade = courseOfStudiesGrade
+                    courseOfStudiesPreciseGradeString = courseOfStudiesPreciseGradeString
                 )
             ) {
                 is Resource.Success -> emit(Resource.Success(Unit))

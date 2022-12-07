@@ -14,6 +14,6 @@ interface QuestionsAnsweringRepository {
     suspend fun submitAdditionalGrades(
         thesisGrade: Grade,
         thesisPresentationGrade: Grade,
-        courseOfStudiesGrade: Grade
+        courseOfStudiesPreciseGradeString: String
     ): Resource<Unit>
 }

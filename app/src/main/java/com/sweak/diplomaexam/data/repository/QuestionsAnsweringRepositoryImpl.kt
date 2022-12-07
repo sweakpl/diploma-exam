@@ -226,7 +226,7 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
     override suspend fun submitAdditionalGrades(
         thesisGrade: Grade,
         thesisPresentationGrade: Grade,
-        courseOfStudiesGrade: Grade
+        courseOfStudiesPreciseGradeString: String
     ): Resource<Unit> {
         try {
             val response = diplomaExamApi.submitAdditionalGrades(
@@ -235,7 +235,7 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
                     sessionId = userSessionManager.getSessionId(),
                     diplomaGrade = thesisGrade.floatRepresentation.toString(),
                     presentationGrade = thesisPresentationGrade.floatRepresentation.toString(),
-                    studyGrade = courseOfStudiesGrade.floatRepresentation.toString()
+                    studyGrade = courseOfStudiesPreciseGradeString
                 )
             )
 
