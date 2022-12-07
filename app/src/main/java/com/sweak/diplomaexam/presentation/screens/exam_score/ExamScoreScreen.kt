@@ -53,10 +53,11 @@ fun ExamScoreScreen(
         CompactExamScoreScreen(
             isLoadingResponse = examScoreState.isLoadingResponse,
             errorMessage = examScoreState.errorMessage,
-            finalGrade = examScoreState.finalGrade,
+            roundedFinalGrade = examScoreState.roundedFinalGrade,
+            preciseFinalGrade = examScoreState.preciseFinalGrade,
             diplomaExamGrade = examScoreState.diplomaExamGrade,
             thesisGrade = examScoreState.thesisGrade,
-            courseOfStudiesGrade = examScoreState.courseOfStudiesGrade,
+            courseOfStudiesPreciseGrade = examScoreState.courseOfStudiesPreciseGrade,
             onFinishExam = { examScoreViewModel.onEvent(ExamScoreScreenEvent.FinishExam) },
             onRetryClick = { examScoreViewModel.onEvent(ExamScoreScreenEvent.RetryAfterError) }
         )
@@ -64,10 +65,11 @@ fun ExamScoreScreen(
         MediumOrExpandedExamScoreScreen(
             isLoadingResponse = examScoreState.isLoadingResponse,
             errorMessage = examScoreState.errorMessage,
-            finalGrade = examScoreState.finalGrade,
+            roundedFinalGrade = examScoreState.roundedFinalGrade,
+            preciseFinalGrade = examScoreState.preciseFinalGrade,
             diplomaExamGrade = examScoreState.diplomaExamGrade,
             thesisGrade = examScoreState.thesisGrade,
-            courseOfStudiesGrade = examScoreState.courseOfStudiesGrade,
+            courseOfStudiesPreciseGrade = examScoreState.courseOfStudiesPreciseGrade,
             onFinishExam = { examScoreViewModel.onEvent(ExamScoreScreenEvent.FinishExam) },
             onRetryClick = { examScoreViewModel.onEvent(ExamScoreScreenEvent.RetryAfterError) }
         )
@@ -79,10 +81,11 @@ fun ExamScoreScreen(
 fun CompactExamScoreScreen(
     isLoadingResponse: Boolean,
     errorMessage: UiText?,
-    finalGrade: Grade?,
+    roundedFinalGrade: Grade?,
+    preciseFinalGrade: Float?,
     diplomaExamGrade: Grade?,
     thesisGrade: Grade?,
-    courseOfStudiesGrade: Grade?,
+    courseOfStudiesPreciseGrade: Float?,
     onFinishExam: () -> Unit,
     onRetryClick: () -> Unit
 ) {
@@ -121,10 +124,11 @@ fun CompactExamScoreScreen(
                 when (targetState) {
                     AnimatedComponentTargetState.SUMMARY -> {
                         FinalGradeInformation(
-                            finalGrade = finalGrade!!,
+                            roundedFinalGrade = roundedFinalGrade!!,
+                            preciseFinalGrade = preciseFinalGrade!!,
                             diplomaExamGrade = diplomaExamGrade!!,
                             thesisGrade = thesisGrade!!,
-                            courseOfStudiesGrade = courseOfStudiesGrade!!,
+                            courseOfStudiesPreciseGrade = courseOfStudiesPreciseGrade!!,
                             modifier = Modifier
                                 .padding(horizontal = MaterialTheme.space.large)
                                 .weight(1f)
@@ -158,10 +162,11 @@ fun CompactExamScoreScreen(
 fun MediumOrExpandedExamScoreScreen(
     isLoadingResponse: Boolean,
     errorMessage: UiText?,
-    finalGrade: Grade?,
+    roundedFinalGrade: Grade?,
+    preciseFinalGrade: Float?,
     diplomaExamGrade: Grade?,
     thesisGrade: Grade?,
-    courseOfStudiesGrade: Grade?,
+    courseOfStudiesPreciseGrade: Float?,
     onFinishExam: () -> Unit,
     onRetryClick: () -> Unit
 ) {
@@ -205,10 +210,11 @@ fun MediumOrExpandedExamScoreScreen(
                 when (targetState) {
                     AnimatedComponentTargetState.SUMMARY -> {
                         FinalGradeInformation(
-                            finalGrade = finalGrade!!,
+                            roundedFinalGrade = roundedFinalGrade!!,
+                            preciseFinalGrade = preciseFinalGrade!!,
                             diplomaExamGrade = diplomaExamGrade!!,
                             thesisGrade = thesisGrade!!,
-                            courseOfStudiesGrade = courseOfStudiesGrade!!,
+                            courseOfStudiesPreciseGrade = courseOfStudiesPreciseGrade!!,
                             modifier = Modifier
                                 .padding(end = MaterialTheme.space.large)
                                 .weight(1f)

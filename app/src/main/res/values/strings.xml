@@ -63,7 +63,7 @@
     <string name="final_score">Final score</string>
     <string name="thank_you_for_participation">Thank you for participating in the Diploma Exam!</string>
     <string name="finish_exam">Finish the exam</string>
-    <string name="final_score_calculation_description">The final result was determined on the basis of the grade for the diploma exam, the thesis grade and the grade for the course of studies.</string>
+    <string name="final_score_calculation_description">The final grade (precisely %1$s) was determined on the basis of the grade for the diploma exam, the thesis grade and the grade for the course of studies.</string>
     <string name="diploma_exam">Diploma Exam:</string>
     <string name="thesis">Thesis:</string>
     <string name="course_of_studies">Course of studies:</string>

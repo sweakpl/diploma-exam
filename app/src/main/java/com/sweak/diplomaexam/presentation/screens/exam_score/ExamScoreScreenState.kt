@@ -6,8 +6,9 @@ import com.sweak.diplomaexam.presentation.screens.common.UiText
 data class ExamScoreScreenState(
     val isLoadingResponse: Boolean = true,
     val errorMessage: UiText? = null,
-    val finalGrade: Grade? = null,
+    val roundedFinalGrade: Grade? = null,
+    val preciseFinalGrade: Float? = null,
     val diplomaExamGrade: Grade? = null,
     val thesisGrade: Grade? = null,
-    val courseOfStudiesGrade: Grade? = null
+    val courseOfStudiesPreciseGrade: Float? = null
 )

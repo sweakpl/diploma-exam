@@ -23,10 +23,11 @@ import com.sweak.diplomaexam.presentation.ui.theme.space
 
 @Composable
 fun FinalGradeInformation(
-    finalGrade: Grade,
+    roundedFinalGrade: Grade,
+    preciseFinalGrade: Float,
     diplomaExamGrade: Grade,
     thesisGrade: Grade,
-    courseOfStudiesGrade: Grade,
+    courseOfStudiesPreciseGrade: Float,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -35,13 +36,16 @@ fun FinalGradeInformation(
         modifier = modifier.verticalScroll(rememberScrollState())
     ) {
         GradeProgressBar(
-            grade = finalGrade,
+            grade = roundedFinalGrade,
             size = GradeProgressBarSize.LARGE,
             modifier = Modifier.padding(bottom = MaterialTheme.space.large)
         )
 
         Text(
-            text = stringResource(R.string.final_score_calculation_description),
+            text = stringResource(
+                R.string.final_score_calculation_description,
+                preciseFinalGrade.toString()
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = MaterialTheme.space.medium)
@@ -64,11 +68,25 @@ fun FinalGradeInformation(
                     .fillMaxWidth()
             )
 
-            ComponentGradeRow(
-                text = stringResource(R.string.course_of_studies),
-                grade = courseOfStudiesGrade,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
-            )
+            ) {
+                Text(
+                    text = stringResource(R.string.course_of_studies),
+                    style = MaterialTheme.typography.h2,
+                    modifier = Modifier
+                        .padding(end = MaterialTheme.space.medium)
+                        .weight(1f)
+                )
+
+                Text(
+                    text = courseOfStudiesPreciseGrade.toString(),
+                    style = MaterialTheme.typography.button,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.width(MaterialTheme.space.extraLarge)
+                )
+            }
         }
     }
 }

@@ -43,10 +43,11 @@ class ExamScoreViewModel @Inject constructor(
                     if (it.data != null) {
                         state = state.copy(
                             isLoadingResponse = false,
-                            finalGrade = it.data.finalGrade,
+                            roundedFinalGrade = it.data.roundedFinalGrade,
+                            preciseFinalGrade = it.data.preciseFinalGrade,
                             diplomaExamGrade = it.data.diplomaExamGrade,
                             thesisGrade = it.data.thesisGrade,
-                            courseOfStudiesGrade = it.data.courseOfStudiesGrade
+                            courseOfStudiesPreciseGrade = it.data.courseOfStudiesPreciseGrade
                         )
                     }
                 }
