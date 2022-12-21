@@ -6,7 +6,7 @@ import com.sweak.diplomaexam.data.remote.common.API_SESSION_STATUS_DRAWING_QUEST
 import com.sweak.diplomaexam.data.remote.common.API_SESSION_STATUS_INACTIVE
 import com.sweak.diplomaexam.data.remote.common.API_SESSION_STATUS_LOBBY
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
-import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
+import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStatusRequestDto
 import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.common.User
@@ -81,9 +81,9 @@ class LobbyRepositoryImpl(
 
     override suspend fun startExaminationSession(): Resource<Unit> {
         try {
-            val response = diplomaExamApi.setSessionState(
+            val response = diplomaExamApi.setSessionStatus(
                 "Bearer ${userSessionManager.getSessionToken()}",
-                SetSessionStateRequestDto(
+                SetSessionStatusRequestDto(
                     userSessionManager.getSessionId(),
                     API_SESSION_STATUS_DRAWING_QUESTIONS
                 )

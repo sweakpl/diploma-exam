@@ -17,9 +17,9 @@ interface DiplomaExamApi {
     ): Response<List<SessionStateDto>>
 
     @POST("examinationSession/setSessionState")
-    suspend fun setSessionState(
+    suspend fun setSessionStatus(
         @Header("Authorization") bearerWithToken: String,
-        @Body setSessionStateRequestDto: SetSessionStateRequestDto
+        @Body setSessionStatusRequestDto: SetSessionStatusRequestDto
     ): Response<SessionStateDto>
 
     @GET("examinationSession/{id}")

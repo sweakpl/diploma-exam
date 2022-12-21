@@ -3,7 +3,7 @@ package com.sweak.diplomaexam.data.repository
 import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.remote.*
 import com.sweak.diplomaexam.data.remote.common.*
-import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
+import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStatusRequestDto
 import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.common.ExamQuestion
@@ -223,9 +223,9 @@ class QuestionsDrawRepositoryImpl(
 
     override suspend fun acceptDrawnQuestions(): Resource<Unit> {
         try {
-            val response = diplomaExamApi.setSessionState(
+            val response = diplomaExamApi.setSessionStatus(
                 "Bearer ${userSessionManager.getSessionToken()}",
-                SetSessionStateRequestDto(
+                SetSessionStatusRequestDto(
                     userSessionManager.getSessionId(),
                     API_SESSION_STATUS_ANSWERING_QUESTIONS
                 )

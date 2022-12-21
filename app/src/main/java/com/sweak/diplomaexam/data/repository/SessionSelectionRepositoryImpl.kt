@@ -6,7 +6,7 @@ import com.sweak.diplomaexam.data.remote.common.API_ROLE_STUDENT
 import com.sweak.diplomaexam.data.remote.common.API_SESSION_STATUS_INACTIVE
 import com.sweak.diplomaexam.data.remote.common.API_SESSION_STATUS_LOBBY
 import com.sweak.diplomaexam.data.remote.DiplomaExamApi
-import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
+import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStatusRequestDto
 import com.sweak.diplomaexam.domain.model.common.Resource
 import com.sweak.diplomaexam.domain.model.common.Error
 import com.sweak.diplomaexam.domain.model.session_selection.AvailableSession
@@ -82,9 +82,9 @@ class SessionSelectionRepositoryImpl @Inject constructor(
                 return Resource.Success(Unit)
             }
 
-            val response = diplomaExamApi.setSessionState(
+            val response = diplomaExamApi.setSessionStatus(
                 "Bearer ${userSessionManager.getSessionToken()}",
-                SetSessionStateRequestDto(selectedSession.sessionId, API_SESSION_STATUS_LOBBY)
+                SetSessionStatusRequestDto(selectedSession.sessionId, API_SESSION_STATUS_LOBBY)
             )
 
             return when (response.code()) {

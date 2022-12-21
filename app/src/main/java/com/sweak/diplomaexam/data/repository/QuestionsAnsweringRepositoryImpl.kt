@@ -4,7 +4,7 @@ import com.sweak.diplomaexam.data.local.UserSessionManager
 import com.sweak.diplomaexam.data.remote.*
 import com.sweak.diplomaexam.data.remote.common.*
 import com.sweak.diplomaexam.data.remote.dto.session.GradedQuestionDto
-import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStateRequestDto
+import com.sweak.diplomaexam.data.remote.dto.session.SetSessionStatusRequestDto
 import com.sweak.diplomaexam.data.remote.dto.session.SubmitAdditionalGradesRequestDto
 import com.sweak.diplomaexam.data.remote.dto.session.SubmitQuestionGradesRequestDto
 import com.sweak.diplomaexam.domain.model.common.Resource
@@ -241,9 +241,9 @@ class QuestionsAnsweringRepositoryImpl @Inject constructor(
 
             when (response.code()) {
                 ResponseCode.OK.codeInt -> {
-                    val setSessionToSummaryResponse = diplomaExamApi.setSessionState(
+                    val setSessionToSummaryResponse = diplomaExamApi.setSessionStatus(
                         "Bearer ${userSessionManager.getSessionToken()}",
-                        SetSessionStateRequestDto(
+                        SetSessionStatusRequestDto(
                             userSessionManager.getSessionId(),
                             API_SESSION_STATUS_SUMMARY
                         )
