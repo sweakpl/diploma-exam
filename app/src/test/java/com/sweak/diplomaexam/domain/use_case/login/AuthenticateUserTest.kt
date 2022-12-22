@@ -27,7 +27,7 @@ class AuthenticateUserTest {
     fun `Authentication is successful, first value is Loading, second is Success`() = runTest {
         authenticationRepository.isSuccessfulResponse = true
 
-        val authenticationFlowValues = authenticateUser.invoke(
+        val flowValues = authenticateUser.invoke(
             "test.email@mail.com",
             "test-password-123",
             UserRole.USER_EXAMINER
@@ -35,12 +35,12 @@ class AuthenticateUserTest {
 
         assertEquals(
             Resource.Loading::class.java,
-            authenticationFlowValues[0]::class.java
+            flowValues[0]::class.java
         )
 
         assertEquals(
             Resource.Success::class.java,
-            authenticationFlowValues[1]::class.java
+            flowValues[1]::class.java
         )
     }
 
@@ -48,7 +48,7 @@ class AuthenticateUserTest {
     fun `Authentication is unsuccessful, first value is Loading, second is Failure`() = runTest {
         authenticationRepository.isSuccessfulResponse = false
 
-        val authenticationFlowValues = authenticateUser.invoke(
+        val flowValues = authenticateUser.invoke(
             "test.email@mail.com",
             "test-password-123",
             UserRole.USER_EXAMINER
@@ -56,12 +56,12 @@ class AuthenticateUserTest {
 
         assertEquals(
             Resource.Loading::class.java,
-            authenticationFlowValues[0]::class.java
+            flowValues[0]::class.java
         )
 
         assertEquals(
             Resource.Failure::class.java,
-            authenticationFlowValues[1]::class.java
+            flowValues[1]::class.java
         )
     }
 
