@@ -24,7 +24,7 @@ class SelectExaminationSessionTest {
     }
 
     @Test
-    fun `Request is successful, first value is Loading, second is Success`() = runTest {
+    fun `If request is successful, then first value is Loading, second is Success`() = runTest {
         sessionSelectionRepository.isSuccessfulResponse = true
 
         val flowValues = selectExaminationSession.invoke(
@@ -33,7 +33,7 @@ class SelectExaminationSessionTest {
 
         Assert.assertEquals(
             Resource.Loading::class.java,
-            flowValues[0]::class.java
+            flowValues.first()::class.java
         )
 
         Assert.assertEquals(
@@ -43,7 +43,7 @@ class SelectExaminationSessionTest {
     }
 
     @Test
-    fun `Request is unsuccessful, first value is Loading, second is Failure`() = runTest {
+    fun `If request is unsuccessful, then first value is Loading, second is Failure`() = runTest {
         sessionSelectionRepository.isSuccessfulResponse = false
 
         val flowValues = selectExaminationSession.invoke(
@@ -52,7 +52,7 @@ class SelectExaminationSessionTest {
 
         Assert.assertEquals(
             Resource.Loading::class.java,
-            flowValues[0]::class.java
+            flowValues.first()::class.java
         )
 
         Assert.assertEquals(
@@ -62,7 +62,7 @@ class SelectExaminationSessionTest {
     }
 
     @Test
-    fun `Request is successful, emits exactly two values`() = runTest {
+    fun `If request is successful, then emits exactly two values`() = runTest {
         sessionSelectionRepository.isSuccessfulResponse = true
 
         Assert.assertEquals(
@@ -74,7 +74,7 @@ class SelectExaminationSessionTest {
     }
 
     @Test
-    fun `Request is unsuccessful, emits exactly two values`() = runTest {
+    fun `If request is unsuccessful, then emits exactly two values`() = runTest {
         sessionSelectionRepository.isSuccessfulResponse = false
 
         Assert.assertEquals(

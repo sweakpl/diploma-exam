@@ -24,7 +24,7 @@ class AuthenticateUserTest {
     }
 
     @Test
-    fun `Authentication is successful, first value is Loading, second is Success`() = runTest {
+    fun `If request is successful, then first value is Loading, second is Success`() = runTest {
         authenticationRepository.isSuccessfulResponse = true
 
         val flowValues = authenticateUser.invoke(
@@ -35,7 +35,7 @@ class AuthenticateUserTest {
 
         assertEquals(
             Resource.Loading::class.java,
-            flowValues[0]::class.java
+            flowValues.first()::class.java
         )
 
         assertEquals(
@@ -45,7 +45,7 @@ class AuthenticateUserTest {
     }
 
     @Test
-    fun `Authentication is unsuccessful, first value is Loading, second is Failure`() = runTest {
+    fun `If request is unsuccessful, then first value is Loading, second is Failure`() = runTest {
         authenticationRepository.isSuccessfulResponse = false
 
         val flowValues = authenticateUser.invoke(
@@ -56,7 +56,7 @@ class AuthenticateUserTest {
 
         assertEquals(
             Resource.Loading::class.java,
-            flowValues[0]::class.java
+            flowValues.first()::class.java
         )
 
         assertEquals(
@@ -66,7 +66,7 @@ class AuthenticateUserTest {
     }
 
     @Test
-    fun `Authentication is successful, emits exactly two values`() = runTest {
+    fun `If request is successful, then emits exactly two values`() = runTest {
         authenticationRepository.isSuccessfulResponse = true
 
         assertEquals(
@@ -80,7 +80,7 @@ class AuthenticateUserTest {
     }
 
     @Test
-    fun `Authentication is unsuccessful, emits exactly two values`() = runTest {
+    fun `If request is unsuccessful, then emits exactly two values`() = runTest {
         authenticationRepository.isSuccessfulResponse = false
 
         assertEquals(

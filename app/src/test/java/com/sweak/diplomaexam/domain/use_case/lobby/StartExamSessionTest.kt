@@ -1,6 +1,6 @@
-package com.sweak.diplomaexam.domain.use_case.session_selection
+package com.sweak.diplomaexam.domain.use_case.lobby
 
-import com.sweak.diplomaexam.data.repository.SessionSelectionRepositoryFake
+import com.sweak.diplomaexam.data.repository.LobbyRepositoryFake
 import com.sweak.diplomaexam.domain.model.common.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.count
@@ -11,22 +11,22 @@ import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class GetAvailableSessionsTest {
+class StartExamSessionTest {
 
-    private lateinit var getAvailableSessions: GetAvailableSessions
-    private lateinit var sessionSelectionRepository: SessionSelectionRepositoryFake
+    private lateinit var startExamSession: StartExamSession
+    private lateinit var lobbyRepository: LobbyRepositoryFake
 
     @Before
     fun setUp() {
-        sessionSelectionRepository = SessionSelectionRepositoryFake()
-        getAvailableSessions = GetAvailableSessions(sessionSelectionRepository)
+        lobbyRepository = LobbyRepositoryFake()
+        startExamSession = StartExamSession(lobbyRepository)
     }
 
     @Test
     fun `If request is successful, then first value is Loading, second is Success`() = runTest {
-        sessionSelectionRepository.isSuccessfulResponse = true
+        lobbyRepository.isSuccessfulResponse = true
 
-        val flowValues = getAvailableSessions.invoke().toList()
+        val flowValues = startExamSession.invoke().toList()
 
         Assert.assertEquals(
             Resource.Loading::class.java,
@@ -41,9 +41,9 @@ class GetAvailableSessionsTest {
 
     @Test
     fun `If request is unsuccessful, then first value is Loading, second is Failure`() = runTest {
-        sessionSelectionRepository.isSuccessfulResponse = false
+        lobbyRepository.isSuccessfulResponse = false
 
-        val authenticationFlowValues = getAvailableSessions.invoke().toList()
+        val authenticationFlowValues = startExamSession.invoke().toList()
 
         Assert.assertEquals(
             Resource.Loading::class.java,
@@ -58,21 +58,21 @@ class GetAvailableSessionsTest {
 
     @Test
     fun `If request is successful, then emits exactly two values`() = runTest {
-        sessionSelectionRepository.isSuccessfulResponse = true
+        lobbyRepository.isSuccessfulResponse = true
 
         Assert.assertEquals(
             2,
-            getAvailableSessions.invoke().count()
+            startExamSession.invoke().count()
         )
     }
 
     @Test
     fun `If request is unsuccessful, then emits exactly two values`() = runTest {
-        sessionSelectionRepository.isSuccessfulResponse = false
+        lobbyRepository.isSuccessfulResponse = false
 
         Assert.assertEquals(
             2,
-            getAvailableSessions.invoke().count()
+            startExamSession.invoke().count()
         )
     }
 }
