@@ -1,21 +1,22 @@
 package com.sweak.diplomaexam.data.repository
 
 import com.sweak.diplomaexam.domain.model.common.*
-import com.sweak.diplomaexam.domain.model.questions_draw.QuestionsDrawState
-import com.sweak.diplomaexam.domain.repository.QuestionsDrawRepository
+import com.sweak.diplomaexam.domain.model.questions_answering.QuestionsAnsweringState
+import com.sweak.diplomaexam.domain.repository.QuestionsAnsweringRepository
 
-class QuestionsDrawRepositoryFake : QuestionsDrawRepository {
+class QuestionsAnsweringRepositoryFake : QuestionsAnsweringRepository {
 
     var isSuccessfulResponse: Boolean = true
     var userRole: UserRole = UserRole.USER_EXAMINER
-    var willBeWaitingForCurrentUser: Boolean = false
-    private var waitingForUserCounter: Int = 0
-    private var failureCounter: Int = 0
+    var willBeWaitingForStudentUser: Boolean = true
+    var willBeWaitingForFinalEvaluation: Boolean = false
+    private var waitingForStudentCounter: Int = 0
+    private var waitingForFinalEvaluationCounter: Int = 0
 
-    override suspend fun getQuestionsDrawState(): Resource<QuestionsDrawState> {
-        return if (failureCounter++ != 3 || isSuccessfulResponse) {
+    override suspend fun getQuestionsAnsweringState(): Resource<QuestionsAnsweringState> {
+        return if (isSuccessfulResponse) {
             Resource.Success(
-                QuestionsDrawState(
+                QuestionsAnsweringState(
                     User(userRole, "test.email1@mail.com"),
                     User(
                         if (userRole == UserRole.USER_STUDENT) UserRole.USER_EXAMINER
@@ -27,10 +28,8 @@ class QuestionsDrawRepositoryFake : QuestionsDrawRepository {
                         ExamQuestion(32, 2, "Questions 2", "Answer 2"),
                         ExamQuestion(27, 3, "Questions 3", "Answer 3")
                     ),
-                    false,
-                    if (waitingForUserCounter++ == 3 && willBeWaitingForCurrentUser) userRole
-                    else if (userRole == UserRole.USER_STUDENT) UserRole.USER_EXAMINER
-                    else UserRole.USER_STUDENT,
+                    waitingForStudentCounter++ == 3 && willBeWaitingForStudentUser,
+                    waitingForFinalEvaluationCounter++ == 3 && willBeWaitingForFinalEvaluation,
                     false
                 )
             )
@@ -53,7 +52,7 @@ class QuestionsDrawRepositoryFake : QuestionsDrawRepository {
         }
     }
 
-    override suspend fun requestQuestionsRedraw(): Resource<Unit> {
+    override suspend fun confirmReadinessToAnswer(): Resource<Unit> {
         return if (isSuccessfulResponse) {
             Resource.Success(Unit)
         } else {
@@ -61,7 +60,7 @@ class QuestionsDrawRepositoryFake : QuestionsDrawRepository {
         }
     }
 
-    override suspend fun redrawQuestions(): Resource<Unit> {
+    override suspend fun submitQuestionGrades(questionsToGradesMap: Map<ExamQuestion, Grade>): Resource<Unit> {
         return if (isSuccessfulResponse) {
             Resource.Success(Unit)
         } else {
@@ -69,7 +68,11 @@ class QuestionsDrawRepositoryFake : QuestionsDrawRepository {
         }
     }
 
-    override suspend fun acceptDrawnQuestions(): Resource<Unit> {
+    override suspend fun submitAdditionalGrades(
+        thesisGrade: Grade,
+        thesisPresentationGrade: Grade,
+        courseOfStudiesPreciseGradeString: String
+    ): Resource<Unit> {
         return if (isSuccessfulResponse) {
             Resource.Success(Unit)
         } else {
